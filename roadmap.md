@@ -1,0 +1,4 @@
+- [ ] Build the shared brand system and imagery
+- [ ] Build the home page and responsive navigation
+- [ ] Build the multi-step registration flow
+- [ ] Validate the live experience and fix any issues
