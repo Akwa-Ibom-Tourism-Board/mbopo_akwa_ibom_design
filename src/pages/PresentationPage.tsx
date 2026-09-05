@@ -11,7 +11,7 @@ import presentationPdf from "@/assets/Mbopo_Akwa_Ibom_Proposal.pdf";
 // useEffect, which only ever runs in the browser.
 type PdfModule = typeof import("react-pdf");
 
-const FALLBACK_TOTAL_PAGES = 13;
+const FALLBACK_TOTAL_PAGES = 14;
 
 export function PresentationPage() {
   const [pdfModule, setPdfModule] = useState<PdfModule | null>(null);
