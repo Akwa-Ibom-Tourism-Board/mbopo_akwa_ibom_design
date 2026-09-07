@@ -3,7 +3,7 @@ import { useState, useEffect, useCallback, useRef } from "react";
 import { Link } from "@tanstack/react-router";
 import { X, ChevronLeft, ChevronRight, Loader2 } from "lucide-react";
 import styled from "styled-components";
-import presentationPdf from "@/assets/Mbopo_Akwa_Ibom_Proposal.pdf";
+import presentationPdf from "@/assets/Mbopo_Akwa_Ibom_Proposal_New.pdf";
 
 // react-pdf must NEVER be statically imported at module scope — pdf.js
 // touches browser-only globals (DOMMatrix, etc). A static import gets
@@ -11,7 +11,7 @@ import presentationPdf from "@/assets/Mbopo_Akwa_Ibom_Proposal.pdf";
 // useEffect, which only ever runs in the browser.
 type PdfModule = typeof import("react-pdf");
 
-const FALLBACK_TOTAL_PAGES = 14;
+const FALLBACK_TOTAL_PAGES = 17;
 
 export function PresentationPage() {
   const [pdfModule, setPdfModule] = useState<PdfModule | null>(null);
