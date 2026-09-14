@@ -6,6 +6,7 @@ import akhtdcLogo from "@/assets/akhtdc-new-logo.png";
 import { useAuth } from "@/features/auth";
 import {
   Header,
+  NavOverlay,
   Bar,
   LogoCluster,
   LogoImage,
@@ -41,6 +42,11 @@ export function Navbar({ variant = "solid" }: NavbarProps) {
 
   return (
     <Header $scrolled={scrolled}>
+      <NavOverlay
+        $visible={menuOpen}
+        aria-label="Close menu"
+        onClick={closeMenu}
+      />
       <Bar>
         <LogoCluster>
           <LogoImage src={akwaIbomLogo} alt="Akwa Ibom State Government logo" />

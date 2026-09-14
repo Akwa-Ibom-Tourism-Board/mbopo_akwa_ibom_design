@@ -51,6 +51,26 @@ export const RightCluster = styled.div`
   gap: 14px;
 `;
 
+// Sits behind the mobile menu card but above the page content, so opening
+// the menu blurs/dims everything else instead of leaving it fully visible.
+// z-index is below Header's so the header bar (and the menu card inside
+// it) always stays on top and unblurred.
+export const NavOverlay = styled.button<{ $visible: boolean }>`
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: ${({ theme }) => theme.zIndex.sticky};
+  border: none;
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  cursor: pointer;
+
+  @media (max-width: 860px) {
+    display: ${({ $visible }) => ($visible ? "block" : "none")};
+  }
+`;
+
 export const NavLinks = styled.div<{ $open: boolean; $light: boolean }>`
   display: flex;
   align-items: center;

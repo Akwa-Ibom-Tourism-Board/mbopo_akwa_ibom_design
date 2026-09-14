@@ -26,10 +26,15 @@ export const SidebarFrame = styled.aside<{ $open: boolean }>`
 export const SidebarOverlay = styled.button<{ $visible: boolean }>`
   position: fixed;
   inset: 0;
-  z-index: ${({ theme }) => theme.zIndex.sticky};
+  /* Must sit above everything else in the shell — including the topbar,
+     which shares the "sticky" z-index layer — so the whole page behind
+     it is covered, not just the content below the topbar. */
+  z-index: ${({ theme }) => theme.zIndex.modal};
   display: ${({ $visible }) => ($visible ? "block" : "none")};
   border: none;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
   cursor: pointer;
 
   ${media.lg} {
