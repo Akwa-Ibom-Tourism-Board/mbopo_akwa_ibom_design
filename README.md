@@ -1,29 +1,31 @@
-# Welcome to your Lovable project
+# Mbobpo Akwa Ibom
 
-This project was built with [Lovable](https://lovable.dev).
+The official cultural pageant and tourism-ambassador platform for Akwa Ibom State — "Beauty with Purpose."
 
-## Build with Lovable
+## Stack
 
-Open your project in the [Lovable editor](https://lovable.dev) and keep building.
+- React + TypeScript, built with Vite
+- `react-router-dom` for client-side routing
+- `styled-components` for theming (light/dark mode)
+- `@tanstack/react-query` for async state
+- `react-hook-form` + `zod` for form validation
+- Radix UI primitives, wrapped in `src/shared/ui/`
 
-- **Ship faster**: describe what you want to build and Lovable handles the code.
-- **Stay in sync**: connect the project to GitHub and every change made in Lovable is committed straight to your repository.
-- **Full ownership**: this code is yours. Push to your repository and your changes sync back into Lovable, ready for your next prompt.
+The codebase follows a feature-based architecture: each feature under `src/features/` owns its own `pages/`, `components/`, `api/`, and `types/`. Every feature exposes its public surface through an `index.ts` barrel; cross-feature imports go through that barrel rather than reaching into internals.
+
+Backend integration (NIN lookup, OTP email, auth, dashboard, application submission) is currently mocked — see each feature's `api/mock.ts` and `src/lib/http.ts` for how a real backend would be wired in later.
 
 ## Development
 
-Prefer working locally? You need Node.js and npm — [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating).
-
 ```sh
-git clone <this-repository-url>
-cd <repository-name>
-npm i
+npm install
 npm run dev
 ```
 
-## Built with
+## Scripts
 
-- TanStack Start
-- TypeScript
-- React
-- Tailwind CSS
+- `npm run dev` — start the Vite dev server
+- `npm run build` — production build
+- `npm run preview` — preview the production build locally
+- `npm run lint` — run ESLint
+- `npm run format` — run Prettier
