@@ -4,7 +4,10 @@ import { media } from "@/theme";
 
 export const Header = styled.header<{ $scrolled: boolean }>`
   position: fixed;
-  z-index: ${({ theme }) => theme.zIndex.navbar};
+  /* Above floatingAction (the home page's scroll-to-top button) so the
+     header — and, at the same level, its mobile-menu overlay below —
+     always sits on top of floating page chrome, not just page content. */
+  z-index: ${({ theme }) => theme.zIndex.modal};
   top: 0;
   left: 0;
   right: 0;
@@ -59,7 +62,10 @@ export const NavOverlay = styled.button<{ $visible: boolean }>`
   display: none;
   position: fixed;
   inset: 0;
-  z-index: ${({ theme }) => theme.zIndex.sticky};
+  /* Same level as Header — Header is rendered after this in the DOM, so
+     it (and everything inside it, including the mobile menu card) still
+     paints on top at equal z-index. */
+  z-index: ${({ theme }) => theme.zIndex.modal};
   border: none;
   background: rgba(0, 0, 0, 0.55);
   backdrop-filter: blur(6px);
