@@ -71,7 +71,7 @@ const SLIDES: HeroSlide[] = [
   },
 ];
 
-const AUTOPLAY_INTERVAL_MS = 2000;
+const AUTOPLAY_INTERVAL_MS = 5000;
 
 export function HeroSection() {
   const [activeIndex, setActiveIndex] = useState(0);
