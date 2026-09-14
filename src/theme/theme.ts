@@ -66,6 +66,10 @@ export const buildTheme = (tokens: ColorTokens) =>
       heroScene: `linear-gradient(135deg, ${tokens.primary} 0%, ${tokens.heroDeep} 55%, ${tokens.black} 100%)`,
       panel: `linear-gradient(160deg, ${tokens.primary} 0%, ${tokens.heroDeep} 100%)`,
       footer: `radial-gradient(ellipse 140% 90% at 50% 0%, ${tokens.footerGlow} 0%, ${tokens.footerDark} 60%, ${tokens.black} 100%)`,
+      // Backs WhyEnterSection + ValuesSection together as one continuous
+      // panel — applied to a wrapper spanning both, not to each section
+      // individually, so there's no seam between them.
+      platform: `linear-gradient(180deg, ${tokens.platformBlendTop} 0%, ${tokens.platformBlendMid} 55%, ${tokens.platformBlendBottom} 100%)`,
     },
 
     shadows: {

@@ -1,8 +1,10 @@
 import styled from "styled-components";
 
+// Background lives on PlatformPanel (HomePage.tsx), which wraps this
+// section together with ValuesSection so both read as one continuous
+// gradient. This section stays transparent aside from its dot texture.
 export const Section = styled.section`
   padding: 110px 0 122px;
-  background: ${({ theme }) => theme.colors.primary.DEFAULT};
   color: ${({ theme }) => theme.colors.white};
   background-image: radial-gradient(
     circle at 88% 18%,

@@ -50,4 +50,8 @@ export const colorsDark: ColorTokens = {
 
   footerDark: "#02110D",
   footerGlow: "#04261A",
+
+  platformBlendTop: "#005033",
+  platformBlendMid: "#003922",
+  platformBlendBottom: "#233E22",
 } as const;

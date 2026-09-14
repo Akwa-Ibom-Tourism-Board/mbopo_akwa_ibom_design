@@ -1,8 +1,10 @@
 import styled from "styled-components";
 
+// Background lives on PlatformPanel (HomePage.tsx), which wraps this
+// section together with WhyEnterSection so both read as one continuous
+// gradient, with no seam between them.
 export const Section = styled.section`
   padding: 0 0 110px;
-  background: ${({ theme }) => theme.colors.primary.DEFAULT};
   color: ${({ theme }) => theme.colors.white};
 `;
 

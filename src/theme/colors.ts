@@ -55,6 +55,15 @@ export const colors = {
   // Footer gradient: near-black base with a soft green glow at top-center.
   footerDark: "#02110D",
   footerGlow: "#04261A",
+
+  // Shared blend backing the WhyEnterSection + ValuesSection pair — the
+  // two render as one continuous panel with a single gradient behind
+  // them, not two separately-colored sections. Fixed dark tones, not
+  // meant to shift between light/dark mode (same values in
+  // colors.dark.ts).
+  platformBlendTop: "#005033",
+  platformBlendMid: "#003922",
+  platformBlendBottom: "#233E22",
 } as const;
 
 export type ColorTokens = Record<keyof typeof colors, string>;
