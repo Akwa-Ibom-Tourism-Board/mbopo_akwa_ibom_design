@@ -12,7 +12,7 @@ export function DashboardPage() {
   const { user } = useAuth();
 
   useEffect(() => {
-    document.title = "Dashboard | Mbobpo Akwa Ibom";
+    document.title = "Dashboard | Mbopo Akwa Ibom";
   }, []);
 
   const summaryQuery = useQuery({

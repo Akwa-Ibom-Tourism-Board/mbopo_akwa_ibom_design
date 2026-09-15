@@ -18,7 +18,7 @@ const PlatformPanel = styled.div`
 
 export function HomePage() {
   useEffect(() => {
-    document.title = "Mbobpo Akwa Ibom | Beauty with Purpose";
+    document.title = "Mbopo Akwa Ibom | Beauty with Purpose";
   }, []);
 
   return (

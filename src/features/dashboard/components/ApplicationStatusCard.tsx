@@ -22,8 +22,8 @@ export function ApplicationStatusCard({
         <CardTitle>Application status</CardTitle>
         <CardDescription>
           {submitted
-            ? "Your Mbobpo Akwa Ibom application has been received."
-            : "You haven't started your Mbobpo Akwa Ibom application yet."}
+            ? "Your Mbopo Akwa Ibom application has been received."
+            : "You haven't started your Mbopo Akwa Ibom application yet."}
         </CardDescription>
       </CardHeader>
       <CardContent>

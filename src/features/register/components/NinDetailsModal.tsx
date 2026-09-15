@@ -84,6 +84,18 @@ export function NinDetailsModal({
             <DetailValue>{record.nin}</DetailValue>
           </DetailItem>
           <DetailItem>
+            <DetailLabel>VIN</DetailLabel>
+            <DetailValue>{record.vin}</DetailValue>
+          </DetailItem>
+          <DetailItem>
+            <DetailLabel>Local Government Area</DetailLabel>
+            <DetailValue>{record.lga}</DetailValue>
+          </DetailItem>
+          <DetailItem>
+            <DetailLabel>Ward</DetailLabel>
+            <DetailValue>{record.ward}</DetailValue>
+          </DetailItem>
+          <DetailItem>
             <DetailLabel>Gender</DetailLabel>
             <DetailValue style={{ textTransform: "capitalize" }}>
               {record.gender}

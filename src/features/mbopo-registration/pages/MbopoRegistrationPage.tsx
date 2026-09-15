@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { Button, sonnerToast } from "@/shared/ui";
-import mbopoLogo from "@/assets/mbobpo_logo.png";
+import mbopoLogo from "@/assets/mbopo-logo.png";
 import { useAuth } from "@/features/auth";
 import {
   registrationSchema,
@@ -44,8 +44,6 @@ export function MbopoRegistrationPage() {
   const [requirePassportPhoto, setRequirePassportPhoto] = useState(false);
   const [requireCertificate, setRequireCertificate] = useState(false);
   const [requireFullImage, setRequireFullImage] = useState(false);
-  const [requireAcademicCertificate, setRequireAcademicCertificate] =
-    useState(false);
 
   const passportPhoto = usePhotoUpload();
   const certificate = usePhotoUpload({
@@ -53,10 +51,6 @@ export function MbopoRegistrationPage() {
     invalidTypeMessage: "Please choose an image or PDF file.",
   });
   const fullImage = usePhotoUpload();
-  const academicCertificate = usePhotoUpload({
-    allowPdf: true,
-    invalidTypeMessage: "Please choose an image or PDF file.",
-  });
 
   const {
     register,
@@ -70,7 +64,7 @@ export function MbopoRegistrationPage() {
   });
 
   useEffect(() => {
-    document.title = "Mbobpo Registration | Mbobpo Akwa Ibom";
+    document.title = "Mbopo Registration | Mbopo Akwa Ibom";
   }, []);
 
   const submitMutation = useMutation({
@@ -99,8 +93,7 @@ export function MbopoRegistrationPage() {
       if (!certificate.file) return;
     } else if (currentStepIndex === 2) {
       setRequireFullImage(!fullImage.file);
-      setRequireAcademicCertificate(!academicCertificate.file);
-      if (!fullImage.file || !academicCertificate.file) return;
+      if (!fullImage.file) return;
     }
 
     setCurrentStepIndex((index) =>
@@ -120,7 +113,7 @@ export function MbopoRegistrationPage() {
   return (
     <PageShellFrame>
       <TopBar>
-        <TopBarLogo src={mbopoLogo} alt="Mbobpo Akwa Ibom" />
+        <TopBarLogo src={mbopoLogo} alt="Mbopo Akwa Ibom" />
         <TopBarLabel>2026 APPLICATIONS</TopBarLabel>
       </TopBar>
       <Main>
@@ -128,7 +121,7 @@ export function MbopoRegistrationPage() {
           <BackToDashboard to="/dashboard">
             <ArrowLeft size={15} /> Back to dashboard
           </BackToDashboard>
-          <Eyebrow>Mbobpo AKWA IBOM</Eyebrow>
+          <Eyebrow>Mbopo AKWA IBOM</Eyebrow>
           <Title>
             Your place in the story
             <br />
@@ -190,14 +183,6 @@ export function MbopoRegistrationPage() {
                   (requireFullImage ? REQUIRED_PHOTO_MESSAGE : undefined)
                 }
                 onFullImageChange={fullImage.onChange}
-                academicCertificateUrl={academicCertificate.previewUrl}
-                academicCertificateError={
-                  academicCertificate.error ??
-                  (requireAcademicCertificate
-                    ? REQUIRED_PHOTO_MESSAGE
-                    : undefined)
-                }
-                onAcademicCertificateChange={academicCertificate.onChange}
               />
             )}
             {currentStepIndex === 3 && (

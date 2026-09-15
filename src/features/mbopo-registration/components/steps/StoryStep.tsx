@@ -41,7 +41,7 @@ export function StoryStep({ register, control, errors }: StoryStepProps) {
       </Field>
 
       <Field
-        label="Why do you want to be Mbobpo Akwa Ibom?"
+        label="Why do you want to be Mbopo Akwa Ibom?"
         required
         error={errors.why?.message}
       >

@@ -32,7 +32,7 @@ export function LegalPage({
   sections,
 }: LegalPageProps) {
   useEffect(() => {
-    document.title = `${documentTitle} | Mbobpo Akwa Ibom`;
+    document.title = `${documentTitle} | Mbopo Akwa Ibom`;
   }, [documentTitle]);
 
   return (

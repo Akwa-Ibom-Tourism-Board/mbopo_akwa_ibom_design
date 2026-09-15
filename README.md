@@ -1,4 +1,4 @@
-# Mbobpo Akwa Ibom
+# Mbopo Akwa Ibom
 
 The official cultural pageant and tourism-ambassador platform for Akwa Ibom State — "Beauty with Purpose."
 

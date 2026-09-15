@@ -1,8 +1,10 @@
 import { delay } from "@/lib/mockDelay";
+import { LOCAL_GOVERNMENT_AREAS } from "@/lib/akwaIbomLgas";
 import { createPendingRegistration } from "@/lib/pendingRegistrationStore";
 import { sonnerToast } from "@/shared/ui";
 import {
   NinNotFoundError,
+  VinNotFoundError,
   type Gender,
   type NinRecord,
   type RequestEmailVerificationInput,
@@ -10,6 +12,7 @@ import {
 } from "../types";
 
 const NIN_PATTERN = /^\d{11}$/;
+const VIN_PATTERN = /^[A-Z0-9]{19}$/;
 
 const FEMALE_FIRST_NAMES = [
   "Uduak",
@@ -43,6 +46,7 @@ const LAST_NAMES = [
   "Effiong",
   "Okon",
 ];
+const WARD_COUNT = 12;
 
 function hashString(value: string): number {
   let hash = 0;
@@ -71,46 +75,60 @@ function dateOfBirthForAge(age: number, dayOffset: number): string {
 
 function buildRecordFromSeed(
   nin: string,
+  vin: string,
   gender: Gender,
   age: number,
 ): NinRecord {
   const seed = hashString(nin);
   const firstNamePool =
     gender === "female" ? FEMALE_FIRST_NAMES : MALE_FIRST_NAMES;
+
+  // The VIN carries the voter's registered LGA and ward, so both are
+  // derived from it (not the NIN) and never left for the applicant to edit.
+  const vinSeed = hashString(vin);
+  const wardNumber = 1 + ((vinSeed >>> 4) % WARD_COUNT);
+
   return {
     nin,
+    vin,
     firstName: pick(firstNamePool, seed),
     lastName: pick(LAST_NAMES, seed >>> 3),
     gender,
     dateOfBirth: dateOfBirthForAge(age, seed),
+    lga: pick([...LOCAL_GOVERNMENT_AREAS], vinSeed),
+    ward: `Ward ${wardNumber}`,
   };
 }
 
 // Deterministic mock dataset. Reserved leading digits let the flow's every
 // branch be exercised on demand during development/demo:
 //   1… -> eligible female, 22-27          2… -> ineligible (male)
-//   3… -> ineligible female, outside 22-27 00000000000 -> not found
-// Anything else -> a stable, hash-derived record (same NIN always returns
-// the same person, mirroring a real idempotent lookup).
-export async function lookupNin(nin: string): Promise<NinRecord> {
+//   3… -> ineligible female, outside 22-27 00000000000 -> NIN not found
+// A VIN of all zeros ("0" x 19) simulates a VIN that doesn't match any
+// record. Anything else -> a stable, hash-derived record (same NIN always
+// returns the same person, mirroring a real idempotent lookup).
+export async function lookupNin(nin: string, vin: string): Promise<NinRecord> {
   await delay();
 
   if (!NIN_PATTERN.test(nin) || nin === "00000000000") {
     throw new NinNotFoundError();
   }
+  if (!VIN_PATTERN.test(vin) || vin === "0".repeat(19)) {
+    throw new VinNotFoundError();
+  }
 
   const seed = hashString(nin);
 
   if (nin.startsWith("1"))
-    return buildRecordFromSeed(nin, "female", 22 + (seed % 6));
+    return buildRecordFromSeed(nin, vin, "female", 22 + (seed % 6));
   if (nin.startsWith("2"))
-    return buildRecordFromSeed(nin, "male", 22 + (seed % 6));
+    return buildRecordFromSeed(nin, vin, "male", 22 + (seed % 6));
   if (nin.startsWith("3"))
-    return buildRecordFromSeed(nin, "female", seed % 2 === 0 ? 19 : 32);
+    return buildRecordFromSeed(nin, vin, "female", seed % 2 === 0 ? 19 : 32);
 
   const gender: Gender = seed % 2 === 0 ? "female" : "male";
   const age = 19 + (seed % 15);
-  return buildRecordFromSeed(nin, gender, age);
+  return buildRecordFromSeed(nin, vin, gender, age);
 }
 
 export async function requestEmailVerification({

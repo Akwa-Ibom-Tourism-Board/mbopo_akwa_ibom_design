@@ -4,7 +4,7 @@ const SECTIONS: LegalSection[] = [
   {
     heading: "1. Acceptance of these Terms",
     paragraphs: [
-      "By registering for or participating in Mbobpo Akwa Ibom, you agree to be bound by these Terms & Conditions. If you do not agree with any part of these terms, please do not proceed with registration.",
+      "By registering for or participating in Mbopo Akwa Ibom, you agree to be bound by these Terms & Conditions. If you do not agree with any part of these terms, please do not proceed with registration.",
     ],
   },
   {

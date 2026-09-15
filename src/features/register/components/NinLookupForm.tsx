@@ -19,6 +19,12 @@ const ninLookupSchema = z.object({
     .trim()
     .length(11, "Your NIN must be exactly 11 digits")
     .regex(/^\d+$/, "Your NIN can only contain digits"),
+  vin: z
+    .string()
+    .trim()
+    .toUpperCase()
+    .length(19, "Your VIN must be exactly 19 characters")
+    .regex(/^[A-Z0-9]+$/, "Your VIN can only contain letters and digits"),
 });
 
 export type NinLookupFormValues = z.infer<typeof ninLookupSchema>;
@@ -44,8 +50,9 @@ export function NinLookupForm({
     <FormCard>
       <FormTitle>Start your application</FormTitle>
       <FormCopy>
-        Enter your National Identification Number (NIN). We&apos;ll use it to
-        confirm your identity and eligibility before you continue.
+        Enter your National Identification Number (NIN) and Voter Identification
+        Number (VIN). We&apos;ll verify both to confirm your identity and
+        eligibility before you continue.
       </FormCopy>
       <form onSubmit={handleSubmit(onSubmit)} noValidate>
         <Field>
@@ -59,7 +66,21 @@ export function NinLookupForm({
             {...register("nin")}
           />
           {errors.nin && <ErrorText>{errors.nin.message}</ErrorText>}
-          {!errors.nin && submitError && <ErrorText>{submitError}</ErrorText>}
+        </Field>
+        <Field>
+          <Label htmlFor="vin">Voter Identification Number</Label>
+          <Input
+            id="vin"
+            maxLength={19}
+            placeholder="19-character VIN"
+            style={{ textTransform: "uppercase" }}
+            invalid={Boolean(errors.vin ?? submitError)}
+            {...register("vin")}
+          />
+          {errors.vin && <ErrorText>{errors.vin.message}</ErrorText>}
+          {!errors.nin && !errors.vin && submitError && (
+            <ErrorText>{submitError}</ErrorText>
+          )}
         </Field>
         <SubmitRow>
           <Button

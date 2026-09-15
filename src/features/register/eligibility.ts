@@ -13,7 +13,7 @@ export function evaluateEligibility(record: NinRecord): EligibilityResult {
   const age = calculateAge(record.dateOfBirth);
 
   if (record.gender !== "female") {
-    reasons.push("Mbobpo Akwa Ibom is open to female applicants only.");
+    reasons.push("Mbopo Akwa Ibom is open to female applicants only.");
   }
 
   if (age < MINIMUM_ELIGIBLE_AGE || age > MAXIMUM_ELIGIBLE_AGE) {

@@ -23,11 +23,12 @@ export function RegisterPage() {
   const [ineligibleReasons, setIneligibleReasons] = useState<string[]>([]);
 
   useEffect(() => {
-    document.title = "Register | Mbobpo Akwa Ibom";
+    document.title = "Register | Mbopo Akwa Ibom";
   }, []);
 
   const lookupMutation = useMutation({
-    mutationFn: (values: NinLookupFormValues) => lookupNin(values.nin),
+    mutationFn: (values: NinLookupFormValues) =>
+      lookupNin(values.nin, values.vin),
     onSuccess: (record) => {
       const eligibility = evaluateEligibility(record);
       if (eligibility.eligible) {
@@ -61,7 +62,7 @@ export function RegisterPage() {
   return (
     <PageShell>
       <PageHeroBanner
-        eyebrow="Mbobpo Akwa Ibom Registration"
+        eyebrow="Mbopo Akwa Ibom Registration"
         title="Verify your identity to begin"
         subtitle="We confirm every applicant's NIN before starting an application."
       />

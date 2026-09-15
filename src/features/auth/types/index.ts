@@ -5,6 +5,9 @@ export interface User {
   firstName: string;
   lastName: string;
   nin: string;
+  vin: string;
+  lga: string;
+  ward: string;
   gender: Gender;
   dateOfBirth: string;
   email: string;

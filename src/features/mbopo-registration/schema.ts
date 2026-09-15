@@ -12,8 +12,8 @@ export const registrationSchema = z.object({
   nextOfKin: z.string().trim().min(1, "Next of kin full name is required"),
   nextOfKinPhone: z.string().trim().min(1, "Next of kin phone is required"),
 
-  // Step 2 — Identity & Origin (Ward removed)
-  lga: z.string().min(1, "Select your Local Government Area"),
+  // Step 2 — Identity & Origin (LGA and Ward are locked, derived from the
+  // VIN lookup — not part of the editable schema, same as NIN/VIN)
   village: z.string().trim().min(1, "Village is required"),
   residenceState: z.string().trim().min(1, "State of residence is required"),
   city: z.string().trim().min(1, "Town or city is required"),
@@ -57,7 +57,6 @@ export const DEFAULT_REGISTRATION_FORM_VALUES: RegistrationFormValues = {
   socialMedia: "",
   nextOfKin: "",
   nextOfKinPhone: "",
-  lga: "",
   village: "",
   residenceState: "",
   city: "",
@@ -76,7 +75,7 @@ export const DEFAULT_REGISTRATION_FORM_VALUES: RegistrationFormValues = {
 
 export const STEP_FIELDS: (keyof RegistrationFormValues)[][] = [
   ["phone", "nextOfKin", "nextOfKinPhone"],
-  ["lga", "village", "residenceState", "city", "address"],
+  ["village", "residenceState", "city", "address"],
   ["education", "occupation", "talents", "languages"],
   ["why", "declarationIdentity", "declarationAccuracy", "declarationTerms"],
 ];

@@ -4,7 +4,7 @@ const SECTIONS: LegalSection[] = [
   {
     heading: "1. Information We Collect",
     paragraphs: [
-      "When you register for Mbobpo Akwa Ibom, we collect information including:",
+      "When you register for Mbopo Akwa Ibom, we collect information including:",
     ],
     list: [
       "Identity details confirmed through your National Identification Number (name, gender, date of birth, NIN)",

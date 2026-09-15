@@ -28,13 +28,13 @@ import {
 const ELIGIBILITY_CRITERIA = [
   { icon: UserRound, text: "Must be female" },
   { icon: MapPinned, text: "Must be an indigene of Akwa Ibom State" },
-  { icon: GraduationCap, text: "Must be a graduate" },
+  { icon: GraduationCap, text: "Must be a graduate (Minimum of B.Sc. or HND)" },
   { icon: Cake, text: "Must be between 22 and 27 years old" },
   { icon: IdCard, text: "Must have a National Identification Number (NIN)" },
   { icon: ScrollText, text: "Must have a Certificate of Origin" },
   {
     icon: FileText,
-    text: "Must submit Statement of result/academic certificate",
+    text: "Must have Voter Identification Number (VIN)",
   },
   { icon: ScanFace, text: "Must have a passport photograph" },
 ];

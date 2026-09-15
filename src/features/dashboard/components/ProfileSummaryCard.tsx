@@ -46,6 +46,18 @@ export function ProfileSummaryCard({
             <DetailValue>{user.nin}</DetailValue>
           </DetailItem>
           <DetailItem>
+            <DetailLabel>VIN</DetailLabel>
+            <DetailValue>{user.vin}</DetailValue>
+          </DetailItem>
+          <DetailItem>
+            <DetailLabel>Local Government Area</DetailLabel>
+            <DetailValue>{user.lga}</DetailValue>
+          </DetailItem>
+          <DetailItem>
+            <DetailLabel>Ward</DetailLabel>
+            <DetailValue>{user.ward}</DetailValue>
+          </DetailItem>
+          <DetailItem>
             <DetailLabel>Gender</DetailLabel>
             <DetailValue style={{ textTransform: "capitalize" }}>
               {user.gender}

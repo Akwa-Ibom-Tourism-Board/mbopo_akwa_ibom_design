@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import akwaIbomLogo from "@/assets/akwa-ibom-logo-main.png";
 import ariseLogo from "@/assets/arise-logo-main.png";
-import mbopoLogo from "@/assets/mbobpo_logo.png";
+import mbopoLogo from "@/assets/mbopo-logo.png";
 import akhtdcLogo from "@/assets/akhtdc-new-logo.png";
 import {
   FooterFrame,
@@ -31,7 +31,7 @@ export function Footer() {
             <LogoImage src={ariseLogo} alt="ARISE Akwa Ibom logo" />
           </LogoRow>
           <LogoRow>
-            <LogoImage src={mbopoLogo} alt="Mbobpo Akwa Ibom logo" />
+            <LogoImage src={mbopoLogo} alt="Mbopo Akwa Ibom logo" />
             <LogoImage
               src={akhtdcLogo}
               alt="Akwa Ibom State Hotels and Tourism Development Commission logo"
@@ -87,7 +87,7 @@ export function Footer() {
       </FooterTop>
       <FooterBottom>
         <span>
-          © {new Date().getFullYear()} Mbobpo Akwa Ibom. All rights reserved.
+          © {new Date().getFullYear()} Mbopo Akwa Ibom. All rights reserved.
         </span>
         <span>Beauty with Purpose</span>
       </FooterBottom>

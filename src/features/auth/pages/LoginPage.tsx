@@ -58,7 +58,7 @@ export function LoginPage() {
   });
 
   useEffect(() => {
-    document.title = "Log In | Mbobpo Akwa Ibom";
+    document.title = "Log In | Mbopo Akwa Ibom";
   }, []);
 
   if (status === "authenticated") {
@@ -109,7 +109,7 @@ export function LoginPage() {
               </Button>
             </form>
             <FormFooter>
-              New to Mbobpo Akwa Ibom?{" "}
+              New to Mbopo Akwa Ibom?{" "}
               <Link to="/register">Start your registration</Link>
             </FormFooter>
           </FormCard>

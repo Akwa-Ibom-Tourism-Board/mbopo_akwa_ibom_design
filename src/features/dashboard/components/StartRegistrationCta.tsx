@@ -24,13 +24,13 @@ export function StartRegistrationCta({
         </CtaTitle>
         <CtaText>
           {submitted
-            ? "You can review the details you submitted for your Mbobpo Akwa Ibom application."
-            : "Complete your Mbobpo Akwa Ibom registration — your identity details are already saved."}
+            ? "You can review the details you submitted for your Mbopo Akwa Ibom application."
+            : "Complete your Mbopo Akwa Ibom registration — your identity details are already saved."}
         </CtaText>
       </CtaCopy>
       <Button asChild variant="secondary" size="lg">
         <Link to="/mbopo-registration">
-          {submitted ? "View application" : "Mbobpo Registration"}{" "}
+          {submitted ? "View application" : "Mbopo Registration"}{" "}
           <ArrowRight size={16} />
         </Link>
       </Button>

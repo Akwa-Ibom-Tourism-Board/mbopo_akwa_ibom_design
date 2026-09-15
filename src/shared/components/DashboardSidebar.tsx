@@ -1,7 +1,7 @@
 import { LayoutDashboard, LogOut, UserRoundCheck } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "@/features/auth";
-import mbopoLogo from "@/assets/mbobpo_logo.png";
+import mbopoLogo from "@/assets/mbopo-logo.png";
 import {
   SidebarFrame,
   SidebarOverlay,
@@ -16,7 +16,7 @@ const NAV_ITEMS = [
   { to: "/dashboard", label: "Overview", icon: LayoutDashboard },
   {
     to: "/mbopo-registration",
-    label: "Mbobpo Registration",
+    label: "Mbopo Registration",
     icon: UserRoundCheck,
   },
 ];
@@ -45,7 +45,7 @@ export function DashboardSidebar({ open, onClose }: DashboardSidebarProps) {
       />
       <SidebarFrame $open={open}>
         <SidebarBrand to="/dashboard" onClick={onClose}>
-          <SidebarLogo src={mbopoLogo} alt="Mbobpo Akwa Ibom" />
+          <SidebarLogo src={mbopoLogo} alt="Mbopo Akwa Ibom" />
         </SidebarBrand>
         <NavList>
           {NAV_ITEMS.map(({ to, label, icon: Icon }) => (

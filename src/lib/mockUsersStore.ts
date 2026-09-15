@@ -14,6 +14,9 @@ export interface MockUserRecord {
   firstName: string;
   lastName: string;
   nin: string;
+  vin: string;
+  lga: string;
+  ward: string;
   gender: Gender;
   dateOfBirth: string;
   email: string;
@@ -48,6 +51,9 @@ export interface CreateUserInput {
   firstName: string;
   lastName: string;
   nin: string;
+  vin: string;
+  lga: string;
+  ward: string;
   gender: Gender;
   dateOfBirth: string;
   email: string;
@@ -61,6 +67,9 @@ export function createUser(input: CreateUserInput): MockUserRecord {
     firstName: input.firstName,
     lastName: input.lastName,
     nin: input.nin,
+    vin: input.vin,
+    lga: input.lga,
+    ward: input.ward,
     gender: input.gender,
     dateOfBirth: input.dateOfBirth,
     email: input.email,

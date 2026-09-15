@@ -1,5 +1,5 @@
 // Light-mode color tokens — ported from the Akwa Ibom Tourism Board's main
-// website (main-website-frontend/src/theme/colors.ts) so Mbobpo Akwa Ibom
+// website (main-website-frontend/src/theme/colors.ts) so Mbopo Akwa Ibom
 // shares one visual identity with the rest of the board's digital presence.
 
 export const colors = {

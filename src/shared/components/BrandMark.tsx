@@ -33,7 +33,7 @@ export function BrandMark({ variant = "dark" }: { variant?: Variant }) {
   return (
     <Mark $variant={variant}>
       <Crest $variant={variant}>M.A</Crest>
-      Mbobpo
+      Mbopo
     </Mark>
   );
 }

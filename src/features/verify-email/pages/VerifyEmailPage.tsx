@@ -53,7 +53,7 @@ export function VerifyEmailPage() {
   } = useForm<PasswordFormValues>({ resolver: zodResolver(passwordSchema) });
 
   useEffect(() => {
-    document.title = "Verify Email | Mbobpo Akwa Ibom";
+    document.title = "Verify Email | Mbopo Akwa Ibom";
   }, []);
 
   useEffect(() => {

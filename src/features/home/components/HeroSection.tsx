@@ -2,9 +2,10 @@ import { useEffect, useState, type ReactNode } from "react";
 import { ArrowRight } from "lucide-react";
 import heroBackdrop from "@/assets/hero-bg.png";
 import ladyPortrait from "@/assets/mbopo-hero-1.png";
+import localHairPortrait from "@/assets/mbopo-hero-local-hair.png";
 import governorPortraitOne from "@/assets/governor_1.png";
 import governorPortraitTwo from "@/assets/governor_2.png";
-import mbopoLogo from "@/assets/mbobpo_logo.png";
+import mbopoLogo from "@/assets/mbopo-logo.png";
 import { Reveal } from "@/shared/components";
 import {
   Hero,
@@ -41,17 +42,27 @@ interface HeroSlide {
 const SLIDES: HeroSlide[] = [
   {
     image: ladyPortrait,
-    imageAlt: "A Mbobpo Akwa Ibom contestant in traditional Akwa Ibom attire",
+    imageAlt: "A Mbopo Akwa Ibom contestant in traditional Akwa Ibom attire",
     kicker: (
       <>
         AKWA IBOM STATE <span>·</span> HOTELS &amp; TOURISM DEVELOPMENT
         COMMISSION
       </>
     ),
-    title: "Mbobpo",
+    title: "Mbopo",
     accent: "Akwa Ibom",
     tagline: "Beauty with Purpose",
     copy: "A premium, culturally authentic pageant and tourism-ambassador platform — celebrating the complete Akwa Ibom woman across all 31 Local Government Areas.",
+  },
+  {
+    image: localHairPortrait,
+    imageAlt:
+      "A Mbopo Akwa Ibom contestant wearing a traditional coral-beaded hairstyle",
+    kicker: <>A CELEBRATION OF LOCAL CRAFT</>,
+    title: "Crowned",
+    accent: "in heritage",
+    tagline: "Every strand tells a story",
+    copy: "From coral beads to hand-styled crowns, Mbopo Akwa Ibom celebrates the artistry of our local hairstylists and the heritage woven into every look.",
   },
   {
     image: governorPortraitOne,
@@ -60,7 +71,7 @@ const SLIDES: HeroSlide[] = [
     title: "Championing",
     accent: "Akwa Ibom's daughters",
     tagline: "Supported by the State Government",
-    copy: "Mbobpo Akwa Ibom is proudly backed by the Akwa Ibom State Government — part of a wider commitment to empowering women across every Local Government Area.",
+    copy: "Mbopo Akwa Ibom is proudly backed by the Akwa Ibom State Government — part of a wider commitment to empowering women across every Local Government Area.",
   },
   {
     image: governorPortraitTwo,
@@ -69,7 +80,7 @@ const SLIDES: HeroSlide[] = [
     title: "Driving",
     accent: "purposeful growth",
     tagline: "For every woman, every community",
-    copy: "From culture to enterprise, Mbobpo Akwa Ibom carries forward the state's vision for inclusive opportunity and pride in every corner of Akwa Ibom.",
+    copy: "From culture to enterprise, Mbopo Akwa Ibom carries forward the state's vision for inclusive opportunity and pride in every corner of Akwa Ibom.",
   },
 ];
 
@@ -103,7 +114,7 @@ export function HeroSection() {
               with the carousel, unlike TextStage below (which remounts
               on every slide change). */}
           <HeroTopRow>
-            <HeroLogo src={mbopoLogo} alt="Mbobpo Akwa Ibom" />
+            <HeroLogo src={mbopoLogo} alt="Mbopo Akwa Ibom" />
             <ViewRequirementsLink to="/#eligibility">
               View Requirements
             </ViewRequirementsLink>

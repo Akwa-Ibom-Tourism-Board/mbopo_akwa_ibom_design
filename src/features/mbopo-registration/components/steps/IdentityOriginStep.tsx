@@ -17,7 +17,7 @@ import {
 } from "@/shared/ui";
 import type { User } from "@/features/auth";
 import type { RegistrationFormValues } from "../../schema";
-import { LOCAL_GOVERNMENT_AREAS, NIGERIAN_STATES } from "../../constants";
+import { NIGERIAN_STATES } from "../../constants";
 import { Field } from "../Field";
 import { FieldGrid, LockedValue } from "../Field.styles";
 import { PhotoUpload } from "../PhotoUpload";
@@ -53,7 +53,8 @@ export function IdentityOriginStep({
       <StepHint>Help us understand where you represent.</StepHint>
 
       <LockedFieldsNote>
-        Your identity was verified from your NIN and can&apos;t be edited here.
+        Your identity was verified from your NIN and VIN and can&apos;t be
+        edited here.
       </LockedFieldsNote>
 
       <FieldGrid>
@@ -76,31 +77,16 @@ export function IdentityOriginStep({
         <Field label="National Identification Number (NIN)" wide>
           <LockedValue>{user.nin}</LockedValue>
         </Field>
-
-        <Field
-          label="Local Government Area of origin"
-          required
-          error={errors.lga?.message}
-        >
-          <Controller
-            control={control}
-            name="lga"
-            render={({ field }) => (
-              <Select value={field.value} onValueChange={field.onChange}>
-                <SelectTrigger invalid={Boolean(errors.lga)}>
-                  <SelectValue placeholder="Select your LGA" />
-                </SelectTrigger>
-                <SelectContent>
-                  {LOCAL_GOVERNMENT_AREAS.map((lga) => (
-                    <SelectItem key={lga} value={lga}>
-                      {lga}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            )}
-          />
+        <Field label="Voter Identification Number (VIN)" wide>
+          <LockedValue>{user.vin}</LockedValue>
         </Field>
+        <Field label="Local Government Area of origin">
+          <LockedValue>{user.lga}</LockedValue>
+        </Field>
+        <Field label="Ward">
+          <LockedValue>{user.ward}</LockedValue>
+        </Field>
+
         <Field label="Village" required error={errors.village?.message}>
           <Input
             placeholder="Your village of origin"
