@@ -27,6 +27,9 @@ export interface EducationStepProps {
   fullImageUrl: string;
   fullImageError?: string;
   onFullImageChange: (event: ChangeEvent<HTMLInputElement>) => void;
+  academicCertificateUrl: string;
+  academicCertificateError?: string;
+  onAcademicCertificateChange: (event: ChangeEvent<HTMLInputElement>) => void;
 }
 
 export function EducationStep({
@@ -36,6 +39,9 @@ export function EducationStep({
   fullImageUrl,
   fullImageError,
   onFullImageChange,
+  academicCertificateUrl,
+  academicCertificateError,
+  onAcademicCertificateChange,
 }: EducationStepProps) {
   return (
     <StepContent>
@@ -98,6 +104,14 @@ export function EducationStep({
         previewUrl={fullImageUrl}
         error={fullImageError}
         onChange={onFullImageChange}
+      />
+      <PhotoUpload
+        label="Statement of Result / Academic Certificate"
+        previewUrl={academicCertificateUrl}
+        error={academicCertificateError}
+        onChange={onAcademicCertificateChange}
+        accept="image/png,image/jpeg,application/pdf"
+        hint="JPG, PNG or PDF · Max 5MB"
       />
     </StepContent>
   );

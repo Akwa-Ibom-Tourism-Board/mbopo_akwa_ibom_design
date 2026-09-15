@@ -24,9 +24,10 @@ export function DashboardPage() {
   if (!user) return null;
 
   const displayUser = summaryQuery.data?.user ?? user;
+  const referenceCode = summaryQuery.data?.referenceCode;
 
   return (
-    <DashboardShell title="Overview">
+    <DashboardShell title="Overview" referenceCode={referenceCode}>
       <Stack>
         <Greeting>Welcome back, {displayUser.firstName}.</Greeting>
         {summaryQuery.isLoading && (
@@ -34,7 +35,10 @@ export function DashboardPage() {
         )}
         <StartRegistrationCta status={displayUser.applicationStatus} />
         <CardGrid>
-          <ProfileSummaryCard user={displayUser} />
+          <ProfileSummaryCard
+            user={displayUser}
+            referenceCode={referenceCode}
+          />
           <ApplicationStatusCard status={displayUser.applicationStatus} />
         </CardGrid>
       </Stack>

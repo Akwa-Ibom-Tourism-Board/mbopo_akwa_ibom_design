@@ -14,7 +14,15 @@ import {
   DetailValue,
 } from "./ProfileSummaryCard.styles";
 
-export function ProfileSummaryCard({ user }: { user: User }) {
+export interface ProfileSummaryCardProps {
+  user: User;
+  referenceCode?: string;
+}
+
+export function ProfileSummaryCard({
+  user,
+  referenceCode,
+}: ProfileSummaryCardProps) {
   return (
     <Card>
       <CardHeader>
@@ -53,6 +61,12 @@ export function ProfileSummaryCard({ user }: { user: User }) {
             <DetailLabel>Email</DetailLabel>
             <DetailValue>{user.email}</DetailValue>
           </DetailItem>
+          {referenceCode && (
+            <DetailItem>
+              <DetailLabel>Reference number</DetailLabel>
+              <DetailValue>{referenceCode}</DetailValue>
+            </DetailItem>
+          )}
         </DetailGrid>
       </CardContent>
     </Card>

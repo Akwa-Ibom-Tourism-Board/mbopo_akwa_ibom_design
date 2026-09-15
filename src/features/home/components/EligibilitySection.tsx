@@ -1,10 +1,12 @@
 import {
   ArrowRight,
   Cake,
+  FileText,
   GraduationCap,
   IdCard,
   MapPinned,
   ScanFace,
+  ScrollText,
   UserRound,
 } from "lucide-react";
 import { Reveal } from "@/shared/components";
@@ -29,6 +31,11 @@ const ELIGIBILITY_CRITERIA = [
   { icon: GraduationCap, text: "Must be a graduate" },
   { icon: Cake, text: "Must be between 22 and 27 years old" },
   { icon: IdCard, text: "Must have a National Identification Number (NIN)" },
+  { icon: ScrollText, text: "Must have a Certificate of Origin" },
+  {
+    icon: FileText,
+    text: "Must submit Statement of result/academic certificate",
+  },
   { icon: ScanFace, text: "Must have a passport photograph" },
 ];
 

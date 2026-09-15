@@ -1,5 +1,6 @@
 import { delay } from "@/lib/mockDelay";
 import { findUserById } from "@/lib/mockUsersStore";
+import { findApplicationByUserId } from "@/lib/mockApplicationsStore";
 import type { DashboardSummary } from "../types";
 
 export async function getDashboardSummary(
@@ -24,5 +25,6 @@ export async function getDashboardSummary(
       applicationStatus: record.applicationStatus,
     },
     memberSince: new Date(record.createdAt).toISOString(),
+    referenceCode: findApplicationByUserId(userId)?.referenceCode,
   };
 }

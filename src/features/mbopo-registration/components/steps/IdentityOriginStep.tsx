@@ -17,7 +17,7 @@ import {
 } from "@/shared/ui";
 import type { User } from "@/features/auth";
 import type { RegistrationFormValues } from "../../schema";
-import { LOCAL_GOVERNMENT_AREAS } from "../../constants";
+import { LOCAL_GOVERNMENT_AREAS, NIGERIAN_STATES } from "../../constants";
 import { Field } from "../Field";
 import { FieldGrid, LockedValue } from "../Field.styles";
 import { PhotoUpload } from "../PhotoUpload";
@@ -112,7 +112,24 @@ export function IdentityOriginStep({
           required
           error={errors.residenceState?.message}
         >
-          <Input placeholder="State" {...register("residenceState")} />
+          <Controller
+            control={control}
+            name="residenceState"
+            render={({ field }) => (
+              <Select value={field.value} onValueChange={field.onChange}>
+                <SelectTrigger invalid={Boolean(errors.residenceState)}>
+                  <SelectValue placeholder="Select your state" />
+                </SelectTrigger>
+                <SelectContent>
+                  {NIGERIAN_STATES.map((state) => (
+                    <SelectItem key={state} value={state}>
+                      {state}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            )}
+          />
         </Field>
         <Field
           label="Town / city of residence"

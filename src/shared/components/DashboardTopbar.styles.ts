@@ -49,12 +49,29 @@ export const UserCluster = styled.div`
   gap: 10px;
 `;
 
-export const UserName = styled.span`
+export const UserMeta = styled.div`
   display: none;
-  font-size: 0.875rem;
-  font-weight: 600;
+  flex-direction: column;
+  line-height: 1.3;
 
   ${media.sm} {
-    display: inline;
+    display: flex;
+  }
+`;
+
+export const UserName = styled.span`
+  font-size: 0.875rem;
+  font-weight: 600;
+`;
+
+// Reference number only appears once there's room for a second line
+// under the name — large screens only, per spec.
+export const UserReference = styled.span`
+  display: none;
+  font-size: 0.6875rem;
+  color: ${({ theme }) => theme.colors.muted.foreground};
+
+  ${media.lg} {
+    display: block;
   }
 `;

@@ -5,10 +5,15 @@ import { ShellFrame, ContentPane, ContentBody } from "./DashboardShell.styles";
 
 export interface DashboardShellProps {
   title: string;
+  referenceCode?: string;
   children: ReactNode;
 }
 
-export function DashboardShell({ title, children }: DashboardShellProps) {
+export function DashboardShell({
+  title,
+  referenceCode,
+  children,
+}: DashboardShellProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
@@ -20,6 +25,7 @@ export function DashboardShell({ title, children }: DashboardShellProps) {
       <ContentPane>
         <DashboardTopbar
           title={title}
+          referenceCode={referenceCode}
           onOpenSidebar={() => setSidebarOpen(true)}
         />
         <ContentBody>{children}</ContentBody>

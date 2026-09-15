@@ -1,22 +1,25 @@
 import { Menu } from "lucide-react";
 import { useAuth } from "@/features/auth";
 import { Avatar, AvatarFallback } from "@/shared/ui";
-import { ThemeToggle } from "./ThemeToggle";
 import {
   TopbarFrame,
   MenuToggle,
   Title,
   UserCluster,
+  UserMeta,
   UserName,
+  UserReference,
 } from "./DashboardTopbar.styles";
 
 export interface DashboardTopbarProps {
   title: string;
+  referenceCode?: string;
   onOpenSidebar: () => void;
 }
 
 export function DashboardTopbar({
   title,
+  referenceCode,
   onOpenSidebar,
 }: DashboardTopbarProps) {
   const { user } = useAuth();
@@ -30,15 +33,17 @@ export function DashboardTopbar({
         <Menu size={20} />
       </MenuToggle>
       <Title>{title}</Title>
-      {/* <ThemeToggle /> */}
       <UserCluster>
         <Avatar>
           <AvatarFallback>{initials}</AvatarFallback>
         </Avatar>
         {user && (
-          <UserName>
-            {user.firstName} {user.lastName}
-          </UserName>
+          <UserMeta>
+            <UserName>
+              {user.firstName} {user.lastName}
+            </UserName>
+            {referenceCode && <UserReference>{referenceCode}</UserReference>}
+          </UserMeta>
         )}
       </UserCluster>
     </TopbarFrame>

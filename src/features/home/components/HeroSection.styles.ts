@@ -73,14 +73,49 @@ export const HeroInner = styled.div`
   }
 `;
 
+export const HeroTopRow = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 24px;
+`;
+
 export const HeroLogo = styled.img`
   height: 64px;
   width: auto;
   object-fit: contain;
-  margin-bottom: 24px;
 
   ${media.lg} {
     height: 92px;
+  }
+`;
+
+// Small-screen shortcut, opposite the logo, straight to the eligibility
+// list — on large screens the primary nav already has an Eligibility
+// link and there's room to read the hero copy without one.
+export const ViewRequirementsLink = styled(Link)`
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 6px;
+  padding: 9px 14px;
+  border: 1px solid rgba(255, 255, 255, 0.45);
+  border-radius: ${({ theme }) => theme.radii.full};
+  color: ${({ theme }) => theme.colors.white};
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  transition: background-color ${({ theme }) => theme.transitions.fast};
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.12);
+  }
+
+  ${media.lg} {
+    display: none;
   }
 `;
 

@@ -44,6 +44,8 @@ export function MbopoRegistrationPage() {
   const [requirePassportPhoto, setRequirePassportPhoto] = useState(false);
   const [requireCertificate, setRequireCertificate] = useState(false);
   const [requireFullImage, setRequireFullImage] = useState(false);
+  const [requireAcademicCertificate, setRequireAcademicCertificate] =
+    useState(false);
 
   const passportPhoto = usePhotoUpload();
   const certificate = usePhotoUpload({
@@ -51,6 +53,10 @@ export function MbopoRegistrationPage() {
     invalidTypeMessage: "Please choose an image or PDF file.",
   });
   const fullImage = usePhotoUpload();
+  const academicCertificate = usePhotoUpload({
+    allowPdf: true,
+    invalidTypeMessage: "Please choose an image or PDF file.",
+  });
 
   const {
     register,
@@ -93,7 +99,8 @@ export function MbopoRegistrationPage() {
       if (!certificate.file) return;
     } else if (currentStepIndex === 2) {
       setRequireFullImage(!fullImage.file);
-      if (!fullImage.file) return;
+      setRequireAcademicCertificate(!academicCertificate.file);
+      if (!fullImage.file || !academicCertificate.file) return;
     }
 
     setCurrentStepIndex((index) =>
@@ -183,6 +190,14 @@ export function MbopoRegistrationPage() {
                   (requireFullImage ? REQUIRED_PHOTO_MESSAGE : undefined)
                 }
                 onFullImageChange={fullImage.onChange}
+                academicCertificateUrl={academicCertificate.previewUrl}
+                academicCertificateError={
+                  academicCertificate.error ??
+                  (requireAcademicCertificate
+                    ? REQUIRED_PHOTO_MESSAGE
+                    : undefined)
+                }
+                onAcademicCertificateChange={academicCertificate.onChange}
               />
             )}
             {currentStepIndex === 3 && (

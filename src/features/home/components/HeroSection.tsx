@@ -11,7 +11,9 @@ import {
   HeroBackdrop,
   HeroScrim,
   HeroInner,
+  HeroTopRow,
   HeroLogo,
+  ViewRequirementsLink,
   TextStage,
   Kicker,
   HeroTitle,
@@ -100,7 +102,12 @@ export function HeroSection() {
           {/* Static brand mark — sits above the copy and never changes
               with the carousel, unlike TextStage below (which remounts
               on every slide change). */}
-          <HeroLogo src={mbopoLogo} alt="Mbobpo Akwa Ibom" />
+          <HeroTopRow>
+            <HeroLogo src={mbopoLogo} alt="Mbobpo Akwa Ibom" />
+            <ViewRequirementsLink to="/#eligibility">
+              View Requirements
+            </ViewRequirementsLink>
+          </HeroTopRow>
 
           <TextStage key={activeIndex}>
             <Kicker>{activeSlide.kicker}</Kicker>

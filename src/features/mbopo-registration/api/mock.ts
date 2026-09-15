@@ -1,6 +1,6 @@
 import { delay } from "@/lib/mockDelay";
 import { markApplicationSubmitted } from "@/lib/mockUsersStore";
-import { localStore, STORAGE_KEYS } from "@/lib/storage";
+import { saveApplication } from "@/lib/mockApplicationsStore";
 import type { SubmitApplicationInput, SubmitApplicationResult } from "../types";
 
 function generateReferenceCode(): string {
@@ -17,14 +17,7 @@ export async function submitApplication({
 
   const referenceCode = generateReferenceCode();
 
-  const submissions =
-    localStore.get<Record<string, unknown>>(STORAGE_KEYS.mockApplicationsDb) ??
-    {};
-  localStore.set(STORAGE_KEYS.mockApplicationsDb, {
-    ...submissions,
-    [userId]: { referenceCode, values, submittedAt: Date.now() },
-  });
-
+  saveApplication(userId, { referenceCode, values, submittedAt: Date.now() });
   markApplicationSubmitted(userId);
 
   return { referenceCode };
