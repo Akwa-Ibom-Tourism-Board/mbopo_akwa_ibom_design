@@ -1,1 +1,6 @@
-export { submitApplication } from "./mock";
+export {
+  submitApplication,
+  getSubmittedApplication,
+  saveRegistrationDraft,
+  getRegistrationDraft,
+} from "./mock";

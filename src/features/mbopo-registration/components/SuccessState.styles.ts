@@ -13,9 +13,10 @@ const pop = keyframes`
 
 export const SuccessPage = styled.div`
   display: grid;
-  min-height: 100vh;
+  min-height: 60vh;
   place-items: center;
   padding: 25px;
+  border-radius: ${({ theme }) => theme.radii["2xl"]};
   background: ${({ theme }) => theme.gradients.panel};
 `;
 

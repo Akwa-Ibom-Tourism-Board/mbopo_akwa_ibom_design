@@ -1,9 +1,8 @@
-/* eslint-disable prettier/prettier */
 import { useState, useEffect, useCallback, useRef } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { X, ChevronLeft, ChevronRight, Loader2 } from "lucide-react";
 import styled from "styled-components";
-import presentationPdf from "@/assets/Mbopo_Akwa_Ibom_Proposal_New.pdf";
+import presentationPdf from "@/assets/presentation/Mbopo_Akwa_Ibom_Proposal_Final_v17.pdf";
 
 // react-pdf must NEVER be statically imported at module scope — pdf.js
 // touches browser-only globals (DOMMatrix, etc). A static import gets
@@ -11,9 +10,10 @@ import presentationPdf from "@/assets/Mbopo_Akwa_Ibom_Proposal_New.pdf";
 // useEffect, which only ever runs in the browser.
 type PdfModule = typeof import("react-pdf");
 
-const FALLBACK_TOTAL_PAGES = 17;
+const FALLBACK_TOTAL_PAGES = 16;
 
 export function PresentationPage() {
+  const navigate = useNavigate();
   const [pdfModule, setPdfModule] = useState<PdfModule | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(FALLBACK_TOTAL_PAGES);
@@ -84,11 +84,11 @@ export function PresentationPage() {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "ArrowRight") goNext();
       if (e.key === "ArrowLeft") goPrev();
-      if (e.key === "Escape") window.location.href = "/";
+      if (e.key === "Escape") navigate("/");
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [goNext, goPrev]);
+  }, [goNext, goPrev, navigate]);
 
   return (
     <PresentationShell>
@@ -236,7 +236,10 @@ const PDFViewer = styled.div`
   overflow: auto;
   display: flex;
   justify-content: center;
-  align-items: flex-start;
+  // Slides are widescreen, so on tall/portrait viewports the rendered
+  // page is shorter than the available height — center it instead of
+  // pinning it to the top, which left a large dead gap underneath.
+  align-items: center;
   padding: 64px 16px 40px;
 
   canvas {

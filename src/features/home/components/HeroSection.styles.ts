@@ -302,26 +302,17 @@ const imageIn = keyframes`
   }
 `;
 
-// Portrait-orientation slides (the contestant photos) use "contain" so
-// the full figure stays visible; the governor's landscape photos would
-// render tiny inside this tall stage under "contain", so those slides
-// pass $fit="cover" to fill the stage and crop the sides instead. Cover
-// slides are sized to 86% width / 90% height (rather than the full
-// stage) since filling it completely read noticeably bigger than the
-// contain slides next to them. This uses top/left + width/height,
-// deliberately not a 4-sided inset: for a replaced element like <img>,
-// setting all four inset sides with width/height left auto makes the
-// box fall back to the image's own intrinsic aspect ratio instead of
-// stretching to fill — which silently breaks the bottom-edge alignment
-// below. top(10%) + height(90%) reaches exactly 100%, so the base still
-// meets Hero's bottom edge without needing to set `bottom` at all.
-export const SlideImage = styled.img<{ $fit: "contain" | "cover" }>`
+// object-fit: contain guarantees the full photo is always visible —
+// nothing cropped off the sides — regardless of whether a slide's
+// source image is a tall portrait or the governor's wider landscape
+// shots; object-position anchors whatever whitespace that leaves to
+// the top, so every slide's subject still sits on the same baseline.
+export const SlideImage = styled.img`
   position: absolute;
-  top: ${({ $fit }) => ($fit === "cover" ? "10%" : "0")};
-  left: ${({ $fit }) => ($fit === "cover" ? "7%" : "0")};
-  width: ${({ $fit }) => ($fit === "cover" ? "86%" : "100%")};
-  height: ${({ $fit }) => ($fit === "cover" ? "90%" : "100%")};
-  object-fit: ${({ $fit }) => $fit};
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
   object-position: bottom center;
   filter: drop-shadow(0 24px 40px rgba(0, 0, 0, 0.45));
   animation: ${imageIn} 550ms ease both;

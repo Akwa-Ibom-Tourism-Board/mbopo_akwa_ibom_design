@@ -25,6 +25,7 @@ export function DashboardPage() {
 
   const displayUser = summaryQuery.data?.user ?? user;
   const referenceCode = summaryQuery.data?.referenceCode;
+  const hasDraft = summaryQuery.data?.hasDraft ?? false;
 
   return (
     <DashboardShell title="Overview" referenceCode={referenceCode}>
@@ -33,7 +34,10 @@ export function DashboardPage() {
         {summaryQuery.isLoading && (
           <LoadingText>Loading your dashboard…</LoadingText>
         )}
-        <StartRegistrationCta status={displayUser.applicationStatus} />
+        <StartRegistrationCta
+          status={displayUser.applicationStatus}
+          hasDraft={hasDraft}
+        />
         <CardGrid>
           <ProfileSummaryCard
             user={displayUser}

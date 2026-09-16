@@ -3,7 +3,7 @@ import { ArrowRight } from "lucide-react";
 import heroBackdrop from "@/assets/hero-bg.png";
 import ladyPortrait from "@/assets/mbopo-hero-1.png";
 import localHairPortrait from "@/assets/mbopo-hero-local-hair.png";
-import governorPortraitOne from "@/assets/governor_1.webp";
+import governorPortraitOne from "@/assets/governor_1.png";
 import governorPortraitTwo from "@/assets/governor_2.png";
 import mbopoLogo from "@/assets/mbopo-logo.png";
 import { Reveal } from "@/shared/components";
@@ -23,6 +23,7 @@ import {
   HeroCopy,
   HeroActions,
   PrimaryLink,
+  GhostLink,
   Dots,
   Dot,
   ImageStage,
@@ -32,9 +33,6 @@ import {
 interface HeroSlide {
   image: string;
   imageAlt: string;
-  // Landscape photos (the governor's) need "cover" to fill this tall
-  // stage instead of shrinking down to fit it — see SlideImage.
-  fit: "contain" | "cover";
   kicker: ReactNode;
   title: ReactNode;
   accent: string;
@@ -46,7 +44,6 @@ const SLIDES: HeroSlide[] = [
   {
     image: ladyPortrait,
     imageAlt: "A Mbopo Akwa Ibom contestant in traditional Akwa Ibom attire",
-    fit: "contain",
     kicker: (
       <>
         AKWA IBOM STATE <span>·</span> HOTELS &amp; TOURISM DEVELOPMENT
@@ -56,33 +53,30 @@ const SLIDES: HeroSlide[] = [
     title: "Mbopo",
     accent: "Akwa Ibom",
     tagline: "Beauty with Purpose",
-    copy: "A premium, culturally authentic pageant and tourism-ambassador platform — celebrating the complete Akwa Ibom woman across all 31 Local Government Areas.",
+    copy: "A premium, culturally authentic pageant and tourism ambassador platform, celebrating the complete Akwa Ibom woman across all 31 Local Government Areas.",
   },
   {
     image: localHairPortrait,
     imageAlt:
-      "A Mbopo Akwa Ibom contestant wearing a traditional coral-beaded hairstyle",
-    fit: "contain",
+      "A Mbopo Akwa Ibom contestant wearing a traditional coral beaded hairstyle",
     kicker: <>A CELEBRATION OF LOCAL CRAFT</>,
     title: "Crowned",
     accent: "in heritage",
     tagline: "Every strand tells a story",
-    copy: "From coral beads to hand-styled crowns, Mbopo Akwa Ibom celebrates the artistry of our local hairstylists and the heritage woven into every look.",
+    copy: "From coral beads to hand styled crowns, Mbopo Akwa Ibom celebrates the artistry of our local hairstylists and the heritage woven into every look.",
   },
   {
     image: governorPortraitOne,
     imageAlt: "The Governor of Akwa Ibom State",
-    fit: "cover",
-    kicker: <>A GOVERNMENT-BACKED INITIATIVE</>,
+    kicker: <>A GOVERNMENT BACKED INITIATIVE</>,
     title: "Championing",
     accent: "Akwa Ibom's daughters",
     tagline: "Supported by the State Government",
-    copy: "Mbopo Akwa Ibom is proudly backed by the Akwa Ibom State Government — part of a wider commitment to empowering women across every Local Government Area.",
+    copy: "Mbopo Akwa Ibom is proudly backed by the Akwa Ibom State Government, part of a wider commitment to empowering women across every Local Government Area.",
   },
   {
     image: governorPortraitTwo,
     imageAlt: "The Governor of Akwa Ibom State",
-    fit: "cover",
     kicker: <>THE A.R.I.S.E. AGENDA</>,
     title: "Driving",
     accent: "purposeful growth",
@@ -140,6 +134,7 @@ export function HeroSection() {
             <PrimaryLink to="/register">
               Register Now <ArrowRight size={17} />
             </PrimaryLink>
+            <GhostLink to="/presentation">Learn More</GhostLink>
             <Dots>
               {SLIDES.map((slide, index) => (
                 <Dot
@@ -159,7 +154,6 @@ export function HeroSection() {
             key={activeSlide.image}
             src={activeSlide.image}
             alt={activeSlide.imageAlt}
-            $fit={activeSlide.fit}
           />
         </ImageStage>
       </HeroInner>

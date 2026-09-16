@@ -1,4 +1,4 @@
-import { LayoutDashboard, LogOut, UserRoundCheck } from "lucide-react";
+import { LayoutDashboard, LogOut } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "@/features/auth";
 import mbopoLogo from "@/assets/mbopo-logo.png";
@@ -14,11 +14,6 @@ import {
 
 const NAV_ITEMS = [
   { to: "/dashboard", label: "Overview", icon: LayoutDashboard },
-  {
-    to: "/mbopo-registration",
-    label: "Mbopo Registration",
-    icon: UserRoundCheck,
-  },
 ];
 
 export interface DashboardSidebarProps {

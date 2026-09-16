@@ -1,5 +1,6 @@
 import { localStore, STORAGE_KEYS } from "./storage";
 import type { RegistrationFormValues } from "@/features/mbopo-registration/schema";
+import type { RegistrationPhotoDataUrls } from "@/features/mbopo-registration/types";
 
 // Shared, storage-backed record of submitted applications, keyed by user
 // id. Written by features/mbopo-registration (on submit) and read by
@@ -8,6 +9,7 @@ import type { RegistrationFormValues } from "@/features/mbopo-registration/schem
 export interface ApplicationRecord {
   referenceCode: string;
   values: RegistrationFormValues;
+  photos: RegistrationPhotoDataUrls;
   submittedAt: number;
 }
 
