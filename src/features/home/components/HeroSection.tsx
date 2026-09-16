@@ -3,7 +3,7 @@ import { ArrowRight } from "lucide-react";
 import heroBackdrop from "@/assets/hero-bg.png";
 import ladyPortrait from "@/assets/mbopo-hero-1.png";
 import localHairPortrait from "@/assets/mbopo-hero-local-hair.png";
-import governorPortraitOne from "@/assets/governor_1.png";
+import governorPortraitOne from "@/assets/governor_1.webp";
 import governorPortraitTwo from "@/assets/governor_2.png";
 import mbopoLogo from "@/assets/mbopo-logo.png";
 import { Reveal } from "@/shared/components";
