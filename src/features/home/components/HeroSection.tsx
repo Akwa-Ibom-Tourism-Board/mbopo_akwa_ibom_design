@@ -32,6 +32,9 @@ import {
 interface HeroSlide {
   image: string;
   imageAlt: string;
+  // Landscape photos (the governor's) need "cover" to fill this tall
+  // stage instead of shrinking down to fit it — see SlideImage.
+  fit: "contain" | "cover";
   kicker: ReactNode;
   title: ReactNode;
   accent: string;
@@ -43,6 +46,7 @@ const SLIDES: HeroSlide[] = [
   {
     image: ladyPortrait,
     imageAlt: "A Mbopo Akwa Ibom contestant in traditional Akwa Ibom attire",
+    fit: "contain",
     kicker: (
       <>
         AKWA IBOM STATE <span>·</span> HOTELS &amp; TOURISM DEVELOPMENT
@@ -58,6 +62,7 @@ const SLIDES: HeroSlide[] = [
     image: localHairPortrait,
     imageAlt:
       "A Mbopo Akwa Ibom contestant wearing a traditional coral-beaded hairstyle",
+    fit: "contain",
     kicker: <>A CELEBRATION OF LOCAL CRAFT</>,
     title: "Crowned",
     accent: "in heritage",
@@ -67,6 +72,7 @@ const SLIDES: HeroSlide[] = [
   {
     image: governorPortraitOne,
     imageAlt: "The Governor of Akwa Ibom State",
+    fit: "cover",
     kicker: <>A GOVERNMENT-BACKED INITIATIVE</>,
     title: "Championing",
     accent: "Akwa Ibom's daughters",
@@ -76,6 +82,7 @@ const SLIDES: HeroSlide[] = [
   {
     image: governorPortraitTwo,
     imageAlt: "The Governor of Akwa Ibom State",
+    fit: "cover",
     kicker: <>THE A.R.I.S.E. AGENDA</>,
     title: "Driving",
     accent: "purposeful growth",
@@ -152,6 +159,7 @@ export function HeroSection() {
             key={activeSlide.image}
             src={activeSlide.image}
             alt={activeSlide.imageAlt}
+            $fit={activeSlide.fit}
           />
         </ImageStage>
       </HeroInner>

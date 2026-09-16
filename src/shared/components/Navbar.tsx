@@ -72,13 +72,13 @@ export function Navbar({ variant = "solid" }: NavbarProps) {
               Eligibility
             </NavAnchor>
             <NavAnchor to="/#why-enter" $light={light} onClick={closeMenu}>
-              Why Enter
+              Why
             </NavAnchor>
             <NavAnchor to="/privacy" $light={light} onClick={closeMenu}>
-              Privacy Policy
+              Privacy
             </NavAnchor>
             <NavAnchor to="/terms" $light={light} onClick={closeMenu}>
-              Terms &amp; Conditions
+              Terms
             </NavAnchor>
             {isAuthenticated ? (
               <CtaLink to="/dashboard" onClick={closeMenu}>

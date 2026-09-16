@@ -103,11 +103,6 @@ export const buildTheme = (tokens: ColorTokens) =>
       "2xl": "1536px",
     },
 
-    container: {
-      maxWidth: "1400px",
-      padding: "1rem",
-    },
-
     zIndex: {
       dropdown: 40,
       sticky: 45,

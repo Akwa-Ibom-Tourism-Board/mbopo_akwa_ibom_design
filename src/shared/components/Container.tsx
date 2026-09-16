@@ -1,8 +1,6 @@
 import styled from "styled-components";
 
 export const Container = styled.div`
-  width: 100%;
-  max-width: ${({ theme }) => theme.container.maxWidth};
+  width: min(1120px, calc(100% - 48px));
   margin: 0 auto;
-  padding: 0 ${({ theme }) => theme.container.padding};
 `;

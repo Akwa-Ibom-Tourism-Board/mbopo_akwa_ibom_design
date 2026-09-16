@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { media } from "@/theme";
 
 export const FooterFrame = styled.footer`
-  padding: 60px max(24px, calc((100% - 1160px) / 2)) 25px;
+  padding: 60px max(24px, calc((100% - 1120px) / 2)) 25px;
   background: ${({ theme }) => theme.gradients.footer};
   color: ${({ theme }) => theme.colors.white};
 `;
@@ -34,9 +34,13 @@ export const LogoRow = styled.div`
 `;
 
 export const LogoImage = styled.img`
-  height: 34px;
+  height: 52px;
   width: auto;
   object-fit: contain;
+
+  ${media.md} {
+    height: 60px;
+  }
 `;
 
 export const FooterAgency = styled.p`

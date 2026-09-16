@@ -24,7 +24,7 @@ export const Bar = styled.nav`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  width: min(1240px, calc(100% - 48px));
+  width: min(1120px, calc(100% - 48px));
   margin: 0 auto;
   gap: 20px;
 `;
@@ -38,13 +38,13 @@ export const LogoCluster = styled.div`
 export const LogoImage = styled.img`
   display: block;
   width: auto;
-  height: 44px;
-  max-width: 120px;
+  height: 58px;
+  max-width: 150px;
   object-fit: contain;
   flex: 0 0 auto;
 
   ${media.md} {
-    height: 52px;
+    height: 72px;
   }
 `;
 
@@ -72,7 +72,7 @@ export const NavOverlay = styled.button<{ $visible: boolean }>`
   -webkit-backdrop-filter: blur(6px);
   cursor: pointer;
 
-  @media (max-width: 860px) {
+  @media (max-width: 1023px) {
     display: ${({ $visible }) => ($visible ? "block" : "none")};
   }
 `;
@@ -81,10 +81,10 @@ export const NavLinks = styled.div<{ $open: boolean; $light: boolean }>`
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 28px;
+  gap: 20px;
   flex: 1;
 
-  @media (max-width: 860px) {
+  @media (max-width: 1023px) {
     position: absolute;
     top: 74px;
     right: 16px;
@@ -114,16 +114,17 @@ export const NavAnchor = styled(Link)<{ $light: boolean }>`
     opacity: 1;
   }
 
-  /* Below 860px, NavLinks becomes a floating card with a light
+  /* Below 1023px, NavLinks becomes a floating card with a light
      background (see NavLinks above) regardless of $light, so the link
      color must follow that card, not the navbar's overlay state. */
-  @media (max-width: 860px) {
+  @media (max-width: 1023px) {
     color: ${({ theme }) => theme.colors.foreground};
   }
 `;
 
 export const CtaLink = styled(Link)`
   display: inline-flex;
+  flex-shrink: 0;
   align-items: center;
   gap: 9px;
   padding: 11px 18px;
@@ -134,6 +135,7 @@ export const CtaLink = styled(Link)`
   font-weight: 800;
   letter-spacing: 0.09em;
   text-transform: uppercase;
+  white-space: nowrap;
   box-shadow: 0 9px 22px
     ${({ theme }) => theme.alpha(theme.colors.secondary.DEFAULT, 0.3)};
   transition:
@@ -145,7 +147,7 @@ export const CtaLink = styled(Link)`
     background: ${({ theme }) => theme.alpha(theme.colors.secondary.DEFAULT, 0.9)};
   }
 
-  @media (max-width: 860px) {
+  @media (max-width: 1023px) {
     justify-content: center;
     padding: 14px;
   }
@@ -158,7 +160,7 @@ export const MenuButton = styled.button<{ $light: boolean }>`
   color: ${({ theme, $light }) => ($light ? theme.colors.white : theme.colors.foreground)};
   cursor: pointer;
 
-  @media (max-width: 860px) {
+  @media (max-width: 1023px) {
     display: grid;
     place-items: center;
     width: 40px;

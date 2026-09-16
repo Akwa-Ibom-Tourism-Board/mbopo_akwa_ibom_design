@@ -6,7 +6,7 @@ export const Hero = styled.section`
   position: relative;
   display: flex;
   overflow: hidden;
-  min-height: min(900px, 100svh);
+  min-height: min(700px, 100svh);
   color: ${({ theme }) => theme.colors.white};
 
   @media (max-width: 780px) {
@@ -58,7 +58,7 @@ export const HeroInner = styled.div`
   grid-template-columns: 1fr;
   align-items: center;
   gap: 32px;
-  width: min(1240px, calc(100% - 48px));
+  width: min(1120px, calc(100% - 48px));
   margin: 0 auto;
   padding: 146px 0 64px;
 
@@ -148,7 +148,7 @@ export const HeroTitle = styled.h1`
   max-width: 620px;
   margin: 0;
   font-family: ${({ theme }) => theme.fonts.display};
-  font-size: clamp(42px, 6.5vw, 84px);
+  font-size: clamp(40px, 6.5vw, 80px);
   font-weight: 600;
   letter-spacing: -0.04em;
   line-height: 0.96;
@@ -269,12 +269,25 @@ export const Dot = styled.button<{ $active: boolean }>`
 `;
 
 // Right column — the sharp foreground portrait for the active slide.
+// align-self + the negative margin below pin the portrait to the very
+// bottom of Hero itself, not just this grid row: HeroInner's own
+// vertical centering (see align-items above) would otherwise leave an
+// even gap above and below the image, and the negative margin pulls it
+// back through HeroInner's bottom padding so its base meets Hero's
+// bottom edge exactly (Hero's overflow: hidden clips it there).
 export const ImageStage = styled.div`
   position: relative;
-  height: clamp(320px, 42vw, 520px);
+  align-self: end;
+  height: clamp(300px, 30vw, 500px);
+  margin-bottom: -64px;
 
   ${media.lg} {
-    height: clamp(380px, 34vw, 560px);
+    height: clamp(380px, 36vw, 600px);
+    margin-bottom: -95px;
+  }
+
+  @media (max-width: 780px) {
+    margin-bottom: -48px;
   }
 `;
 
@@ -289,12 +302,26 @@ const imageIn = keyframes`
   }
 `;
 
-export const SlideImage = styled.img`
+// Portrait-orientation slides (the contestant photos) use "contain" so
+// the full figure stays visible; the governor's landscape photos would
+// render tiny inside this tall stage under "contain", so those slides
+// pass $fit="cover" to fill the stage and crop the sides instead. Cover
+// slides are sized to 86% width / 90% height (rather than the full
+// stage) since filling it completely read noticeably bigger than the
+// contain slides next to them. This uses top/left + width/height,
+// deliberately not a 4-sided inset: for a replaced element like <img>,
+// setting all four inset sides with width/height left auto makes the
+// box fall back to the image's own intrinsic aspect ratio instead of
+// stretching to fill — which silently breaks the bottom-edge alignment
+// below. top(10%) + height(90%) reaches exactly 100%, so the base still
+// meets Hero's bottom edge without needing to set `bottom` at all.
+export const SlideImage = styled.img<{ $fit: "contain" | "cover" }>`
   position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
+  top: ${({ $fit }) => ($fit === "cover" ? "10%" : "0")};
+  left: ${({ $fit }) => ($fit === "cover" ? "7%" : "0")};
+  width: ${({ $fit }) => ($fit === "cover" ? "86%" : "100%")};
+  height: ${({ $fit }) => ($fit === "cover" ? "90%" : "100%")};
+  object-fit: ${({ $fit }) => $fit};
   object-position: bottom center;
   filter: drop-shadow(0 24px 40px rgba(0, 0, 0, 0.45));
   animation: ${imageIn} 550ms ease both;
