@@ -92,10 +92,10 @@ export function Navbar({ variant = "solid" }: NavbarProps) {
           </NavLinks>
 
           <RightCluster>
-            <LogoImage
+            {/*<LogoImage
               src={akhtdcLogo}
               alt="Akwa Ibom State Hotels and Tourism Development Commission logo"
-            />
+            /> */}
             <MenuButton
               type="button"
               $light={light}

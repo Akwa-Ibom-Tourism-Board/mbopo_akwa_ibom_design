@@ -32,10 +32,11 @@ export function Footer() {
           </LogoRow>
           <LogoRow>
             <LogoImage src={mbopoLogo} alt="Mbopo Akwa Ibom logo" />
-            <LogoImage
+           {/*  <LogoImage
               src={akhtdcLogo}
               alt="Akwa Ibom State Hotels and Tourism Development Commission logo"
             />
+            */}
           </LogoRow>
           <FooterAgency>
             Akwa Ibom State Hotels &amp; Tourism Development Commission
