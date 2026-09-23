@@ -8,7 +8,9 @@ function App() {
   return (
     <ErrorBoundary>
       <AppProviders>
-        <BrowserRouter>
+        <BrowserRouter
+          basename={import.meta.env.BASE_URL.replace(/\/+$/, "")}
+        >
           <ScrollToHash />
           <AppRoutes />
         </BrowserRouter>
