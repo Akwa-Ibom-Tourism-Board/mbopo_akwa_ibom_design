@@ -1,12 +1,18 @@
 import { Component, type ErrorInfo, type ReactNode } from "react";
 import styled from "styled-components";
 
+// This boundary wraps AppProviders (see App.tsx) so it can also catch
+// errors thrown by the providers themselves — which means its own fallback
+// UI renders OUTSIDE the styled-components ThemeProvider and can't read
+// `theme` (that's what threw "Cannot read properties of undefined (reading
+// 'background')" previously). Every style below is a hardcoded, theme-
+// independent value for exactly that reason — don't reach for `theme.*` here.
 const Frame = styled.div`
   display: grid;
   min-height: 100vh;
   place-items: center;
   padding: 24px;
-  background: ${({ theme }) => theme.colors.background};
+  background: #ffffff;
   text-align: center;
 `;
 
@@ -14,13 +20,26 @@ const Title = styled.h1`
   margin: 0 0 8px;
   font-size: 1.125rem;
   font-weight: 600;
-  color: ${({ theme }) => theme.colors.foreground};
+  color: #0b4923;
 `;
 
 const Copy = styled.p`
   margin: 0 0 20px;
-  color: ${({ theme }) => theme.colors.muted.foreground};
+  color: #677e76;
   font-size: 0.9375rem;
+`;
+
+const ErrorDetails = styled.pre`
+  margin: 0 0 20px;
+  max-width: 32rem;
+  padding: 12px;
+  border-radius: 8px;
+  background: #f3f7f5;
+  color: #384252;
+  font-size: 0.75rem;
+  text-align: left;
+  white-space: pre-wrap;
+  word-break: break-word;
 `;
 
 const Actions = styled.div`
@@ -32,10 +51,10 @@ const Actions = styled.div`
 
 const ActionButton = styled.button`
   padding: 10px 18px;
-  border-radius: ${({ theme }) => theme.radii.md};
-  border: 1px solid ${({ theme }) => theme.colors.border};
-  background: ${({ theme }) => theme.colors.primary.DEFAULT};
-  color: ${({ theme }) => theme.colors.primary.foreground};
+  border-radius: 6px;
+  border: 1px solid #e0ebe7;
+  background: #0b4923;
+  color: #ffffff;
   font-size: 0.875rem;
   font-weight: 600;
   cursor: pointer;
@@ -45,9 +64,9 @@ const ActionLink = styled.a`
   display: inline-flex;
   align-items: center;
   padding: 10px 18px;
-  border-radius: ${({ theme }) => theme.radii.md};
-  border: 1px solid ${({ theme }) => theme.colors.border};
-  color: ${({ theme }) => theme.colors.foreground};
+  border-radius: 6px;
+  border: 1px solid #e0ebe7;
+  color: #0b4923;
   font-size: 0.875rem;
   font-weight: 600;
 `;
@@ -79,6 +98,9 @@ export class ErrorBoundary extends Component<
             <Copy>
               Something went wrong. You can try refreshing or head back home.
             </Copy>
+            {import.meta.env.DEV && (
+              <ErrorDetails>{this.state.error.stack ?? this.state.error.message}</ErrorDetails>
+            )}
             <Actions>
               <ActionButton onClick={() => window.location.reload()}>
                 Try again

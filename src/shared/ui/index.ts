@@ -4,6 +4,7 @@ export * from "./dialog";
 export * from "./tooltip";
 export * from "./toast";
 export * from "./input";
+export * from "./password-input";
 export * from "./textarea";
 export * from "./select";
 export * from "./checkbox";

@@ -5,7 +5,7 @@ import { z } from "zod";
 import { useMutation } from "@tanstack/react-query";
 import { Link, Navigate, useLocation, useNavigate } from "react-router-dom";
 import { PageShell, PageHeroBanner, Container } from "@/shared/components";
-import { Button, Input, Label, sonnerToast } from "@/shared/ui";
+import { Button, Input, Label, PasswordInput, sonnerToast } from "@/shared/ui";
 import { useAuth } from "../context/AuthContext";
 import { login } from "../api";
 import { InvalidCredentialsError } from "../types";
@@ -88,9 +88,8 @@ export function LoginPage() {
               </Field>
               <Field>
                 <Label htmlFor="password">Password</Label>
-                <Input
+                <PasswordInput
                   id="password"
-                  type="password"
                   autoComplete="current-password"
                   invalid={Boolean(errors.password)}
                   {...register("password")}

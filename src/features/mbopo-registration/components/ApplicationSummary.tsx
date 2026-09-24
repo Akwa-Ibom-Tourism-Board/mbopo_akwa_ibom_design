@@ -1,4 +1,4 @@
-import { FileText } from "lucide-react";
+import { FileText, ImageOff } from "lucide-react";
 import { format } from "date-fns";
 import type { User } from "@/features/auth";
 import type { RegistrationFormValues } from "../schema";
@@ -12,14 +12,18 @@ import {
   DetailValue,
   PhotoRow,
   PhotoThumb,
+  PhotoPlaceholder,
 } from "./ApplicationSummary.styles";
 
 export interface ApplicationSummaryProps {
   user: User;
   values: RegistrationFormValues;
   // Preview sources for display only — object URLs while still on the
-  // form, data URLs once persisted. Either works in an <img src>/<a href>.
-  photos: RegistrationPhotoDataUrls;
+  // form, data URLs once persisted. Optional/partial because a record
+  // saved by an older version of this app (or otherwise incomplete) may
+  // be missing one or all of these — never assume the whole object, or
+  // any given key, is present. See PhotoOrPlaceholder below.
+  photos?: Partial<RegistrationPhotoDataUrls>;
 }
 
 function isPdf(src: string) {
@@ -28,7 +32,14 @@ function isPdf(src: string) {
   );
 }
 
-function CertificateThumb({ src }: { src: string }) {
+function PhotoOrPlaceholder({ src, alt }: { src?: string; alt: string }) {
+  if (!src) {
+    return (
+      <PhotoPlaceholder role="img" aria-label={`${alt} not on file`}>
+        <ImageOff size={20} aria-hidden />
+      </PhotoPlaceholder>
+    );
+  }
   if (isPdf(src)) {
     return (
       <a href={src} target="_blank" rel="noopener noreferrer">
@@ -36,13 +47,13 @@ function CertificateThumb({ src }: { src: string }) {
       </a>
     );
   }
-  return <img src={src} alt="Certificate of Origin preview" />;
+  return <img src={src} alt={alt} />;
 }
 
 export function ApplicationSummary({
   user,
   values,
-  photos,
+  photos = {},
 }: ApplicationSummaryProps) {
   return (
     <>
@@ -88,7 +99,10 @@ export function ApplicationSummary({
         </DetailGrid>
         <PhotoRow>
           <PhotoThumb>
-            <img src={photos.passportPhoto} alt="Passport photograph preview" />
+            <PhotoOrPlaceholder
+              src={photos.passportPhoto}
+              alt="Passport photograph preview"
+            />
             <figcaption>Passport photograph</figcaption>
           </PhotoThumb>
         </PhotoRow>
@@ -144,7 +158,10 @@ export function ApplicationSummary({
         </DetailGrid>
         <PhotoRow>
           <PhotoThumb>
-            <CertificateThumb src={photos.certificateOfOrigin} />
+            <PhotoOrPlaceholder
+              src={photos.certificateOfOrigin}
+              alt="Certificate of Origin preview"
+            />
             <figcaption>Certificate of Origin</figcaption>
           </PhotoThumb>
         </PhotoRow>
@@ -178,7 +195,7 @@ export function ApplicationSummary({
         </DetailGrid>
         <PhotoRow>
           <PhotoThumb>
-            <img src={photos.fullImage} alt="Full image preview" />
+            <PhotoOrPlaceholder src={photos.fullImage} alt="Full image preview" />
             <figcaption>Full image</figcaption>
           </PhotoThumb>
         </PhotoRow>

@@ -4,6 +4,7 @@ import akwaIbomLogo from "@/assets/akwa-ibom-logo-main.png";
 import ariseLogo from "@/assets/arise-logo-main.png";
 import akhtdcLogo from "@/assets/akhtdc-new-logo.png";
 import { useAuth } from "@/features/auth";
+import { ThemeToggle } from "./ThemeToggle";
 import {
   Header,
   NavOverlay,
@@ -96,6 +97,7 @@ export function Navbar({ variant = "solid" }: NavbarProps) {
               src={akhtdcLogo}
               alt="Akwa Ibom State Hotels and Tourism Development Commission logo"
             /> */}
+            <ThemeToggle light={light} />
             <MenuButton
               type="button"
               $light={light}

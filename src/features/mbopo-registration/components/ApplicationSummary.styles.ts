@@ -79,3 +79,16 @@ export const PhotoThumb = styled.figure`
     color: ${({ theme }) => theme.colors.muted.foreground};
   }
 `;
+
+// Shown in place of a photo when an older/incomplete stored record has no
+// URL for that slot — this display never throws on missing data, it just
+// says so.
+export const PhotoPlaceholder = styled.div`
+  display: grid;
+  place-items: center;
+  width: 96px;
+  height: 96px;
+  border-radius: ${({ theme }) => theme.radii.lg};
+  border: 1px dashed ${({ theme }) => theme.colors.border};
+  color: ${({ theme }) => theme.colors.muted.foreground};
+`;

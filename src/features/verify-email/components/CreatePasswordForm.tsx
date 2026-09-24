@@ -1,5 +1,5 @@
 import type { FieldErrors, UseFormRegister } from "react-hook-form";
-import { Input, Label } from "@/shared/ui";
+import { Label, PasswordInput } from "@/shared/ui";
 import {
   PasswordFields,
   Field,
@@ -25,9 +25,8 @@ export function CreatePasswordForm({
     <PasswordFields>
       <Field>
         <Label htmlFor="password">Create a password</Label>
-        <Input
+        <PasswordInput
           id="password"
-          type="password"
           autoComplete="new-password"
           invalid={Boolean(errors.password)}
           {...register("password")}
@@ -37,9 +36,8 @@ export function CreatePasswordForm({
       </Field>
       <Field>
         <Label htmlFor="confirmPassword">Confirm password</Label>
-        <Input
+        <PasswordInput
           id="confirmPassword"
-          type="password"
           autoComplete="new-password"
           invalid={Boolean(errors.confirmPassword)}
           {...register("confirmPassword")}
