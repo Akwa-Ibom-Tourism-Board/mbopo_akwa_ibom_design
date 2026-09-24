@@ -9,7 +9,7 @@ export const GlobalStyle = createGlobalStyle`
   }
 
   :root {
-    color-scheme: light dark;
+    color-scheme: light;
   }
 
   html {
@@ -20,7 +20,9 @@ export const GlobalStyle = createGlobalStyle`
 
   body {
     margin: 0;
-    background: ${({ theme }) => theme.colors.background};
+    /* The bursary portal's own off-white canvas (gray-50), not a flat
+       pure white, sits behind every section's own explicit background. */
+    background: ${({ theme }) => theme.colors.muted.DEFAULT};
     color: ${({ theme }) => theme.colors.foreground};
     font-family: ${({ theme }) => theme.fonts.sans};
     -webkit-font-smoothing: antialiased;

@@ -1,15 +1,11 @@
 import styled from "styled-components";
 
 export const NoticeCard = styled.div`
-  max-width: 460px;
-  margin: -80px auto 0;
-  padding: 32px;
+  padding: 28px 24px;
   border-radius: ${({ theme }) => theme.radii["2xl"]};
   background: ${({ theme }) => theme.colors.card};
   border: 1px solid ${({ theme }) => theme.colors.destructive.DEFAULT};
-  box-shadow: ${({ theme }) => theme.shadows.xl};
-  position: relative;
-  z-index: 1;
+  box-shadow: ${({ theme }) => theme.shadows.md};
   text-align: center;
 `;
 

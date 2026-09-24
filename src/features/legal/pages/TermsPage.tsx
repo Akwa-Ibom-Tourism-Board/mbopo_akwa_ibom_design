@@ -42,7 +42,7 @@ const SECTIONS: LegalSection[] = [
   {
     heading: "6. Disqualification",
     paragraphs: [
-      "The organizers reserve the right to disqualify an application at any stage — before, during, or after selection — where eligibility criteria are not met or where information provided is later found to be inaccurate.",
+      "The organizers reserve the right to disqualify an application at any stage, whether before, during, or after selection, where eligibility criteria are not met or where information provided is later found to be inaccurate.",
     ],
   },
   {

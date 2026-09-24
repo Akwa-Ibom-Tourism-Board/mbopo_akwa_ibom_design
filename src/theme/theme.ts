@@ -1,11 +1,10 @@
 import type { ColorTokens } from "./colors";
 import { colors } from "./colors";
-import { colorsDark } from "./colors.dark";
 import { withAlpha } from "./utils";
 
 // Same reference-shaped composition (colors as {DEFAULT,foreground} pairs,
 // gradients, shadows, radii, fonts, breakpoints, container, zIndex,
-// transitions) built as a factory so light and dark mode share one shape.
+// transitions) built as a factory so the theme has one predictable shape.
 export const buildTheme = (tokens: ColorTokens) =>
   ({
     colors: {
@@ -56,6 +55,8 @@ export const buildTheme = (tokens: ColorTokens) =>
       servicesBackground: tokens.servicesBackground,
       footerDark: tokens.footerDark,
       footerGlow: tokens.footerGlow,
+      sectionDark: tokens.sectionDark,
+      sectionDarkCard: tokens.sectionDarkCard,
     },
 
     alpha: withAlpha,
@@ -65,7 +66,9 @@ export const buildTheme = (tokens: ColorTokens) =>
       accent: `linear-gradient(135deg, ${tokens.secondary}, #EB9A4C)`,
       heroScene: `linear-gradient(135deg, ${tokens.primary} 0%, ${tokens.heroDeep} 55%, ${tokens.black} 100%)`,
       panel: `linear-gradient(160deg, ${tokens.primary} 0%, ${tokens.heroDeep} 100%)`,
-      footer: `radial-gradient(ellipse 140% 90% at 50% 0%, ${tokens.footerGlow} 0%, ${tokens.footerDark} 60%, ${tokens.black} 100%)`,
+      // Exact match to the bursary portal footer: dark green fading to
+      // near-black, top to bottom.
+      footer: `linear-gradient(180deg, ${tokens.footerGlow} 0%, #001C14 55%, ${tokens.footerDark} 100%)`,
       // Backs WhyEnterSection + ValuesSection together as one continuous
       // panel — applied to a wrapper spanning both, not to each section
       // individually, so there's no seam between them.
@@ -78,6 +81,9 @@ export const buildTheme = (tokens: ColorTokens) =>
       lg: "0 10px 15px -3px rgba(0, 0, 0, 0.1)",
       xl: "0 20px 25px -5px rgba(0, 0, 0, 0.1)",
       elegant: `0 10px 40px -10px ${withAlpha(tokens.primary, 0.2)}`,
+      // Colored shadow for the brand-orange pill CTAs — mirrors the
+      // bursary portal's shadow-primary/30 treatment.
+      cta: `0 11px 25px -5px ${withAlpha(tokens.secondary, 0.35)}`,
     },
 
     radii: {
@@ -90,7 +96,7 @@ export const buildTheme = (tokens: ColorTokens) =>
     },
 
     fonts: {
-      sans: "'Inter', system-ui, sans-serif",
+      sans: "'Montserrat', system-ui, sans-serif",
       display: "'Playfair Display', serif",
     },
 
@@ -119,7 +125,6 @@ export const buildTheme = (tokens: ColorTokens) =>
     },
   }) as const;
 
-export const lightTheme = buildTheme(colors);
-export const darkTheme = buildTheme(colorsDark);
+export const theme = buildTheme(colors);
 
 export type Theme = ReturnType<typeof buildTheme>;

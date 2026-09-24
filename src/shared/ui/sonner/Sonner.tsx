@@ -1,13 +1,12 @@
 import { Toaster as SonnerToaster, type ToasterProps } from "sonner";
-import { useTheme, useThemeMode } from "@/theme";
+import { useTheme } from "@/theme";
 
 export const Toaster = (props: ToasterProps) => {
   const theme = useTheme();
-  const { mode } = useThemeMode();
 
   return (
     <SonnerToaster
-      theme={mode}
+      theme="light"
       toastOptions={{
         style: {
           background: theme.colors.card,

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
-import { PageShell, PageHeroBanner, Container } from "@/shared/components";
+import { AuthLayout } from "@/shared/components";
 import { sonnerToast } from "@/shared/ui";
 import {
   NinLookupForm,
@@ -12,7 +12,6 @@ import { IneligibleNotice } from "../components/IneligibleNotice";
 import { lookupNin, requestEmailVerification } from "../api";
 import { evaluateEligibility } from "../eligibility";
 import type { NinRecord } from "../types";
-import { PageFrame } from "./RegisterPage.styles";
 
 type RegisterStage = "lookup" | "ineligible";
 
@@ -60,32 +59,21 @@ export function RegisterPage() {
   };
 
   return (
-    <PageShell>
-      <PageHeroBanner
-        eyebrow="Mbopo Akwa Ibom Registration"
-        title="Verify your identity to begin"
-        subtitle="We confirm every applicant's NIN before starting an application."
-      />
-      <PageFrame>
-        <Container>
-          {stage === "ineligible" ? (
-            <IneligibleNotice
-              reasons={ineligibleReasons}
-              onTryAgain={resetToLookup}
-            />
-          ) : (
-            <NinLookupForm
-              onSubmit={(values) => lookupMutation.mutate(values)}
-              isSubmitting={lookupMutation.isPending}
-              submitError={
-                lookupMutation.isError
-                  ? lookupMutation.error.message
-                  : undefined
-              }
-            />
-          )}
-        </Container>
-      </PageFrame>
+    <AuthLayout>
+      {stage === "ineligible" ? (
+        <IneligibleNotice
+          reasons={ineligibleReasons}
+          onTryAgain={resetToLookup}
+        />
+      ) : (
+        <NinLookupForm
+          onSubmit={(values) => lookupMutation.mutate(values)}
+          isSubmitting={lookupMutation.isPending}
+          submitError={
+            lookupMutation.isError ? lookupMutation.error.message : undefined
+          }
+        />
+      )}
 
       {ninRecord && (
         <NinDetailsModal
@@ -98,6 +86,6 @@ export function RegisterPage() {
           }
         />
       )}
-    </PageShell>
+    </AuthLayout>
   );
 }

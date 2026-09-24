@@ -1,42 +1,37 @@
-import {
-  ArrowRight,
-  Cake,
-  FileText,
-  GraduationCap,
-  IdCard,
-  MapPinned,
-  ScanFace,
-  ScrollText,
-  UserRound,
-} from "lucide-react";
+import { ArrowRight, ShieldCheck } from "lucide-react";
 import { Reveal } from "@/shared/components";
 import {
   Section,
   SectionShell,
   Header,
+  EyebrowRow,
+  EyebrowRule,
   Eyebrow,
   Title,
   Subtitle,
+  Panel,
+  PanelHeader,
+  PanelHeading,
+  PanelSubheading,
+  RequiredBadge,
   CriteriaGrid,
   CriteriaCard,
-  CriteriaIcon,
+  CriteriaIndex,
   CriteriaText,
-  CtaRow,
+  CtaCell,
+  CtaCellText,
   RegisterLink,
 } from "./EligibilitySection.styles";
 
 const ELIGIBILITY_CRITERIA = [
-  { icon: UserRound, text: "Must be female" },
-  { icon: MapPinned, text: "Must be an indigene of Akwa Ibom State" },
-  { icon: GraduationCap, text: "Must be a graduate (Minimum of B.Sc. or HND)" },
-  { icon: Cake, text: "Must be between 22 and 27 years old" },
-  { icon: IdCard, text: "Must have a National Identification Number (NIN)" },
-  { icon: ScrollText, text: "Must have a Certificate of Origin" },
-  {
-    icon: FileText,
-    text: "Must have Voter Identification Number (VIN)",
-  },
-  { icon: ScanFace, text: "Must have a passport photograph" },
+  "Must be female",
+  "Must be an indigene of Akwa Ibom State",
+  "Must be a graduate (minimum of B.Sc. or HND)",
+  "Must be between 22 and 27 years old",
+  "Must have a National Identification Number (NIN)",
+  "Must have a Certificate of Origin",
+  "Must have a Voter Identification Number (VIN)",
+  "Must have a passport photograph",
 ];
 
 export function EligibilitySection() {
@@ -45,28 +40,52 @@ export function EligibilitySection() {
       <SectionShell>
         <Reveal>
           <Header>
-            <Eyebrow>BEFORE YOU BEGIN</Eyebrow>
-            <Title>Eligibility criteria</Title>
+            <EyebrowRow>
+              <EyebrowRule />
+              <Eyebrow>Eligibility</Eyebrow>
+              <EyebrowRule />
+            </EyebrowRow>
+            <Title>Who can apply?</Title>
             <Subtitle>
               Make sure you meet every requirement below before you start your
               application.
             </Subtitle>
           </Header>
-          <CriteriaGrid>
-            {ELIGIBILITY_CRITERIA.map(({ icon: Icon, text }) => (
-              <CriteriaCard key={text}>
-                <CriteriaIcon>
-                  <Icon size={18} />
-                </CriteriaIcon>
-                <CriteriaText>{text}</CriteriaText>
-              </CriteriaCard>
-            ))}
-          </CriteriaGrid>
-          <CtaRow>
-            <RegisterLink to="/register">
-              Register Now <ArrowRight size={16} />
-            </RegisterLink>
-          </CtaRow>
+
+          <Panel>
+            <PanelHeader>
+              <div>
+                <PanelHeading>Eligibility Requirements</PanelHeading>
+                <PanelSubheading>
+                  All {ELIGIBILITY_CRITERIA.length} conditions must be met at
+                  the time of application.
+                </PanelSubheading>
+              </div>
+              <RequiredBadge>
+                <ShieldCheck size={14} />
+                All {ELIGIBILITY_CRITERIA.length} Required
+              </RequiredBadge>
+            </PanelHeader>
+
+            <CriteriaGrid>
+              {ELIGIBILITY_CRITERIA.map((text, index) => (
+                <CriteriaCard key={text}>
+                  <CriteriaIndex>
+                    {String(index + 1).padStart(2, "0")}
+                  </CriteriaIndex>
+                  <CriteriaText>{text}</CriteriaText>
+                </CriteriaCard>
+              ))}
+              <CtaCell>
+                <CtaCellText>
+                  Meet all {ELIGIBILITY_CRITERIA.length} conditions?
+                </CtaCellText>
+                <RegisterLink to="/register">
+                  Register Now <ArrowRight size={15} />
+                </RegisterLink>
+              </CtaCell>
+            </CriteriaGrid>
+          </Panel>
         </Reveal>
       </SectionShell>
     </Section>

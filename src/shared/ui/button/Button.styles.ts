@@ -21,14 +21,20 @@ const variantStyles = {
       background: ${({ theme }) => theme.alpha(theme.colors.destructive.DEFAULT, 0.9)};
     }
   `,
+  // Bursary never floods an outline/ghost element with a solid orange
+  // fill on hover; orange only ever shows there as a light tint (its own
+  // "hover:bg-primary/10" pattern), reserving the solid fill for actual
+  // primary CTAs. Mirrored here with a translucent tint instead of
+  // \`accent.DEFAULT\` as a solid background.
   outline: css`
     background: ${({ theme }) => theme.colors.background};
     border: 1px solid ${({ theme }) => theme.colors.input};
     color: ${({ theme }) => theme.colors.foreground};
 
     &:hover {
-      background: ${({ theme }) => theme.colors.accent.DEFAULT};
-      color: ${({ theme }) => theme.colors.accent.foreground};
+      border-color: ${({ theme }) => theme.colors.secondary.DEFAULT};
+      background: ${({ theme }) => theme.alpha(theme.colors.secondary.DEFAULT, 0.08)};
+      color: ${({ theme }) => theme.colors.secondary.DEFAULT};
     }
   `,
   secondary: css`
@@ -44,8 +50,8 @@ const variantStyles = {
     color: ${({ theme }) => theme.colors.foreground};
 
     &:hover {
-      background: ${({ theme }) => theme.colors.accent.DEFAULT};
-      color: ${({ theme }) => theme.colors.accent.foreground};
+      background: ${({ theme }) => theme.alpha(theme.colors.secondary.DEFAULT, 0.08)};
+      color: ${({ theme }) => theme.colors.secondary.DEFAULT};
     }
   `,
   link: css`
@@ -66,12 +72,10 @@ const sizeStyles = {
   `,
   sm: css`
     height: 2.25rem;
-    border-radius: ${({ theme }) => theme.radii.md};
     padding: 0 0.75rem;
   `,
   lg: css`
     height: 3rem;
-    border-radius: ${({ theme }) => theme.radii.md};
     padding: 0 2rem;
   `,
   icon: css`
@@ -90,7 +94,7 @@ export const StyledButton = styled.button<{
   justify-content: center;
   gap: 0.5rem;
   white-space: nowrap;
-  border-radius: ${({ theme }) => theme.radii.md};
+  border-radius: ${({ theme }) => theme.radii.full};
   border: none;
   font-size: 0.875rem;
   font-weight: 600;

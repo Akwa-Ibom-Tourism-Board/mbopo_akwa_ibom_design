@@ -1,69 +1,81 @@
-// Light-mode color tokens — ported from the Akwa Ibom Tourism Board's main
-// website (main-website-frontend/src/theme/colors.ts) so Mbopo Akwa Ibom
-// shares one visual identity with the rest of the board's digital presence.
+// Color tokens matched to the Akwa Ibom State Bursary Portal
+// (bursary.akwaibomstate.gov.ng) so Mbopo Akwa Ibom shares the same
+// government brand system: brand green + brand orange, neutral dark text,
+// pill-shaped CTAs on solid or gradient green/orange surfaces.
 
 export const colors = {
   background: "#FFFFFF",
-  foreground: "#0B4923",
+  foreground: "#111928",
 
   card: "#FFFFFF",
-  cardForeground: "#0B4923",
+  cardForeground: "#111928",
 
   popover: "#FFFFFF",
-  popoverForeground: "#0B4923",
+  popoverForeground: "#111928",
 
-  primary: "#0B4923",
+  // Brand green — used for headings, body accents and dark surfaces.
+  primary: "#003922",
   primaryForeground: "#FFFFFF",
 
-  secondary: "#FE6301",
+  // Brand orange — used for primary CTAs and highlight accents.
+  secondary: "#FE6201",
   secondaryForeground: "#FFFFFF",
 
-  muted: "#F3F7F5",
-  mutedForeground: "#677E76",
+  // Exact match to the bursary portal's gray-50 — the off-white canvas
+  // color behind white cards/panes, so nothing on the page sits on a flat
+  // pure-white field the way it used to.
+  muted: "#F9FAFB",
+  mutedForeground: "#6B7280",
 
-  accent: "#E77918",
+  // Orange hover shade — used for hover fills on outline/ghost elements.
+  accent: "#CB4E01",
   accentForeground: "#FFFFFF",
 
   destructive: "#EF4444",
   destructiveForeground: "#FFFFFF",
 
-  border: "#E0EBE7",
-  input: "#E0EBE7",
-  ring: "#0B4923",
+  border: "#E5E7EB",
+  input: "#E5E7EB",
+  ring: "#FE6201",
 
   white: "#FFFFFF",
   black: "#000000",
 
   // Dropdown/nav hover green — distinct from `primary`.
-  navHover: "#287B60",
+  navHover: "#002F20",
 
-  // Highlight yellow used for registration call-to-action emphasis.
-  highlight: "#FACC14",
-  highlightMuted: "#FDDF49",
+  // Highlight accent — brand orange, used for small decorative touches
+  // (quote rules, dot textures, icon rings) instead of a one-off yellow.
+  highlight: "#FE6201",
+  highlightMuted: "#FFE0CC",
 
   // Neutral grays for chrome that isn't tied to the brand palette.
-  gray700: "#384252",
+  gray700: "#374151",
   gray500: "#6B7280",
 
-  // Mid stop of the hero gradient (a lighter step of `primary`).
-  primaryLight: "#0B4923",
+  // Mid stop of the hero gradient — brand green hover shade.
+  primaryLight: "#002F20",
   // Near-black with a hint of green — dark end of the hero gradient.
-  heroDeep: "#04120C",
+  heroDeep: "#00120C",
 
-  servicesBackground: "#F5F7FB",
+  servicesBackground: "#F9FAFB",
 
-  // Footer gradient: near-black base with a soft green glow at top-center.
-  footerDark: "#02110D",
-  footerGlow: "#04261A",
+  // Footer gradient stops — exact match to the bursary portal footer.
+  footerDark: "#00120C",
+  footerGlow: "#01251A",
 
   // Shared blend backing the WhyEnterSection + ValuesSection pair — the
   // two render as one continuous panel with a single gradient behind
-  // them, not two separately-colored sections. Fixed dark tones, not
-  // meant to shift between light/dark mode (same values in
-  // colors.dark.ts).
-  platformBlendTop: "#005033",
-  platformBlendMid: "#003922",
-  platformBlendBottom: "#233E22",
+  // them, not two separately-colored sections. Brand green tones, dark
+  // to darker, matching the bursary portal's dark-green highlight bands.
+  platformBlendTop: "#003922",
+  platformBlendMid: "#002614",
+  platformBlendBottom: "#001D0F",
+
+  // Solid dark-green section background + card cell fill, used by
+  // EligibilitySection's requirements panel — exact bursary portal tones.
+  sectionDark: "#01251A",
+  sectionDarkCard: "#02301F",
 } as const;
 
 export type ColorTokens = Record<keyof typeof colors, string>;

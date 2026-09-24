@@ -14,23 +14,23 @@ import {
 const BENEFITS = [
   {
     number: "01",
-    title: "Represent your community",
-    text: "Carry the voice, pride and possibility of your LGA.",
+    title: "Represent your LGA",
+    text: "Compete from Ward and LGA pageants through to the Senatorial finals, carrying your community's pride all the way to the state stage.",
   },
   {
     number: "02",
-    title: "Lead with mentorship",
-    text: "Grow through guidance, connection and shared experience.",
+    title: "Be judged on substance",
+    text: "Presence and poise carry only a small share of the score; character, culture and purpose carry the rest.",
   },
   {
     number: "03",
-    title: "Unlock your potential",
-    text: "Access visibility, empowerment and new opportunities.",
+    title: "Grow the creative economy",
+    text: "Every wrapper, bead and hairstyle you wear commissions a local tailor, stylist or artisan.",
   },
   {
     number: "04",
-    title: "Be recognised statewide",
-    text: "Stand for a new generation of Akwa Ibom excellence.",
+    title: "Serve for a full year",
+    text: "Wear the crown for 365 days as a tourism ambassador, with your impact tracked and celebrated statewide.",
   },
 ];
 

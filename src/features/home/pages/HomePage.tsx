@@ -4,8 +4,10 @@ import { PageShell } from "@/shared/components";
 import { HeroSection } from "../components/HeroSection";
 import { AboutSection } from "../components/AboutSection";
 import { EligibilitySection } from "../components/EligibilitySection";
+import { HowItWorksSection } from "../components/HowItWorksSection";
 import { WhyEnterSection } from "../components/WhyEnterSection";
 import { ValuesSection } from "../components/ValuesSection";
+import { FaqSection } from "../components/FaqSection";
 import { CtaSection } from "../components/CtaSection";
 import { ScrollToTopButton } from "../components/ScrollToTopButton";
 
@@ -26,10 +28,12 @@ export function HomePage() {
       <HeroSection />
       <AboutSection />
       <EligibilitySection />
+      <HowItWorksSection />
       <PlatformPanel>
         <WhyEnterSection />
         <ValuesSection />
       </PlatformPanel>
+      <FaqSection />
       <CtaSection />
       <ScrollToTopButton />
     </PageShell>

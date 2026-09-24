@@ -66,6 +66,7 @@ export function Footer() {
             <Link to="/#about">About</Link>
             <Link to="/#eligibility">Eligibility</Link>
             <Link to="/#why-enter">Why Enter</Link>
+            <Link to="/#faq">FAQ</Link>
           </ColumnLinks>
         </div>
 

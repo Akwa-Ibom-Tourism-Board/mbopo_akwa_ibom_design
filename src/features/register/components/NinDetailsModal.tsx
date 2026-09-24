@@ -110,7 +110,7 @@ export function NinDetailsModal({
         </DetailGrid>
 
         <ChangeNinButton type="button" onClick={onChangeNin}>
-          This isn&apos;t me — change NIN
+          This isn&apos;t me, change NIN
         </ChangeNinButton>
 
         <form

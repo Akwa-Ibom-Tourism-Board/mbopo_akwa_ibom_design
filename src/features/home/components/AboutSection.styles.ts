@@ -22,7 +22,7 @@ export const SectionEyebrow = styled.p<{ $light?: boolean }>`
 export const SectionTitle = styled.h2`
   max-width: 680px;
   margin: 0;
-  color: ${({ theme }) => theme.colors.primary.DEFAULT};
+  color: ${({ theme }) => theme.colors.foreground};
   font-family: ${({ theme }) => theme.fonts.display};
   font-size: clamp(34px, 5.5vw, 58px);
   font-weight: 600;

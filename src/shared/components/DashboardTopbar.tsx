@@ -1,7 +1,6 @@
 import { Menu } from "lucide-react";
 import { useAuth } from "@/features/auth";
 import { Avatar, AvatarFallback } from "@/shared/ui";
-import { ThemeToggle } from "./ThemeToggle";
 import {
   TopbarFrame,
   MenuToggle,
@@ -35,7 +34,6 @@ export function DashboardTopbar({
       </MenuToggle>
       <Title>{title}</Title>
       <UserCluster>
-        <ThemeToggle />
         <Avatar>
           <AvatarFallback>{initials}</AvatarFallback>
         </Avatar>

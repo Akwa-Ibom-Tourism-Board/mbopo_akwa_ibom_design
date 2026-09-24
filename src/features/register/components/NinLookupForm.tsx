@@ -1,17 +1,19 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { Link } from "react-router-dom";
-import { Button, Input, Label } from "@/shared/ui";
+import { ArrowRight } from "lucide-react";
 import {
-  FormCard,
-  FormTitle,
-  FormCopy,
+  Heading,
+  Subtitle,
+  FormBlock,
   Field,
+  FieldLabel,
+  StyledField,
   ErrorText,
-  SubmitRow,
+  SubmitButton,
   FormFooter,
-} from "./NinLookupForm.styles";
+  InlineLink,
+} from "@/shared/components/AuthForm.styles";
 
 const ninLookupSchema = z.object({
   nin: z
@@ -47,17 +49,17 @@ export function NinLookupForm({
   } = useForm<NinLookupFormValues>({ resolver: zodResolver(ninLookupSchema) });
 
   return (
-    <FormCard>
-      <FormTitle>Start your application</FormTitle>
-      <FormCopy>
+    <>
+      <Heading>Verify Your Identity</Heading>
+      <Subtitle>
         Enter your National Identification Number (NIN) and Voter Identification
-        Number (VIN). We&apos;ll verify both to confirm your identity and
-        eligibility before you continue.
-      </FormCopy>
-      <form onSubmit={handleSubmit(onSubmit)} noValidate>
+        Number (VIN) to start your application.
+      </Subtitle>
+
+      <FormBlock onSubmit={handleSubmit(onSubmit)} noValidate>
         <Field>
-          <Label htmlFor="nin">National Identification Number</Label>
-          <Input
+          <FieldLabel htmlFor="nin">National Identification Number</FieldLabel>
+          <StyledField
             id="nin"
             inputMode="numeric"
             maxLength={11}
@@ -68,8 +70,8 @@ export function NinLookupForm({
           {errors.nin && <ErrorText>{errors.nin.message}</ErrorText>}
         </Field>
         <Field>
-          <Label htmlFor="vin">Voter Identification Number</Label>
-          <Input
+          <FieldLabel htmlFor="vin">Voter Identification Number</FieldLabel>
+          <StyledField
             id="vin"
             maxLength={19}
             placeholder="19-character VIN"
@@ -82,20 +84,21 @@ export function NinLookupForm({
             <ErrorText>{submitError}</ErrorText>
           )}
         </Field>
-        <SubmitRow>
-          <Button
-            type="submit"
-            size="lg"
-            style={{ width: "100%" }}
-            disabled={isSubmitting}
-          >
-            {isSubmitting ? "Verifying…" : "Continue"}
-          </Button>
-        </SubmitRow>
-      </form>
+
+        <SubmitButton
+          type="submit"
+          size="lg"
+          variant="secondary"
+          disabled={isSubmitting}
+        >
+          {isSubmitting ? "Verifying…" : "Continue"}
+          <ArrowRight size={18} />
+        </SubmitButton>
+      </FormBlock>
+
       <FormFooter>
-        Already registered? <Link to="/login">Log in</Link>
+        Already registered? <InlineLink to="/login">Log in</InlineLink>
       </FormFooter>
-    </FormCard>
+    </>
   );
 }

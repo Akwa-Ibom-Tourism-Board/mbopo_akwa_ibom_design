@@ -28,8 +28,8 @@ export function StartRegistrationCta({
   const text = submitted
     ? "You can review the details you submitted for your Mbopo Akwa Ibom application."
     : inProgress
-      ? "Pick up right where you left off — your progress has been saved."
-      : "Complete your Mbopo Akwa Ibom registration — your identity details are already saved.";
+      ? "Pick up right where you left off; your progress has been saved."
+      : "Complete your Mbopo Akwa Ibom registration; your identity details are already saved.";
 
   const cta = submitted
     ? "View application"

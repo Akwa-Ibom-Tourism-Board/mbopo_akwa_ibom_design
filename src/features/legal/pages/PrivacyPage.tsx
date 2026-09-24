@@ -16,7 +16,7 @@ const SECTIONS: LegalSection[] = [
   {
     heading: "2. How We Use Your Information",
     paragraphs: [
-      "We use the information you provide to verify your eligibility, process your application, communicate with you about your registration, and — if you are selected — to fulfil your role as a program ambassador.",
+      "We use the information you provide to verify your eligibility, process your application, communicate with you about your registration, and, if you are selected, to fulfil your role as a program ambassador.",
     ],
   },
   {
@@ -46,7 +46,7 @@ const SECTIONS: LegalSection[] = [
   {
     heading: "7. Cookies & Local Storage",
     paragraphs: [
-      "This platform uses your browser's local storage to keep you signed in and to remember preferences such as light or dark mode. This data stays on your device and is not used for tracking or advertising.",
+      "This platform uses your browser's local storage to keep you signed in and to remember your application progress. This data stays on your device and is not used for tracking or advertising.",
     ],
   },
   {

@@ -101,17 +101,21 @@ export const NavLinks = styled.div<{ $open: boolean; $light: boolean }>`
 `;
 
 export const NavAnchor = styled(Link)<{ $light: boolean }>`
-  padding: 10px 4px;
+  padding: 10px 14px;
+  border-radius: ${({ theme }) => theme.radii.full};
   font-size: 12px;
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: ${({ theme, $light }) => ($light ? theme.colors.white : theme.colors.foreground)};
   opacity: 0.85;
-  transition: opacity ${({ theme }) => theme.transitions.fast};
+  transition:
+    opacity ${({ theme }) => theme.transitions.fast},
+    background-color ${({ theme }) => theme.transitions.fast};
 
   &:hover {
     opacity: 1;
+    background: ${({ theme, $light }) => ($light ? "rgba(255, 255, 255, 0.15)" : theme.alpha(theme.colors.primary.DEFAULT, 0.08))};
   }
 
   /* Below 1023px, NavLinks becomes a floating card with a light
@@ -119,6 +123,10 @@ export const NavAnchor = styled(Link)<{ $light: boolean }>`
      color must follow that card, not the navbar's overlay state. */
   @media (max-width: 1023px) {
     color: ${({ theme }) => theme.colors.foreground};
+
+    &:hover {
+      background: ${({ theme }) => theme.alpha(theme.colors.primary.DEFAULT, 0.08)};
+    }
   }
 `;
 

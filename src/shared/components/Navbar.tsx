@@ -4,7 +4,6 @@ import akwaIbomLogo from "@/assets/akwa-ibom-logo-main.png";
 import ariseLogo from "@/assets/arise-logo-main.png";
 import akhtdcLogo from "@/assets/akhtdc-new-logo.png";
 import { useAuth } from "@/features/auth";
-import { ThemeToggle } from "./ThemeToggle";
 import {
   Header,
   NavOverlay,
@@ -75,6 +74,9 @@ export function Navbar({ variant = "solid" }: NavbarProps) {
             <NavAnchor to="/#why-enter" $light={light} onClick={closeMenu}>
               Why
             </NavAnchor>
+            {/* <NavAnchor to="/#faq" $light={light} onClick={closeMenu}>
+              FAQ
+            </NavAnchor> */}
             <NavAnchor to="/privacy" $light={light} onClick={closeMenu}>
               Privacy
             </NavAnchor>
@@ -86,9 +88,14 @@ export function Navbar({ variant = "solid" }: NavbarProps) {
                 Dashboard <LayoutDashboard size={15} />
               </CtaLink>
             ) : (
-              <CtaLink to="/register" onClick={closeMenu}>
-                Register Now <ArrowRight size={15} />
-              </CtaLink>
+              <>
+                <NavAnchor to="/login" $light={light} onClick={closeMenu}>
+                  Sign In
+                </NavAnchor>
+                <CtaLink to="/register" onClick={closeMenu}>
+                  Register Now <ArrowRight size={15} />
+                </CtaLink>
+              </>
             )}
           </NavLinks>
 
@@ -97,7 +104,6 @@ export function Navbar({ variant = "solid" }: NavbarProps) {
               src={akhtdcLogo}
               alt="Akwa Ibom State Hotels and Tourism Development Commission logo"
             /> */}
-            <ThemeToggle light={light} />
             <MenuButton
               type="button"
               $light={light}
