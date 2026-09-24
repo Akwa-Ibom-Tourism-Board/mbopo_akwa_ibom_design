@@ -83,9 +83,7 @@ export class ErrorBoundary extends Component<
               <ActionButton onClick={() => window.location.reload()}>
                 Try again
               </ActionButton>
-              <ActionLink href={import.meta.env.BASE_URL}>
-                Go home
-              </ActionLink>
+              <ActionLink href="/">Go home</ActionLink>
             </Actions>
           </div>
         </Frame>

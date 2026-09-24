@@ -2,14 +2,6 @@
 // "database" and session value in the app is keyed through here so the
 // storage keys live in one place instead of being repeated as string
 // literals across features.
-//
-// localStorage is scoped per-origin, not per-path — unlike a cookie, it has
-// no Path attribute. Once this app is served at
-// akhtdc.akwaibomstate.gov.ng/mbopo, it shares its localStorage bucket with
-// anything else running on that origin. The "mbopo-" prefix below keeps
-// collisions unlikely, but it's not a real boundary. Not urgent while the
-// backend is mocked — when a real backend replaces mock.ts, move the auth
-// token to an httpOnly, Path=/mbopo cookie instead of localStorage.
 export const STORAGE_KEYS = {
   authToken: "mbopo-auth-token",
   authUser: "mbopo-auth-user",

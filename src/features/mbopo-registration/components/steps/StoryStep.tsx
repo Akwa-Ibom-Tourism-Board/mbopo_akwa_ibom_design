@@ -100,19 +100,11 @@ export function StoryStep({ register, control, errors }: StoryStepProps) {
               />
               <span>
                 I agree to the{" "}
-                <a
-                  href={`${import.meta.env.BASE_URL}terms`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
+                <a href="/terms" target="_blank" rel="noopener noreferrer">
                   Terms &amp; Conditions
                 </a>{" "}
                 and{" "}
-                <a
-                  href={`${import.meta.env.BASE_URL}privacy`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
+                <a href="/privacy" target="_blank" rel="noopener noreferrer">
                   Privacy Policy
                 </a>
                 .
