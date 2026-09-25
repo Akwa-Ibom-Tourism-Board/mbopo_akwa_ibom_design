@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import governor1 from "@/assets/governor_1.png";
-import governor2 from "@/assets/governor_2.png";
-import governor3 from "@/assets/governor_3.png";
-import governor4 from "@/assets/governor_4.jpeg";
+import governor1 from "@/assets/governor_1.webp";
+import governor2 from "@/assets/governor_2.webp";
+import governor3 from "@/assets/governor_3.webp";
+import governor4 from "@/assets/governor_4.webp";
 import {
   Frame,
   SlideFigure,

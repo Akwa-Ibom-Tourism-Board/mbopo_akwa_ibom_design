@@ -26,8 +26,13 @@ export function RegisterPage() {
   }, []);
 
   const lookupMutation = useMutation({
-    mutationFn: (values: NinLookupFormValues) =>
-      lookupNin(values.nin, values.vin),
+    mutationFn: ({
+      values,
+      captchaToken,
+    }: {
+      values: NinLookupFormValues;
+      captchaToken: string;
+    }) => lookupNin(values.nin, values.vin, captchaToken),
     onSuccess: (record) => {
       const eligibility = evaluateEligibility(record);
       if (eligibility.eligible) {
@@ -67,7 +72,9 @@ export function RegisterPage() {
         />
       ) : (
         <NinLookupForm
-          onSubmit={(values) => lookupMutation.mutate(values)}
+          onSubmit={(values, captchaToken) =>
+            lookupMutation.mutate({ values, captchaToken })
+          }
           isSubmitting={lookupMutation.isPending}
           submitError={
             lookupMutation.isError ? lookupMutation.error.message : undefined

@@ -107,7 +107,14 @@ function buildRecordFromSeed(
 // A VIN of all zeros ("0" x 19) simulates a VIN that doesn't match any
 // record. Anything else -> a stable, hash-derived record (same NIN always
 // returns the same person, mirroring a real idempotent lookup).
-export async function lookupNin(nin: string, vin: string): Promise<NinRecord> {
+// captchaToken is accepted so this mock's signature matches the real
+// contract, but isn't checked here — a real backend must verify it against
+// Google's siteverify endpoint before running the lookup.
+export async function lookupNin(
+  nin: string,
+  vin: string,
+  captchaToken: string,
+): Promise<NinRecord> {
   await delay();
 
   if (!NIN_PATTERN.test(nin) || nin === "00000000000") {

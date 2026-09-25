@@ -1,7 +1,17 @@
+import { useState } from "react";
 import { LayoutDashboard, LogOut } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "@/features/auth";
-import mbopoLogo from "@/assets/mbopo-logo.png";
+import {
+  Button,
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from "@/shared/ui";
+import mbopoLogo from "@/assets/mbopo-logo.webp";
 import {
   SidebarFrame,
   SidebarOverlay,
@@ -25,8 +35,11 @@ export function DashboardSidebar({ open, onClose }: DashboardSidebarProps) {
   const location = useLocation();
   const navigate = useNavigate();
   const { logout } = useAuth();
+  const [confirmOpen, setConfirmOpen] = useState(false);
 
   const handleLogout = () => {
+    setConfirmOpen(false);
+    onClose();
     logout();
     navigate("/login", { replace: true });
   };
@@ -55,11 +68,31 @@ export function DashboardSidebar({ open, onClose }: DashboardSidebarProps) {
             </NavItem>
           ))}
         </NavList>
-        <NavButton type="button" onClick={handleLogout}>
+        <NavButton type="button" onClick={() => setConfirmOpen(true)}>
           <LogOut size={18} />
           Log out
         </NavButton>
       </SidebarFrame>
+
+      <Dialog open={confirmOpen} onOpenChange={setConfirmOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Log out?</DialogTitle>
+            <DialogDescription>
+              You&apos;ll need to sign in again to access your dashboard and
+              application.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setConfirmOpen(false)}>
+              Cancel
+            </Button>
+            <Button variant="destructive" onClick={handleLogout}>
+              Log out
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </>
   );
 }

@@ -77,6 +77,15 @@ export const ErrorText = styled.p`
   font-size: 13px;
 `;
 
+// Google's widget renders at a fixed ~304px width regardless of its
+// container, so this just gives it the same vertical rhythm as the
+// fields around it and lets it shrink-to-fit on very narrow screens.
+export const CaptchaField = styled.div`
+  margin-bottom: 22px;
+  max-width: 100%;
+  overflow-x: auto;
+`;
+
 export const OptionsRow = styled.div`
   display: flex;
   flex-wrap: wrap;

@@ -22,6 +22,10 @@ export interface Session {
 export interface LoginInput {
   email: string;
   password: string;
+  // Google reCAPTCHA token from the widget above the submit button. Mocked
+  // today (see api/mock.ts); a real backend must verify it server-side
+  // against Google's siteverify endpoint before checking credentials.
+  captchaToken: string;
 }
 
 export class InvalidCredentialsError extends Error {

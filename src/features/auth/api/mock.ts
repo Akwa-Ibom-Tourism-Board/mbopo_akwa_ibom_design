@@ -31,6 +31,9 @@ function toPublicUser(record: MockUserRecord): User {
   };
 }
 
+// captchaToken is accepted to keep this mock's signature matching the real
+// LoginInput contract, but isn't checked here — a real backend must verify
+// it against Google's siteverify endpoint before checking credentials.
 export async function login({ email, password }: LoginInput): Promise<Session> {
   await delay();
 

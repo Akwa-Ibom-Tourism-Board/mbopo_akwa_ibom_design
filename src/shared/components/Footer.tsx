@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import akwaIbomLogo from "@/assets/akwa-ibom-logo-main.png";
 import ariseLogo from "@/assets/arise-logo-main.png";
-import mbopoLogo from "@/assets/mbopo-logo.png";
+import mbopoLogo from "@/assets/mbopo-logo.webp";
 import akhtdcLogo from "@/assets/akhtdc-new-logo.png";
 import {
   FooterFrame,

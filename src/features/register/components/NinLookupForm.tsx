@@ -1,7 +1,10 @@
+import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { ArrowRight } from "lucide-react";
+import ReCAPTCHA from "react-google-recaptcha";
+import { RECAPTCHA_SITE_KEY } from "@/lib/config";
 import {
   Heading,
   Subtitle,
@@ -10,6 +13,7 @@ import {
   FieldLabel,
   StyledField,
   ErrorText,
+  CaptchaField,
   SubmitButton,
   FormFooter,
   InlineLink,
@@ -32,7 +36,7 @@ const ninLookupSchema = z.object({
 export type NinLookupFormValues = z.infer<typeof ninLookupSchema>;
 
 export interface NinLookupFormProps {
-  onSubmit: (values: NinLookupFormValues) => void;
+  onSubmit: (values: NinLookupFormValues, captchaToken: string) => void;
   isSubmitting: boolean;
   submitError?: string;
 }
@@ -48,6 +52,17 @@ export function NinLookupForm({
     formState: { errors },
   } = useForm<NinLookupFormValues>({ resolver: zodResolver(ninLookupSchema) });
 
+  const [captchaToken, setCaptchaToken] = useState<string | null>(null);
+  const recaptchaRef = useRef<ReCAPTCHA>(null);
+
+  // A reCAPTCHA token is single-use, so a failed lookup (NIN/VIN not
+  // found, wrong captcha, etc.) needs a fresh one before trying again.
+  useEffect(() => {
+    if (!submitError) return;
+    recaptchaRef.current?.reset();
+    setCaptchaToken(null);
+  }, [submitError]);
+
   return (
     <>
       <Heading>Verify Your Identity</Heading>
@@ -56,7 +71,13 @@ export function NinLookupForm({
         Number (VIN) to start your application.
       </Subtitle>
 
-      <FormBlock onSubmit={handleSubmit(onSubmit)} noValidate>
+      <FormBlock
+        onSubmit={handleSubmit((values) => {
+          if (!captchaToken) return;
+          onSubmit(values, captchaToken);
+        })}
+        noValidate
+      >
         <Field>
           <FieldLabel htmlFor="nin">National Identification Number</FieldLabel>
           <StyledField
@@ -85,11 +106,20 @@ export function NinLookupForm({
           )}
         </Field>
 
+        <CaptchaField>
+          <ReCAPTCHA
+            ref={recaptchaRef}
+            sitekey={RECAPTCHA_SITE_KEY}
+            onChange={setCaptchaToken}
+            onExpired={() => setCaptchaToken(null)}
+          />
+        </CaptchaField>
+
         <SubmitButton
           type="submit"
           size="lg"
           variant="secondary"
-          disabled={isSubmitting}
+          disabled={isSubmitting || !captchaToken}
         >
           {isSubmitting ? "Verifying…" : "Continue"}
           <ArrowRight size={18} />

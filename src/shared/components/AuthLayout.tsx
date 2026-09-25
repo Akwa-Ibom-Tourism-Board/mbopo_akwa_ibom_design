@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 import akwaIbomLogo from "@/assets/akwa-ibom-logo-main.png";
 import ariseLogo from "@/assets/arise-logo-main.png";
-import mbopoLogo from "@/assets/mbopo-logo.png";
+import mbopoLogo from "@/assets/mbopo-logo.webp";
 import { GovernorCarousel } from "./GovernorCarousel";
 import {
   Shell,
