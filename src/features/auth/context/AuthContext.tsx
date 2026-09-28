@@ -20,6 +20,9 @@ interface AuthContextValue {
   isAuthenticated: boolean;
   login: (session: Session) => void;
   logout: () => void;
+  // Patches the cached user in place (e.g. after an avatar upload) without
+  // a full session round-trip.
+  updateUser: (patch: Partial<User>) => void;
 }
 
 const AuthContext = createContext<AuthContextValue | undefined>(undefined);
@@ -62,6 +65,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     [queryClient],
   );
 
+  const updateUser = useCallback(
+    (patch: Partial<User>) => {
+      if (!token) return;
+      queryClient.setQueryData<User>(
+        [...SESSION_QUERY_KEY, token],
+        (current) => {
+          if (!current) return current;
+          const next = { ...current, ...patch };
+          localStore.set(STORAGE_KEYS.authUser, next);
+          return next;
+        },
+      );
+    },
+    [queryClient, token],
+  );
+
   // A stored token that fails validation (expired/revoked) means the
   // cached session was stale — fall back to anonymous rather than getting
   // stuck showing a dead "restoring" state.
@@ -86,8 +105,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       isAuthenticated: status === "authenticated",
       login,
       logout,
+      updateUser,
     }),
-    [status, sessionQuery.data, login, logout],
+    [status, sessionQuery.data, login, logout, updateUser],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

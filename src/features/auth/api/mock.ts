@@ -5,6 +5,7 @@ import {
   mintToken,
   readTokenPayload,
   verifyPassword,
+  updateUserAvatar,
   type MockUserRecord,
 } from "@/lib/mockUsersStore";
 import {
@@ -28,6 +29,7 @@ function toPublicUser(record: MockUserRecord): User {
     dateOfBirth: record.dateOfBirth,
     email: record.email,
     applicationStatus: record.applicationStatus,
+    avatarUrl: record.avatarUrl,
   };
 }
 
@@ -53,6 +55,23 @@ export async function getCurrentUser(token: string): Promise<User> {
 
   const payload = readTokenPayload(token);
   const record = payload && findUserById(payload.sub);
+  if (!record) {
+    throw new SessionExpiredError();
+  }
+
+  return toPublicUser(record);
+}
+
+// Mirrors the real backend's POST /auth/avatar (multipart) — mocked here as
+// a data-URL update on the stored user record, matching how the
+// registration flow's own photo fields are persisted (see photoEncoding.ts).
+export async function updateAvatar(
+  userId: string,
+  avatarDataUrl: string,
+): Promise<User> {
+  await delay();
+
+  const record = updateUserAvatar(userId, avatarDataUrl);
   if (!record) {
     throw new SessionExpiredError();
   }
