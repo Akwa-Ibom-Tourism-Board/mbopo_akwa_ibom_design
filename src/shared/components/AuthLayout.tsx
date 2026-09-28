@@ -17,9 +17,10 @@ import {
 
 export interface AuthLayoutProps {
   children: ReactNode;
+  carouselVariant: "signup" | "login";
 }
 
-export function AuthLayout({ children }: AuthLayoutProps) {
+export function AuthLayout({ children, carouselVariant }: AuthLayoutProps) {
   return (
     <Shell>
       <LeftPane>
@@ -44,7 +45,7 @@ export function AuthLayout({ children }: AuthLayoutProps) {
           </PageFooterText>
         </PageFooter>
       </LeftPane>
-      <GovernorCarousel />
+      <GovernorCarousel variant={carouselVariant} />
     </Shell>
   );
 }
