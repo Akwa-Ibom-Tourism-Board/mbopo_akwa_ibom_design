@@ -92,3 +92,12 @@ export const PhotoPlaceholder = styled.div`
   border: 1px dashed ${({ theme }) => theme.colors.border};
   color: ${({ theme }) => theme.colors.muted.foreground};
 `;
+
+export const VideoPreview = styled.video`
+  width: 100%;
+  max-width: 360px;
+  aspect-ratio: 16 / 9;
+  border-radius: ${({ theme }) => theme.radii.lg};
+  border: 1px solid ${({ theme }) => theme.colors.border};
+  background: #0a0f0c;
+`;

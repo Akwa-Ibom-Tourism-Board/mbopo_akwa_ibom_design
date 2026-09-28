@@ -30,7 +30,9 @@ export function DashboardPage() {
   return (
     <DashboardShell title="Dashboard" referenceCode={referenceCode}>
       <Stack>
-        <Greeting>Welcome back, {displayUser.firstName}.</Greeting>
+        <Greeting>
+          Welcome back, {displayUser.firstName ?? displayUser.email}.
+        </Greeting>
         {summaryQuery.isLoading && (
           <LoadingText>Loading your dashboard…</LoadingText>
         )}

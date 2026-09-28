@@ -77,5 +77,7 @@ export const STEP_FIELDS: (keyof RegistrationFormValues)[][] = [
   ["phone", "nextOfKin", "nextOfKinPhone"],
   ["village", "residenceState", "city", "address"],
   ["education", "occupation", "talents", "languages"],
+  // Video Pitch — validated separately (recorded, not a form field).
+  [],
   ["why", "declarationIdentity", "declarationAccuracy", "declarationTerms"],
 ];

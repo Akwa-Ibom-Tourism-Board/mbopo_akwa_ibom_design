@@ -31,17 +31,11 @@ export const DetailValue = styled.dd`
   color: ${({ theme }) => theme.colors.foreground};
 `;
 
-export const Field = styled.div`
+export const ConfirmActions = styled.div`
   display: flex;
-  flex-direction: column;
-  gap: 6px;
-  margin-bottom: 4px;
-`;
-
-export const ErrorText = styled.p`
-  margin: 0;
-  color: ${({ theme }) => theme.colors.destructive.DEFAULT};
-  font-size: 0.8125rem;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 20px;
 `;
 
 export const ChangeNinButton = styled.button`

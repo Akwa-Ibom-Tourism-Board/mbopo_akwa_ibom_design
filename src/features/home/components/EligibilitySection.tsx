@@ -47,10 +47,10 @@ export function EligibilitySection() {
             </EyebrowRow>
             <Title>Who can apply?</Title>
             <Subtitle>
-              Make sure you meet every requirement below before you start your
-              application. Meeting these requirements does not guarantee
-              selection; every application is reviewed through the full,
-              competitive selection process.
+              Applicants must meet the following requirements to be eligible to
+              apply. Meeting these requirements does not guarantee selection;
+              every application is reviewed through the full, competitive
+              selection process.
             </Subtitle>
           </Header>
 

@@ -1,32 +1,30 @@
 import { useLocation } from "react-router-dom";
-import { readPendingRegistration } from "@/lib/pendingRegistrationStore";
+import { readPendingEmailVerification } from "@/lib/emailVerificationStore";
 
 interface PendingRegistrationLocationState {
-  pendingId?: string;
   email?: string;
 }
 
 export interface PendingRegistrationHandle {
-  pendingId: string;
   email: string;
 }
 
-// Reached primarily via router state (set right after the NIN modal's
-// submit), falling back to the sessionStorage-backed record for a hard
+// Reached primarily via router state (set right after registration
+// succeeds), falling back to the sessionStorage-backed record for a hard
 // refresh of /verify-email. Returns undefined when neither source has a
-// valid, unexpired pending registration.
+// valid, unexpired pending email verification.
 export function usePendingRegistration():
   PendingRegistrationHandle | undefined {
   const location = useLocation();
   const state = location.state as PendingRegistrationLocationState | null;
 
-  if (state?.pendingId && state.email) {
-    return { pendingId: state.pendingId, email: state.email };
+  if (state?.email) {
+    return { email: state.email };
   }
 
-  const stored = readPendingRegistration();
+  const stored = readPendingEmailVerification();
   if (stored) {
-    return { pendingId: stored.pendingId, email: stored.email };
+    return { email: stored.email };
   }
 
   return undefined;

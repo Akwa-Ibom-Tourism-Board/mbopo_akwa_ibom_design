@@ -1,7 +1,4 @@
-import { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
+import { useEffect, useState, type FormEvent } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { Navigate, useNavigate } from "react-router-dom";
 import { AuthLayout } from "@/shared/components";
@@ -18,39 +15,18 @@ import {
   OTP_LENGTH,
   OtpExpiredError,
   OtpIncorrectError,
-} from "@/lib/pendingRegistrationStore";
-import { useAuth } from "@/features/auth";
+} from "@/lib/emailVerificationStore";
 import { OtpForm } from "../components/OtpForm";
-import { CreatePasswordForm } from "../components/CreatePasswordForm";
-import { verifyOtpAndCreateAccount, resendOtp } from "../api";
+import { verifyOtp, resendOtp } from "../api";
 
 const RESEND_COOLDOWN_SECONDS = 30;
-
-const passwordSchema = z
-  .object({
-    password: z.string().min(8, "Password must be at least 8 characters"),
-    confirmPassword: z.string(),
-  })
-  .refine((values) => values.password === values.confirmPassword, {
-    message: "Passwords don't match",
-    path: ["confirmPassword"],
-  });
-
-type PasswordFormValues = z.infer<typeof passwordSchema>;
 
 export function VerifyEmailPage() {
   const pending = usePendingRegistration();
   const navigate = useNavigate();
-  const { login: setSession } = useAuth();
 
   const [otp, setOtp] = useState("");
   const [cooldown, setCooldown] = useState(0);
-
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<PasswordFormValues>({ resolver: zodResolver(passwordSchema) });
 
   useEffect(() => {
     document.title = "Verify Email | Mbopo Akwa Ibom";
@@ -67,16 +43,15 @@ export function VerifyEmailPage() {
 
   useEffect(() => {
     if (!pending) {
-      sonnerToast.error("Your session expired. Please look up your NIN again.");
+      sonnerToast.error("Your session expired. Please register again.");
     }
   }, [pending]);
 
   const verifyMutation = useMutation({
-    mutationFn: verifyOtpAndCreateAccount,
-    onSuccess: (session) => {
-      setSession(session);
-      sonnerToast.success("Your email has been verified.");
-      navigate("/dashboard", { replace: true });
+    mutationFn: verifyOtp,
+    onSuccess: () => {
+      sonnerToast.success("Your email has been verified. Please log in.");
+      navigate("/login", { replace: true });
     },
   });
 
@@ -99,16 +74,13 @@ export function VerifyEmailPage() {
         ? "Something went wrong. Please try again."
         : undefined;
 
-  const onSubmit = handleSubmit((values) => {
-    verifyMutation.mutate({
-      pendingId: pending.pendingId,
-      code: otp,
-      password: values.password,
-    });
-  });
+  const onSubmit = (event: FormEvent) => {
+    event.preventDefault();
+    verifyMutation.mutate({ email: pending.email, code: otp });
+  };
 
   return (
-    <AuthLayout>
+    <AuthLayout carouselVariant="signup">
       <Heading>One Last Step</Heading>
       <Subtitle>
         We sent a {OTP_LENGTH}-digit code to <strong>{pending.email}</strong>.
@@ -118,18 +90,12 @@ export function VerifyEmailPage() {
         <OtpForm
           value={otp}
           onChange={setOtp}
-          onResend={() =>
-            resendMutation.mutate({ pendingId: pending.pendingId })
-          }
+          onResend={() => resendMutation.mutate({ email: pending.email })}
           resendDisabled={cooldown > 0 || resendMutation.isPending}
           resendLabel={cooldown > 0 ? `Resend in ${cooldown}s` : "Resend code"}
         />
 
         {errorMessage && <ErrorText>{errorMessage}</ErrorText>}
-
-        {otpComplete && (
-          <CreatePasswordForm register={register} errors={errors} />
-        )}
 
         <SubmitButton
           type="submit"
@@ -137,7 +103,7 @@ export function VerifyEmailPage() {
           variant="secondary"
           disabled={!otpComplete || verifyMutation.isPending}
         >
-          {verifyMutation.isPending ? "Verifying…" : "Verify and continue"}
+          {verifyMutation.isPending ? "Verifying…" : "Verify email"}
         </SubmitButton>
       </FormBlock>
     </AuthLayout>

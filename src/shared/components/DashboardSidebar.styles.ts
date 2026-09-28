@@ -11,14 +11,19 @@ export const SidebarFrame = styled.aside<{ $open: boolean }>`
   display: flex;
   flex-direction: column;
   width: 264px;
+  height: 100vh;
   padding: 22px 14px;
   background: ${({ theme }) => theme.colors.sectionDark};
   color: ${({ theme }) => theme.colors.white};
+  overflow-y: auto;
   transform: translateX(${({ $open }) => ($open ? "0" : "-100%")});
   transition: transform ${({ theme }) => theme.transitions.base};
 
+  /* Stays fixed to the viewport regardless of how tall the main content
+     column gets — a flex sibling with "sticky" here would stretch to match
+     that height (its containing block), which combined with top+bottom
+     anchors made it visibly drift as the form scrolled. */
   ${media.lg} {
-    position: sticky;
     transform: none;
   }
 `;

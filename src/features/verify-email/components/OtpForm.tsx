@@ -1,5 +1,5 @@
 import { OtpInput, OtpInputSlots } from "@/shared/ui";
-import { OTP_LENGTH } from "@/lib/pendingRegistrationStore";
+import { OTP_LENGTH } from "@/lib/emailVerificationStore";
 import { OtpFrame, ResendRow, ResendButton } from "./OtpForm.styles";
 
 export interface OtpFormProps {
