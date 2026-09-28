@@ -6,7 +6,7 @@ import {
   DialogDescription,
   DialogFooter,
 } from "@/shared/ui";
-import type { User } from "@/features/auth";
+import type { VerifiedUser } from "@/features/auth";
 import type { RegistrationFormValues } from "../schema";
 import type { RegistrationPhotoDataUrls } from "../types";
 import { ApplicationSummary } from "./ApplicationSummary";
@@ -19,9 +19,10 @@ import {
 export interface ReviewSubmitModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  user: User;
+  user: VerifiedUser;
   values: RegistrationFormValues;
   photos: RegistrationPhotoDataUrls;
+  videoPreviewUrl?: string;
   isSubmitting: boolean;
   onConfirm: () => void;
 }
@@ -32,6 +33,7 @@ export function ReviewSubmitModal({
   user,
   values,
   photos,
+  videoPreviewUrl,
   isSubmitting,
   onConfirm,
 }: ReviewSubmitModalProps) {
@@ -50,7 +52,12 @@ export function ReviewSubmitModal({
         </DialogHeader>
 
         <ScrollArea>
-          <ApplicationSummary user={user} values={values} photos={photos} />
+          <ApplicationSummary
+            user={user}
+            values={values}
+            photos={photos}
+            videoPreviewUrl={videoPreviewUrl}
+          />
         </ScrollArea>
 
         <ConfirmNotice>

@@ -15,7 +15,7 @@ import {
   SelectContent,
   SelectItem,
 } from "@/shared/ui";
-import type { User } from "@/features/auth";
+import type { VerifiedUser } from "@/features/auth";
 import type { RegistrationFormValues } from "../../schema";
 import { NIGERIAN_STATES } from "../../constants";
 import { Field } from "../Field";
@@ -29,7 +29,7 @@ import {
 } from "../StepShell.styles";
 
 export interface IdentityOriginStepProps {
-  user: User;
+  user: VerifiedUser;
   register: UseFormRegister<RegistrationFormValues>;
   control: Control<RegistrationFormValues>;
   errors: FieldErrors<RegistrationFormValues>;

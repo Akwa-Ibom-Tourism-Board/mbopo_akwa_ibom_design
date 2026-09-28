@@ -2,8 +2,11 @@ export const REGISTRATION_STEPS = [
   "Personal",
   "Identity & Origin",
   "Education",
+  "Video Pitch",
   "Your Story",
 ] as const;
+
+export const VIDEO_PITCH_MAX_SECONDS = 60;
 
 export const EDUCATION_LEVELS = [
   "HND",

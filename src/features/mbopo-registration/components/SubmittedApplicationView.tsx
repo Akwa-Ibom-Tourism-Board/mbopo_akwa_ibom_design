@@ -1,6 +1,6 @@
 import { CheckCircle2 } from "lucide-react";
 import { format } from "date-fns";
-import type { User } from "@/features/auth";
+import type { VerifiedUser } from "@/features/auth";
 import type { SubmittedApplication } from "../types";
 import { ApplicationSummary } from "./ApplicationSummary";
 import {
@@ -17,7 +17,7 @@ export function SubmittedApplicationView({
   user,
   application,
 }: {
-  user: User;
+  user: VerifiedUser;
   application: SubmittedApplication;
 }) {
   return (
@@ -50,6 +50,7 @@ export function SubmittedApplicationView({
           user={user}
           values={application.values}
           photos={application.photos}
+          videoPreviewUrl={application.videoPitchUrl}
         />
       </SummaryCard>
     </ViewFrame>
