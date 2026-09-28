@@ -25,7 +25,7 @@ const FAQS = [
   {
     question: "Who is eligible to apply for Mbopo Akwa Ibom?",
     answer:
-      "Any female indigene of Akwa Ibom State, aged between 22 and 27, who holds a minimum of a B.Sc. or HND, a valid NIN, VIN and Certificate of Origin.",
+      "Any female indigene of Akwa Ibom State, aged between 22 and 27, who holds a minimum of a B.Sc. or HND, a valid NIN, VIN and Certificate of Origin. Meeting these requirements does not guarantee selection; every application goes through the full selection process.",
   },
   {
     question: "Is there any fee to apply?",

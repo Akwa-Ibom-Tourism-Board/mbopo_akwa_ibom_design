@@ -2,7 +2,11 @@ import styled from "styled-components";
 import { Link } from "react-router-dom";
 import { media } from "@/theme";
 
-export const Header = styled.header<{ $scrolled: boolean }>`
+// Fixed frame for the whole header stack (disclaimer strip + nav bar) —
+// the strip lives inside this, as a normal-flow first child, rather than
+// as its own independently-fixed element, so the two never need
+// hardcoded height coordination to stack correctly.
+export const HeaderFrame = styled.header`
   position: fixed;
   /* Above floatingAction (the home page's scroll-to-top button) so the
      header — and, at the same level, its mobile-menu overlay below —
@@ -11,6 +15,9 @@ export const Header = styled.header<{ $scrolled: boolean }>`
   top: 0;
   left: 0;
   right: 0;
+`;
+
+export const HeaderBar = styled.div<{ $scrolled: boolean }>`
   padding: 14px 0;
   background: ${({ theme, $scrolled }) => ($scrolled ? theme.alpha(theme.colors.background, 0.94) : "transparent")};
   box-shadow: ${({ $scrolled }) => ($scrolled ? "0 3px 24px rgba(11, 73, 35, 0.1)" : "none")};

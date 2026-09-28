@@ -14,8 +14,9 @@ export const GlobalStyle = createGlobalStyle`
 
   html {
     scroll-behavior: smooth;
-    /* Keeps hash-linked sections from landing underneath the fixed Navbar. */
-    scroll-padding-top: 5.5rem;
+    /* Keeps hash-linked sections from landing underneath the fixed Navbar,
+       which now also carries the DisclaimerStrip above the nav row. */
+    scroll-padding-top: 7rem;
   }
 
   body {

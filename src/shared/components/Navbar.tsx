@@ -10,8 +10,10 @@ import { useLocation } from "react-router-dom";
 import akwaIbomLogo from "@/assets/akwa-ibom-logo-main.png";
 import ariseLogo from "@/assets/arise-logo-main.png";
 import { useAuth } from "@/features/auth";
+import { DisclaimerStrip } from "./DisclaimerStrip";
 import {
-  Header,
+  HeaderFrame,
+  HeaderBar,
   NavOverlay,
   Bar,
   BrandCluster,
@@ -83,73 +85,76 @@ export function Navbar({ variant = "solid" }: NavbarProps) {
 
   return (
     <>
-      {/* Rendered as a sibling, not a child, of Header — Header's own
-          backdrop-filter establishes a containing block for `position:
-          fixed` descendants, which would confine this overlay to
-          Header's own (small) box instead of the full viewport. */}
+      {/* Rendered as a sibling, not a child, of HeaderFrame — HeaderBar's
+          own backdrop-filter establishes a containing block for
+          `position: fixed` descendants, which would confine this overlay
+          to that (small) box instead of the full viewport. */}
       <NavOverlay
         $visible={menuOpen}
         aria-label="Close menu"
         onClick={closeMenu}
       />
-      <Header $scrolled={scrolled}>
-        <Bar>
-          <BrandCluster>
-            <LogoCluster>
-              <LogoImage
-                src={akwaIbomLogo}
-                alt="Akwa Ibom State Government logo"
-              />
-              <LogoImage src={ariseLogo} alt="ARISE Akwa Ibom logo" />
-            </LogoCluster>
-            <BrandDivider $light={light} aria-hidden />
-            <BrandText>
-              <BrandName $light={light}>Mbopo Akwa Ibom</BrandName>
-              <BrandSubtitle $light={light}>
-                Akwa Ibom State Hotels and Tourism Development Commission
-              </BrandSubtitle>
-            </BrandText>
-          </BrandCluster>
+      <HeaderFrame>
+        <DisclaimerStrip />
+        <HeaderBar $scrolled={scrolled}>
+          <Bar>
+            <BrandCluster>
+              <LogoCluster>
+                <LogoImage
+                  src={akwaIbomLogo}
+                  alt="Akwa Ibom State Government logo"
+                />
+                <LogoImage src={ariseLogo} alt="ARISE Akwa Ibom logo" />
+              </LogoCluster>
+              <BrandDivider $light={light} aria-hidden />
+              <BrandText>
+                <BrandName $light={light}>Mbopo Akwa Ibom</BrandName>
+                <BrandSubtitle $light={light}>
+                  Akwa Ibom State Hotels and Tourism Development Commission
+                </BrandSubtitle>
+              </BrandText>
+            </BrandCluster>
 
-          <NavLinks>
-            {NAV_ITEMS.map(({ to, label }) => (
-              <NavAnchor
-                key={to}
-                to={to}
-                $light={light}
-                $active={isNavActive(to, location.pathname, location.hash)}
-              >
-                {label}
-              </NavAnchor>
-            ))}
-            {isAuthenticated ? (
-              <CtaLink to="/dashboard">
-                Dashboard <LayoutDashboard size={15} />
-              </CtaLink>
-            ) : (
-              <>
-                <SignInLink to="/login" $light={light}>
-                  Sign In
-                </SignInLink>
-                <CtaLink to="/register">
-                  Register Now <ArrowRight size={15} />
+            <NavLinks>
+              {NAV_ITEMS.map(({ to, label }) => (
+                <NavAnchor
+                  key={to}
+                  to={to}
+                  $light={light}
+                  $active={isNavActive(to, location.pathname, location.hash)}
+                >
+                  {label}
+                </NavAnchor>
+              ))}
+              {isAuthenticated ? (
+                <CtaLink to="/dashboard">
+                  Dashboard <LayoutDashboard size={15} />
                 </CtaLink>
-              </>
-            )}
-          </NavLinks>
+              ) : (
+                <>
+                  <SignInLink to="/login" $light={light}>
+                    Sign In
+                  </SignInLink>
+                  <CtaLink to="/register">
+                    Register Now <ArrowRight size={15} />
+                  </CtaLink>
+                </>
+              )}
+            </NavLinks>
 
-          <RightCluster>
-            <MenuButton
-              type="button"
-              $light={light}
-              aria-label={menuOpen ? "Close menu" : "Open menu"}
-              onClick={() => setMenuOpen((open) => !open)}
-            >
-              {menuOpen ? <X size={22} /> : <Menu size={22} />}
-            </MenuButton>
-          </RightCluster>
-        </Bar>
-      </Header>
+            <RightCluster>
+              <MenuButton
+                type="button"
+                $light={light}
+                aria-label={menuOpen ? "Close menu" : "Open menu"}
+                onClick={() => setMenuOpen((open) => !open)}
+              >
+                {menuOpen ? <X size={22} /> : <Menu size={22} />}
+              </MenuButton>
+            </RightCluster>
+          </Bar>
+        </HeaderBar>
+      </HeaderFrame>
 
       <MobileDrawer $open={menuOpen}>
         <MobileDrawerHeader>

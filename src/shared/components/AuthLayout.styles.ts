@@ -50,39 +50,26 @@ export const ContentColumn = styled.div`
   }
 `;
 
-// Government + ARISE logos sit as a small, secondary cluster above the
-// Mbopo mark, so all three read as one identity stack (state authority,
-// then this specific portal) instead of competing for the same weight.
+// All three logos sit on a single row, same size, as one clickable
+// identity mark that takes the visitor home from any of them.
 export const LogoBlock = styled.div`
   display: flex;
-  flex-direction: column;
-  align-items: center;
+  justify-content: center;
   margin-bottom: 36px;
 
   ${media.lg} {
-    align-items: flex-start;
+    justify-content: flex-start;
   }
-`;
-
-export const GovLogoRow = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 14px;
-`;
-
-export const GovLogoImage = styled.img`
-  height: 34px;
-  width: auto;
-  object-fit: contain;
 `;
 
 export const LogoLink = styled(Link)`
   display: inline-flex;
+  align-items: center;
+  gap: 16px;
 `;
 
 export const LogoImage = styled.img`
-  height: 52px;
+  height: 40px;
   width: auto;
   object-fit: contain;
 `;

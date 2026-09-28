@@ -5,12 +5,18 @@ import {
   type FieldErrors,
   type UseFormRegister,
 } from "react-hook-form";
+import { AlertTriangle } from "lucide-react";
 import { Checkbox, Textarea } from "@/shared/ui";
 import type { RegistrationFormValues } from "../../schema";
 import { MAXIMUM_STORY_WORDS, MINIMUM_STORY_WORDS } from "../../constants";
 import { Field } from "../Field";
 import { StepContent, StepTitle, StepHint } from "../StepShell.styles";
-import { WordCount, Declarations, DeclarationRow } from "./StoryStep.styles";
+import {
+  WordCount,
+  ImportantNotice,
+  Declarations,
+  DeclarationRow,
+} from "./StoryStep.styles";
 
 export interface StoryStepProps {
   register: UseFormRegister<RegistrationFormValues>;
@@ -55,6 +61,16 @@ export function StoryStep({ register, control, errors }: StoryStepProps) {
           {MAXIMUM_STORY_WORDS}
         </WordCount>
       </Field>
+
+      <ImportantNotice>
+        <AlertTriangle size={16} aria-hidden />
+        <span>
+          <strong>Please note:</strong> submitting this application does not
+          guarantee selection. Every application is reviewed through the full
+          selection process. Applying is completely free — never pay anyone at
+          any stage of this process.
+        </span>
+      </ImportantNotice>
 
       <Declarations>
         <Controller

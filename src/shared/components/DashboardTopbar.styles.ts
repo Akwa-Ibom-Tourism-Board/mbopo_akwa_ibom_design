@@ -1,18 +1,25 @@
 import styled from "styled-components";
 import { media } from "@/theme";
 
+// Sticky frame for the whole topbar stack (disclaimer strip + topbar
+// row) — the strip lives inside this, as a normal-flow first child, the
+// same "nest, don't independently stick" approach Navbar uses, so the
+// two never need hardcoded height coordination to stack correctly.
 export const TopbarFrame = styled.header`
   position: sticky;
   top: 0;
   z-index: ${({ theme }) => theme.zIndex.sticky};
+  background: ${({ theme }) => theme.alpha(theme.colors.background, 0.92)};
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid ${({ theme }) => theme.colors.border};
+`;
+
+export const TopbarRow = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 16px;
   padding: 16px 20px;
-  background: ${({ theme }) => theme.alpha(theme.colors.background, 0.92)};
-  backdrop-filter: blur(10px);
-  border-bottom: 1px solid ${({ theme }) => theme.colors.border};
 
   ${media.lg} {
     padding: 18px 32px;

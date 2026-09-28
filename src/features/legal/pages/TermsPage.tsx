@@ -21,38 +21,51 @@ const SECTIONS: LegalSection[] = [
     ],
   },
   {
-    heading: "3. Registration & Identity Verification",
+    heading: "3. No Guarantee of Selection",
+    paragraphs: [
+      "Meeting the eligibility criteria and submitting a complete application does not guarantee selection as Mbopo Akwa Ibom or advancement to any stage of the program. Every application is reviewed through a competitive, multi-stage selection process (including Local Government Area and Senatorial pageants, camp, and the Grand Finale), and eligibility alone does not entitle an applicant to advance, be shortlisted, or be selected.",
+    ],
+  },
+  {
+    heading: "4. No Application Fee",
+    paragraphs: [
+      "Registration and application for Mbopo Akwa Ibom are completely free. At no stage of the process — registration, verification, selection, or otherwise — will you be asked to pay any fee to the organizers or their representatives.",
+      "If anyone requests payment, a gift, or any other consideration in exchange for registering, advancing, or being selected, this is fraudulent and not authorized by the Akwa Ibom State Hotels & Tourism Development Commission. Please report any such request using the contact details on this site.",
+    ],
+  },
+  {
+    heading: "5. Registration & Identity Verification",
     paragraphs: [
       "Applications begin with a lookup of your National Identification Number to confirm your identity, gender, and age before you may proceed. The name, date of birth, gender, and NIN returned by this lookup cannot be edited during registration, as they form the verified basis of your application.",
       "You are responsible for the accuracy of every other detail you submit, including your contact information, educational background, and personal statement. Providing false or misleading information may result in disqualification at any stage.",
     ],
   },
   {
-    heading: "4. Applicant Conduct",
+    heading: "6. Applicant Conduct",
     paragraphs: [
       "Applicants are expected to conduct themselves with honesty and respect throughout the application and selection process. The organizers reserve the right to disqualify any applicant whose conduct is found to be inconsistent with the values of the program.",
     ],
   },
   {
-    heading: "5. Use of Photographs & Media",
+    heading: "7. Use of Photographs & Media",
     paragraphs: [
       "Photographs and images submitted as part of your application may be used by the Akwa Ibom State Hotels & Tourism Development Commission for purposes directly related to the program, including promotional and archival use.",
     ],
   },
   {
-    heading: "6. Disqualification",
+    heading: "8. Disqualification",
     paragraphs: [
       "The organizers reserve the right to disqualify an application at any stage, whether before, during, or after selection, where eligibility criteria are not met or where information provided is later found to be inaccurate.",
     ],
   },
   {
-    heading: "7. Changes to these Terms",
+    heading: "9. Changes to these Terms",
     paragraphs: [
       "These Terms & Conditions may be updated from time to time. Continued use of the platform after changes are published constitutes acceptance of the revised terms.",
     ],
   },
   {
-    heading: "8. Contact",
+    heading: "10. Contact",
     paragraphs: [
       "Questions about these terms can be directed to the Akwa Ibom State Hotels & Tourism Development Commission.",
     ],

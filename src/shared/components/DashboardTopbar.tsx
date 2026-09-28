@@ -3,6 +3,7 @@ import { ChevronDown, LogOut, Menu, User as UserIcon } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/features/auth";
 import { NotificationBell } from "@/features/notifications";
+import { DisclaimerStrip } from "./DisclaimerStrip";
 import {
   Avatar,
   AvatarImage,
@@ -22,6 +23,7 @@ import {
 } from "@/shared/ui";
 import {
   TopbarFrame,
+  TopbarRow,
   MenuToggle,
   Title,
   RightCluster,
@@ -59,54 +61,64 @@ export function DashboardTopbar({
 
   return (
     <TopbarFrame>
-      <MenuToggle type="button" aria-label="Open menu" onClick={onOpenSidebar}>
-        <Menu size={20} />
-      </MenuToggle>
-      <Title>{title}</Title>
-      <RightCluster>
-        <NotificationBell />
+      <DisclaimerStrip />
+      <TopbarRow>
+        <MenuToggle
+          type="button"
+          aria-label="Open menu"
+          onClick={onOpenSidebar}
+        >
+          <Menu size={20} />
+        </MenuToggle>
+        <Title>{title}</Title>
+        <RightCluster>
+          <NotificationBell />
 
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <ProfileTrigger type="button" aria-label="Account menu">
-              <Avatar>
-                {user?.avatarUrl && (
-                  <AvatarImage
-                    src={user.avatarUrl}
-                    alt={`${user.firstName} ${user.lastName}`}
-                  />
-                )}
-                <AvatarFallback>{initials}</AvatarFallback>
-              </Avatar>
-              {user && (
-                <UserMeta>
-                  <UserName>
-                    {user.firstName} {user.lastName}
-                  </UserName>
-                  {referenceCode && (
-                    <UserReference>{referenceCode}</UserReference>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <ProfileTrigger type="button" aria-label="Account menu">
+                <Avatar>
+                  {user?.avatarUrl && (
+                    <AvatarImage
+                      src={user.avatarUrl}
+                      alt={`${user.firstName} ${user.lastName}`}
+                    />
                   )}
-                </UserMeta>
+                  <AvatarFallback>{initials}</AvatarFallback>
+                </Avatar>
+                {user && (
+                  <UserMeta>
+                    <UserName>
+                      {user.firstName} {user.lastName}
+                    </UserName>
+                    {referenceCode && (
+                      <UserReference>{referenceCode}</UserReference>
+                    )}
+                  </UserMeta>
+                )}
+                <ChevronDown size={16} />
+              </ProfileTrigger>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              {user && (
+                <DropdownGreeting>Welcome {user.firstName}!</DropdownGreeting>
               )}
-              <ChevronDown size={16} />
-            </ProfileTrigger>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent>
-            {user && (
-              <DropdownGreeting>Welcome {user.firstName}!</DropdownGreeting>
-            )}
-            <DropdownMenuItem onSelect={() => navigate("/profile")}>
-              <UserIcon size={16} />
-              Profile
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem destructive onSelect={() => setConfirmOpen(true)}>
-              <LogOut size={16} />
-              Log out
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      </RightCluster>
+              <DropdownMenuItem onSelect={() => navigate("/profile")}>
+                <UserIcon size={16} />
+                Profile
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem
+                destructive
+                onSelect={() => setConfirmOpen(true)}
+              >
+                <LogOut size={16} />
+                Log out
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </RightCluster>
+      </TopbarRow>
 
       <Dialog open={confirmOpen} onOpenChange={setConfirmOpen}>
         <DialogContent>

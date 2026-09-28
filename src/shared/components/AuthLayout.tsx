@@ -9,8 +9,6 @@ import {
   LeftPaneBody,
   ContentColumn,
   LogoBlock,
-  GovLogoRow,
-  GovLogoImage,
   LogoLink,
   LogoImage,
   PageFooter,
@@ -28,14 +26,12 @@ export function AuthLayout({ children }: AuthLayoutProps) {
         <LeftPaneBody>
           <ContentColumn>
             <LogoBlock>
-              <GovLogoRow>
-                <GovLogoImage
+              <LogoLink to="/" aria-label="Mbopo Akwa Ibom home">
+                <LogoImage
                   src={akwaIbomLogo}
                   alt="Akwa Ibom State Government"
                 />
-                <GovLogoImage src={ariseLogo} alt="ARISE Akwa Ibom" />
-              </GovLogoRow>
-              <LogoLink to="/" aria-label="Mbopo Akwa Ibom home">
+                <LogoImage src={ariseLogo} alt="ARISE Akwa Ibom" />
                 <LogoImage src={mbopoLogo} alt="Mbopo Akwa Ibom" />
               </LogoLink>
             </LogoBlock>
