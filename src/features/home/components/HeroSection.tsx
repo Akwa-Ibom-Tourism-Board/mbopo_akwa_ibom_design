@@ -134,7 +134,7 @@ export function HeroSection() {
             <PrimaryLink to="/register">
               Register Now <ArrowRight size={17} />
             </PrimaryLink>
-            <GhostLink to="/presentation">Learn More</GhostLink>
+            {/* <GhostLink to="/presentation">Learn More</GhostLink> */}
             <Dots>
               {SLIDES.map((slide, index) => (
                 <Dot
