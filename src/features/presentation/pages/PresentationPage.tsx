@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { X, ChevronLeft, ChevronRight, Loader2 } from "lucide-react";
 import styled from "styled-components";
-import presentationPdf from "@/assets/presentation/Mbopo_Akwa_Ibom_Proposal_Final_v17.pdf";
+import presentationPdf from "@/assets/presentation/Mbopo_Akwa_Ibom_Proposal_Final_v17_Draft.pdf";
 
 // react-pdf must NEVER be statically imported at module scope — pdf.js
 // touches browser-only globals (DOMMatrix, etc). A static import gets
@@ -10,7 +10,7 @@ import presentationPdf from "@/assets/presentation/Mbopo_Akwa_Ibom_Proposal_Fina
 // useEffect, which only ever runs in the browser.
 type PdfModule = typeof import("react-pdf");
 
-const FALLBACK_TOTAL_PAGES = 16;
+const FALLBACK_TOTAL_PAGES = 12;
 
 export function PresentationPage() {
   const navigate = useNavigate();
