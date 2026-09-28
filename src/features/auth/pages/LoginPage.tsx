@@ -11,7 +11,7 @@ import { Checkbox, sonnerToast } from "@/shared/ui";
 import { RECAPTCHA_SITE_KEY } from "@/lib/config";
 import { useAuth } from "../context/AuthContext";
 import { login } from "../api";
-import { InvalidCredentialsError } from "../types";
+import { EmailNotVerifiedError, InvalidCredentialsError } from "../types";
 import {
   Heading,
   Subtitle,
@@ -65,7 +65,8 @@ export function LoginPage() {
     },
     onError: (error) => {
       const message =
-        error instanceof InvalidCredentialsError
+        error instanceof InvalidCredentialsError ||
+        error instanceof EmailNotVerifiedError
           ? error.message
           : "Something went wrong. Please try again.";
       setError("password", { message });
@@ -86,7 +87,7 @@ export function LoginPage() {
   }
 
   return (
-    <AuthLayout>
+    <AuthLayout carouselVariant="login">
       <Heading>Welcome Back</Heading>
       <Subtitle>Sign in to continue to your account</Subtitle>
 

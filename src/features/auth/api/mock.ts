@@ -9,6 +9,7 @@ import {
   type MockUserRecord,
 } from "@/lib/mockUsersStore";
 import {
+  EmailNotVerifiedError,
   InvalidCredentialsError,
   SessionExpiredError,
   type LoginInput,
@@ -19,6 +20,10 @@ import {
 function toPublicUser(record: MockUserRecord): User {
   return {
     id: record.id,
+    email: record.email,
+    applicationStatus: record.applicationStatus,
+    avatarUrl: record.avatarUrl,
+    identityVerified: record.identityVerified,
     firstName: record.firstName,
     lastName: record.lastName,
     nin: record.nin,
@@ -27,9 +32,6 @@ function toPublicUser(record: MockUserRecord): User {
     ward: record.ward,
     gender: record.gender,
     dateOfBirth: record.dateOfBirth,
-    email: record.email,
-    applicationStatus: record.applicationStatus,
-    avatarUrl: record.avatarUrl,
   };
 }
 
@@ -42,6 +44,9 @@ export async function login({ email, password }: LoginInput): Promise<Session> {
   const record = findUserByEmail(email);
   if (!record || !verifyPassword(record, password)) {
     throw new InvalidCredentialsError();
+  }
+  if (!record.emailVerified) {
+    throw new EmailNotVerifiedError();
   }
 
   return { token: mintToken(record.id), user: toPublicUser(record) };

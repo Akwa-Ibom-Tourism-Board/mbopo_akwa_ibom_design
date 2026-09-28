@@ -17,6 +17,10 @@ export async function getDashboardSummary(
   return {
     user: {
       id: record.id,
+      email: record.email,
+      applicationStatus: record.applicationStatus,
+      avatarUrl: record.avatarUrl,
+      identityVerified: record.identityVerified,
       firstName: record.firstName,
       lastName: record.lastName,
       nin: record.nin,
@@ -25,8 +29,6 @@ export async function getDashboardSummary(
       ward: record.ward,
       gender: record.gender,
       dateOfBirth: record.dateOfBirth,
-      email: record.email,
-      applicationStatus: record.applicationStatus,
     },
     memberSince: new Date(record.createdAt).toISOString(),
     referenceCode: findApplicationByUserId(userId)?.referenceCode,

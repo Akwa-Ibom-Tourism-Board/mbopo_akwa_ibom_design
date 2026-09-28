@@ -99,7 +99,9 @@ export class ErrorBoundary extends Component<
               Something went wrong. You can try refreshing or head back home.
             </Copy>
             {import.meta.env.DEV && (
-              <ErrorDetails>{this.state.error.stack ?? this.state.error.message}</ErrorDetails>
+              <ErrorDetails>
+                {this.state.error.stack ?? this.state.error.message}
+              </ErrorDetails>
             )}
             <Actions>
               <ActionButton onClick={() => window.location.reload()}>
