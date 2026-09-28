@@ -1,5 +1,6 @@
 import { delay } from "@/lib/mockDelay";
 import { markApplicationSubmitted } from "@/lib/mockUsersStore";
+import { createNotification } from "@/lib/mockNotificationsStore";
 import {
   saveApplication,
   findApplicationByUserId,
@@ -40,6 +41,13 @@ export async function submitApplication({
   });
   markApplicationSubmitted(userId);
   clearDraft(userId);
+
+  createNotification({
+    userId,
+    title: "Application submitted",
+    body: `Your Mbopo Akwa Ibom application was submitted successfully. Your reference code is ${referenceCode}.`,
+    type: "application",
+  });
 
   return { referenceCode };
 }

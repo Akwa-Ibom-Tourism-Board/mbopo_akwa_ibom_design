@@ -28,7 +28,7 @@ export function DashboardPage() {
   const hasDraft = summaryQuery.data?.hasDraft ?? false;
 
   return (
-    <DashboardShell title="Overview" referenceCode={referenceCode}>
+    <DashboardShell title="Dashboard" referenceCode={referenceCode}>
       <Stack>
         <Greeting>Welcome back, {displayUser.firstName}.</Greeting>
         {summaryQuery.isLoading && (

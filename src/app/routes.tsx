@@ -4,7 +4,8 @@ import { HomePage } from "@/features/home";
 import { RegisterPage } from "@/features/register";
 import { VerifyEmailPage } from "@/features/verify-email";
 import { LoginPage } from "@/features/auth";
-import { DashboardPage } from "@/features/dashboard";
+import { DashboardPage, ProfilePage } from "@/features/dashboard";
+import { NotificationsPage } from "@/features/notifications";
 import { MbopoRegistrationPage } from "@/features/mbopo-registration";
 import { TermsPage, PrivacyPage } from "@/features/legal";
 import { NotFoundPage } from "@/features/not-found";
@@ -49,6 +50,22 @@ export function AppRoutes() {
         element={
           <ProtectedRoute>
             <MbopoRegistrationPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/notifications"
+        element={
+          <ProtectedRoute>
+            <NotificationsPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/profile"
+        element={
+          <ProtectedRoute>
+            <ProfilePage />
           </ProtectedRoute>
         }
       />

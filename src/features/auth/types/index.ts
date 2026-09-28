@@ -12,6 +12,10 @@ export interface User {
   dateOfBirth: string;
   email: string;
   applicationStatus: "not_started" | "submitted";
+  // Data URL in the mock (see mockUsersStore.ts); a real backend serves
+  // this as an uploaded-file URL instead (POST /auth/avatar). Undefined
+  // until the applicant uploads one — the UI falls back to a placeholder.
+  avatarUrl?: string;
 }
 
 export interface Session {
