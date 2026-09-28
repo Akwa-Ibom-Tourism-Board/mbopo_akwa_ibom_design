@@ -49,8 +49,16 @@ export function DashboardTopbar({
   const navigate = useNavigate();
   const [confirmOpen, setConfirmOpen] = useState(false);
 
+  const displayName = user
+    ? user.firstName
+      ? `${user.firstName} ${user.lastName}`
+      : user.email
+    : "";
   const initials = user
-    ? `${user.firstName[0] ?? ""}${user.lastName[0] ?? ""}`.toUpperCase()
+    ? (user.firstName
+        ? `${user.firstName[0] ?? ""}${user.lastName?.[0] ?? ""}`
+        : (user.email[0] ?? "")
+      ).toUpperCase()
     : "";
 
   const handleLogout = () => {
@@ -79,18 +87,13 @@ export function DashboardTopbar({
               <ProfileTrigger type="button" aria-label="Account menu">
                 <Avatar>
                   {user?.avatarUrl && (
-                    <AvatarImage
-                      src={user.avatarUrl}
-                      alt={`${user.firstName} ${user.lastName}`}
-                    />
+                    <AvatarImage src={user.avatarUrl} alt={displayName} />
                   )}
                   <AvatarFallback>{initials}</AvatarFallback>
                 </Avatar>
                 {user && (
                   <UserMeta>
-                    <UserName>
-                      {user.firstName} {user.lastName}
-                    </UserName>
+                    <UserName>{displayName}</UserName>
                     {referenceCode && (
                       <UserReference>{referenceCode}</UserReference>
                     )}
@@ -101,7 +104,9 @@ export function DashboardTopbar({
             </DropdownMenuTrigger>
             <DropdownMenuContent>
               {user && (
-                <DropdownGreeting>Welcome {user.firstName}!</DropdownGreeting>
+                <DropdownGreeting>
+                  Welcome {user.firstName ?? user.email}!
+                </DropdownGreeting>
               )}
               <DropdownMenuItem onSelect={() => navigate("/profile")}>
                 <UserIcon size={16} />

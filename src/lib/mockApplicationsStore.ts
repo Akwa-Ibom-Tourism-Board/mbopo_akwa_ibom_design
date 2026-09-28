@@ -10,6 +10,7 @@ export interface ApplicationRecord {
   referenceCode: string;
   values: RegistrationFormValues;
   photos: RegistrationPhotoDataUrls;
+  videoPitchUrl?: string;
   submittedAt: number;
 }
 

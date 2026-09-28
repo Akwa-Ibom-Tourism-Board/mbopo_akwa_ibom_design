@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { media } from "@/theme";
 
 export const ShellFrame = styled.div`
   display: flex;
@@ -6,11 +7,18 @@ export const ShellFrame = styled.div`
   background: ${({ theme }) => theme.colors.background};
 `;
 
+// The sidebar is `position: fixed` at every breakpoint (see
+// DashboardSidebar.styles.ts) so it never stretches or drifts with this
+// column's height — this reserves its width instead of relying on flex.
 export const ContentPane = styled.div`
   display: flex;
   flex-direction: column;
   flex: 1;
   min-width: 0;
+
+  ${media.lg} {
+    margin-left: 264px;
+  }
 `;
 
 export const ContentBody = styled.div`

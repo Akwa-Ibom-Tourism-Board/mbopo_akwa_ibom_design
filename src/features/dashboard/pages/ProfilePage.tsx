@@ -40,8 +40,14 @@ export function ProfilePage() {
 
   if (!user) return null;
 
-  const initials =
-    `${user.firstName[0] ?? ""}${user.lastName[0] ?? ""}`.toUpperCase();
+  const displayName = user.firstName
+    ? `${user.firstName} ${user.lastName}`
+    : user.email;
+  const initials = (
+    user.firstName
+      ? `${user.firstName[0] ?? ""}${user.lastName?.[0] ?? ""}`
+      : (user.email[0] ?? "")
+  ).toUpperCase();
 
   const onFileChange = async (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -65,10 +71,7 @@ export function ProfilePage() {
           <AvatarFrame>
             <LargeAvatar>
               {user.avatarUrl && (
-                <AvatarImage
-                  src={user.avatarUrl}
-                  alt={`${user.firstName} ${user.lastName}`}
-                />
+                <AvatarImage src={user.avatarUrl} alt={displayName} />
               )}
               <AvatarFallback>{initials}</AvatarFallback>
             </LargeAvatar>
@@ -83,9 +86,7 @@ export function ProfilePage() {
             </AvatarUploadButton>
           </AvatarFrame>
           <AvatarMeta>
-            <AvatarName>
-              {user.firstName} {user.lastName}
-            </AvatarName>
+            <AvatarName>{displayName}</AvatarName>
             <AvatarHint>
               {uploadMutation.isPending
                 ? "Uploading…"

@@ -1,7 +1,7 @@
 import type { ChangeEvent } from "react";
 import type { FieldErrors, UseFormRegister } from "react-hook-form";
 import { Input } from "@/shared/ui";
-import type { User } from "@/features/auth";
+import type { VerifiedUser } from "@/features/auth";
 import type { RegistrationFormValues } from "../../schema";
 import { Field } from "../Field";
 import { FieldGrid, LockedValue } from "../Field.styles";
@@ -9,7 +9,7 @@ import { PhotoUpload } from "../PhotoUpload";
 import { StepContent, StepTitle, StepHint } from "../StepShell.styles";
 
 export interface PersonalStepProps {
-  user: User;
+  user: VerifiedUser;
   register: UseFormRegister<RegistrationFormValues>;
   errors: FieldErrors<RegistrationFormValues>;
   passportPhotoUrl: string;

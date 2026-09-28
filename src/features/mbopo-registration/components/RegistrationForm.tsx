@@ -5,7 +5,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { ArrowLeft, ArrowRight, Save } from "lucide-react";
 import { Button, sonnerToast } from "@/shared/ui";
-import type { User } from "@/features/auth";
+import type { VerifiedUser } from "@/features/auth";
 import {
   registrationSchema,
   DEFAULT_REGISTRATION_FORM_VALUES,
@@ -17,9 +17,11 @@ import { submitApplication, saveRegistrationDraft } from "../api";
 import type { RegistrationDraft, RegistrationPhotoDataUrls } from "../types";
 import { StepProgress } from "./StepProgress";
 import { usePhotoUpload } from "./usePhotoUpload";
+import { useVideoRecorder } from "./useVideoRecorder";
 import { PersonalStep } from "./steps/PersonalStep";
 import { IdentityOriginStep } from "./steps/IdentityOriginStep";
 import { EducationStep } from "./steps/EducationStep";
+import { VideoPitchStep } from "./steps/VideoPitchStep";
 import { StoryStep } from "./steps/StoryStep";
 import { SuccessState } from "./SuccessState";
 import { ReviewSubmitModal } from "./ReviewSubmitModal";
@@ -35,12 +37,21 @@ import {
 } from "./RegistrationForm.styles";
 
 const REQUIRED_PHOTO_MESSAGE = "This photo is required.";
+const PERSONAL_STEP = 0;
+const IDENTITY_STEP = 1;
+const EDUCATION_STEP = 2;
+const VIDEO_STEP = 3;
 
+// Everything except the video pitch can be saved as a draft and resumed —
+// see "Save & Exit" below. The video is different: once it's been
+// submitted (useVideoRecorder's "locked" status), it can never be
+// re-recorded, even from a resumed draft, so it isn't gated the same way
+// the other steps' required fields are.
 export function RegistrationForm({
   user,
   initialDraft,
 }: {
-  user: User;
+  user: VerifiedUser;
   initialDraft?: RegistrationDraft | null;
 }) {
   const navigate = useNavigate();
@@ -55,6 +66,8 @@ export function RegistrationForm({
   const [requirePassportPhoto, setRequirePassportPhoto] = useState(false);
   const [requireCertificate, setRequireCertificate] = useState(false);
   const [requireFullImage, setRequireFullImage] = useState(false);
+  const [requireFullImage2, setRequireFullImage2] = useState(false);
+  const [requireVideo, setRequireVideo] = useState(false);
   const [reviewOpen, setReviewOpen] = useState(false);
 
   const passportPhoto = usePhotoUpload({
@@ -67,6 +80,13 @@ export function RegistrationForm({
   });
   const fullImage = usePhotoUpload({
     initialDataUrl: initialDraft?.photos.fullImage,
+  });
+  const fullImage2 = usePhotoUpload({
+    initialDataUrl: initialDraft?.photos.fullImage2,
+  });
+  const videoRecorder = useVideoRecorder({
+    userId: user.id,
+    initialLockedUrl: initialDraft?.videoPitchUrl,
   });
 
   const {
@@ -139,21 +159,26 @@ export function RegistrationForm({
     passportPhoto: await passportPhoto.getPersistableDataUrl(),
     certificateOfOrigin: await certificate.getPersistableDataUrl(),
     fullImage: await fullImage.getPersistableDataUrl(),
+    fullImage2: await fullImage2.getPersistableDataUrl(),
   });
 
   const goToNextStep = async () => {
     const fieldsValid = await trigger(STEP_FIELDS[currentStepIndex]);
     if (!fieldsValid) return;
 
-    if (currentStepIndex === 0) {
+    if (currentStepIndex === PERSONAL_STEP) {
       setRequirePassportPhoto(!passportPhoto.hasPhoto);
       if (!passportPhoto.hasPhoto) return;
-    } else if (currentStepIndex === 1) {
+    } else if (currentStepIndex === IDENTITY_STEP) {
       setRequireCertificate(!certificate.hasPhoto);
       if (!certificate.hasPhoto) return;
-    } else if (currentStepIndex === 2) {
+    } else if (currentStepIndex === EDUCATION_STEP) {
       setRequireFullImage(!fullImage.hasPhoto);
-      if (!fullImage.hasPhoto) return;
+      setRequireFullImage2(!fullImage2.hasPhoto);
+      if (!fullImage.hasPhoto || !fullImage2.hasPhoto) return;
+    } else if (currentStepIndex === VIDEO_STEP) {
+      setRequireVideo(videoRecorder.status !== "locked");
+      if (videoRecorder.status !== "locked") return;
     }
 
     setCurrentStepIndex((index) =>
@@ -165,12 +190,22 @@ export function RegistrationForm({
     setCurrentStepIndex((index) => Math.max(index - 1, 0));
 
   const handleSaveAndExit = async () => {
+    if (videoRecorder.status === "preview") {
+      sonnerToast.error(
+        "Tap Submit Video to keep your recording, or Record Again — an unsubmitted take isn't saved with your draft.",
+      );
+      return;
+    }
     const photos = await gatherPhotos();
     saveDraftMutation.mutate({
       userId: user.id,
       values: getValues(),
       currentStepIndex,
       photos,
+      videoPitchUrl:
+        videoRecorder.status === "locked"
+          ? videoRecorder.previewUrl
+          : undefined,
     });
   };
 
@@ -184,9 +219,11 @@ export function RegistrationForm({
         (name) => getFieldState(name).invalid,
       );
       const missingPhoto =
-        (index === 0 && !passportPhoto.hasPhoto) ||
-        (index === 1 && !certificate.hasPhoto) ||
-        (index === 2 && !fullImage.hasPhoto);
+        (index === PERSONAL_STEP && !passportPhoto.hasPhoto) ||
+        (index === IDENTITY_STEP && !certificate.hasPhoto) ||
+        (index === EDUCATION_STEP &&
+          (!fullImage.hasPhoto || !fullImage2.hasPhoto)) ||
+        (index === VIDEO_STEP && videoRecorder.status !== "locked");
       if (hasFieldError || missingPhoto) return index;
     }
     return null;
@@ -195,12 +232,18 @@ export function RegistrationForm({
   const openReview = async () => {
     const fieldsValid = await trigger();
     const photosOk =
-      passportPhoto.hasPhoto && certificate.hasPhoto && fullImage.hasPhoto;
+      passportPhoto.hasPhoto &&
+      certificate.hasPhoto &&
+      fullImage.hasPhoto &&
+      fullImage2.hasPhoto;
+    const videoOk = videoRecorder.status === "locked";
 
-    if (!fieldsValid || !photosOk) {
+    if (!fieldsValid || !photosOk || !videoOk) {
       setRequirePassportPhoto(!passportPhoto.hasPhoto);
       setRequireCertificate(!certificate.hasPhoto);
       setRequireFullImage(!fullImage.hasPhoto);
+      setRequireFullImage2(!fullImage2.hasPhoto);
+      setRequireVideo(!videoOk);
       const invalidStep = findFirstInvalidStep();
       if (invalidStep !== null) setCurrentStepIndex(invalidStep);
       sonnerToast.error(
@@ -213,8 +256,14 @@ export function RegistrationForm({
   };
 
   const handleConfirmSubmit = async () => {
+    if (videoRecorder.status !== "locked") return;
     const photos = await gatherPhotos();
-    submitMutation.mutate({ userId: user.id, values: getValues(), photos });
+    submitMutation.mutate({
+      userId: user.id,
+      values: getValues(),
+      photos,
+      videoPitchUrl: videoRecorder.previewUrl,
+    });
   };
 
   const isLastStep = currentStepIndex === REGISTRATION_STEPS.length - 1;
@@ -225,7 +274,7 @@ export function RegistrationForm({
       <Intro>
         <Eyebrow>Mbopo AKWA IBOM</Eyebrow>
         <Title>
-          Your place in the story
+          Your place in history
           <br />
           <em>starts here.</em>
         </Title>
@@ -247,7 +296,7 @@ export function RegistrationForm({
           }}
           noValidate
         >
-          {currentStepIndex === 0 && (
+          {currentStepIndex === PERSONAL_STEP && (
             <PersonalStep
               user={user}
               register={register}
@@ -260,7 +309,7 @@ export function RegistrationForm({
               onPassportPhotoChange={passportPhoto.onChange}
             />
           )}
-          {currentStepIndex === 1 && (
+          {currentStepIndex === IDENTITY_STEP && (
             <IdentityOriginStep
               user={user}
               register={register}
@@ -274,7 +323,7 @@ export function RegistrationForm({
               onCertificateChange={certificate.onChange}
             />
           )}
-          {currentStepIndex === 2 && (
+          {currentStepIndex === EDUCATION_STEP && (
             <EducationStep
               register={register}
               control={control}
@@ -285,9 +334,21 @@ export function RegistrationForm({
                 (requireFullImage ? REQUIRED_PHOTO_MESSAGE : undefined)
               }
               onFullImageChange={fullImage.onChange}
+              fullImage2Url={fullImage2.previewUrl}
+              fullImage2Error={
+                fullImage2.error ??
+                (requireFullImage2 ? REQUIRED_PHOTO_MESSAGE : undefined)
+              }
+              onFullImage2Change={fullImage2.onChange}
             />
           )}
-          {currentStepIndex === 3 && (
+          {currentStepIndex === VIDEO_STEP && (
+            <VideoPitchStep
+              recorder={videoRecorder}
+              showRequiredNotice={requireVideo}
+            />
+          )}
+          {isLastStep && (
             <StoryStep register={register} control={control} errors={errors} />
           )}
 
@@ -335,7 +396,9 @@ export function RegistrationForm({
           passportPhoto: passportPhoto.previewUrl,
           certificateOfOrigin: certificate.previewUrl,
           fullImage: fullImage.previewUrl,
+          fullImage2: fullImage2.previewUrl,
         }}
+        videoPreviewUrl={videoRecorder.previewUrl}
         isSubmitting={submitMutation.isPending}
         onConfirm={() => void handleConfirmSubmit()}
       />

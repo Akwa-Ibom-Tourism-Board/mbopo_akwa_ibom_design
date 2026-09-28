@@ -1,1 +1,1 @@
-export { verifyOtpAndCreateAccount, resendOtp } from "./mock";
+export { verifyOtp, resendOtp } from "./mock";

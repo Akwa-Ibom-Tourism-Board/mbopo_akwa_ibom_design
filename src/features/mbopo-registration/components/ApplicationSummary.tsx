@@ -1,6 +1,7 @@
+import { useState } from "react";
 import { FileText, ImageOff } from "lucide-react";
 import { format } from "date-fns";
-import type { User } from "@/features/auth";
+import type { VerifiedUser } from "@/features/auth";
 import type { RegistrationFormValues } from "../schema";
 import type { RegistrationPhotoDataUrls } from "../types";
 import {
@@ -13,10 +14,11 @@ import {
   PhotoRow,
   PhotoThumb,
   PhotoPlaceholder,
+  VideoPreview,
 } from "./ApplicationSummary.styles";
 
 export interface ApplicationSummaryProps {
-  user: User;
+  user: VerifiedUser;
   values: RegistrationFormValues;
   // Preview sources for display only — object URLs while still on the
   // form, data URLs once persisted. Optional/partial because a record
@@ -24,6 +26,9 @@ export interface ApplicationSummaryProps {
   // be missing one or all of these — never assume the whole object, or
   // any given key, is present. See PhotoOrPlaceholder below.
   photos?: Partial<RegistrationPhotoDataUrls>;
+  // Object URL while still on the form; only persists for the lifetime of
+  // the in-memory mock video store once submitted (see mockVideoStore.ts).
+  videoPreviewUrl?: string;
 }
 
 function isPdf(src: string) {
@@ -50,10 +55,37 @@ function PhotoOrPlaceholder({ src, alt }: { src?: string; alt: string }) {
   return <img src={src} alt={alt} />;
 }
 
+// The mock video store only holds the recording's Blob for the lifetime of
+// the tab (see mockVideoStore.ts) — its object URL stops resolving after a
+// reload, which the browser otherwise shows as a video element stuck
+// loading forever. Falling back to the same placeholder as a missing photo
+// is more honest than that silent spin.
+function VideoOrPlaceholder({ src }: { src?: string }) {
+  const [failed, setFailed] = useState(false);
+
+  if (!src || failed) {
+    return (
+      <PhotoPlaceholder role="img" aria-label="Video pitch not on file">
+        <ImageOff size={20} aria-hidden />
+      </PhotoPlaceholder>
+    );
+  }
+
+  return (
+    <VideoPreview
+      src={src}
+      controls
+      playsInline
+      onError={() => setFailed(true)}
+    />
+  );
+}
+
 export function ApplicationSummary({
   user,
   values,
   photos = {},
+  videoPreviewUrl,
 }: ApplicationSummaryProps) {
   return (
     <>
@@ -195,10 +227,25 @@ export function ApplicationSummary({
         </DetailGrid>
         <PhotoRow>
           <PhotoThumb>
-            <PhotoOrPlaceholder src={photos.fullImage} alt="Full image preview" />
-            <figcaption>Full image</figcaption>
+            <PhotoOrPlaceholder
+              src={photos.fullImage}
+              alt="Full image 1 preview"
+            />
+            <figcaption>Full image 1</figcaption>
+          </PhotoThumb>
+          <PhotoThumb>
+            <PhotoOrPlaceholder
+              src={photos.fullImage2}
+              alt="Full image 2 preview"
+            />
+            <figcaption>Full image 2</figcaption>
           </PhotoThumb>
         </PhotoRow>
+      </Section>
+
+      <Section>
+        <SectionTitle>Video pitch</SectionTitle>
+        <VideoOrPlaceholder src={videoPreviewUrl} />
       </Section>
 
       <Section>

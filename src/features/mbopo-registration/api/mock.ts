@@ -28,6 +28,7 @@ export async function submitApplication({
   userId,
   values,
   photos,
+  videoPitchUrl,
 }: SubmitApplicationInput): Promise<SubmitApplicationResult> {
   await delay(1000, 400);
 
@@ -37,6 +38,7 @@ export async function submitApplication({
     referenceCode,
     values,
     photos,
+    videoPitchUrl,
     submittedAt: Date.now(),
   });
   markApplicationSubmitted(userId);
@@ -66,12 +68,14 @@ export async function saveRegistrationDraft({
   values,
   currentStepIndex,
   photos,
+  videoPitchUrl,
 }: SaveDraftInput): Promise<void> {
   await delay(400, 200);
   saveDraft(userId, {
     values,
     currentStepIndex,
     photos,
+    videoPitchUrl,
     updatedAt: Date.now(),
   });
 }

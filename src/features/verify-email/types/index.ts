@@ -1,13 +1,10 @@
-import type { Session } from "@/features/auth";
-
-export interface VerifyOtpAndCreateAccountInput {
-  pendingId: string;
+export interface VerifyOtpInput {
+  email: string;
   code: string;
-  password: string;
 }
 
 export interface ResendOtpInput {
-  pendingId: string;
+  email: string;
 }
 
-export type VerifyOtpAndCreateAccountResult = Session;
+export type VerifyOtpResult = void;

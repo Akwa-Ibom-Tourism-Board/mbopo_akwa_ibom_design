@@ -103,7 +103,7 @@ export function HowItWorksSection() {
             <Subtitle>
               The Mbopo Akwa Ibom application process is designed to be
               straightforward and accessible. Four steps stand between you and
-              the crown.
+              the contest.
             </Subtitle>
           </Header>
 
