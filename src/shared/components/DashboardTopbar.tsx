@@ -1,14 +1,35 @@
-import { Menu } from "lucide-react";
+import { useState } from "react";
+import { ChevronDown, LogOut, Menu, User as UserIcon } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/features/auth";
-import { Avatar, AvatarFallback } from "@/shared/ui";
+import { NotificationBell } from "@/features/notifications";
+import {
+  Avatar,
+  AvatarImage,
+  AvatarFallback,
+  Button,
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+} from "@/shared/ui";
 import {
   TopbarFrame,
   MenuToggle,
   Title,
-  UserCluster,
+  RightCluster,
+  ProfileTrigger,
   UserMeta,
   UserName,
   UserReference,
+  DropdownGreeting,
 } from "./DashboardTopbar.styles";
 
 export interface DashboardTopbarProps {
@@ -22,10 +43,19 @@ export function DashboardTopbar({
   referenceCode,
   onOpenSidebar,
 }: DashboardTopbarProps) {
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
+  const [confirmOpen, setConfirmOpen] = useState(false);
+
   const initials = user
     ? `${user.firstName[0] ?? ""}${user.lastName[0] ?? ""}`.toUpperCase()
     : "";
+
+  const handleLogout = () => {
+    setConfirmOpen(false);
+    logout();
+    navigate("/login", { replace: true });
+  };
 
   return (
     <TopbarFrame>
@@ -33,19 +63,70 @@ export function DashboardTopbar({
         <Menu size={20} />
       </MenuToggle>
       <Title>{title}</Title>
-      <UserCluster>
-        <Avatar>
-          <AvatarFallback>{initials}</AvatarFallback>
-        </Avatar>
-        {user && (
-          <UserMeta>
-            <UserName>
-              {user.firstName} {user.lastName}
-            </UserName>
-            {referenceCode && <UserReference>{referenceCode}</UserReference>}
-          </UserMeta>
-        )}
-      </UserCluster>
+      <RightCluster>
+        <NotificationBell />
+
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <ProfileTrigger type="button" aria-label="Account menu">
+              <Avatar>
+                {user?.avatarUrl && (
+                  <AvatarImage
+                    src={user.avatarUrl}
+                    alt={`${user.firstName} ${user.lastName}`}
+                  />
+                )}
+                <AvatarFallback>{initials}</AvatarFallback>
+              </Avatar>
+              {user && (
+                <UserMeta>
+                  <UserName>
+                    {user.firstName} {user.lastName}
+                  </UserName>
+                  {referenceCode && (
+                    <UserReference>{referenceCode}</UserReference>
+                  )}
+                </UserMeta>
+              )}
+              <ChevronDown size={16} />
+            </ProfileTrigger>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent>
+            {user && (
+              <DropdownGreeting>Welcome {user.firstName}!</DropdownGreeting>
+            )}
+            <DropdownMenuItem onSelect={() => navigate("/profile")}>
+              <UserIcon size={16} />
+              Profile
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem destructive onSelect={() => setConfirmOpen(true)}>
+              <LogOut size={16} />
+              Log out
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </RightCluster>
+
+      <Dialog open={confirmOpen} onOpenChange={setConfirmOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Log out?</DialogTitle>
+            <DialogDescription>
+              You&apos;ll need to sign in again to access your dashboard and
+              application.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setConfirmOpen(false)}>
+              Cancel
+            </Button>
+            <Button variant="destructive" onClick={handleLogout}>
+              Log out
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </TopbarFrame>
   );
 }

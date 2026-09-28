@@ -8,6 +8,7 @@ export const STORAGE_KEYS = {
   mockUsersDb: "mbopo-mock-users-db",
   mockApplicationsDb: "mbopo-mock-applications-db",
   mockRegistrationDraftsDb: "mbopo-mock-registration-drafts-db",
+  mockNotificationsDb: "mbopo-mock-notifications-db",
   pendingRegistration: "mbopo-pending-registration",
   themeMode: "mbopo-theme-mode",
 } as const;

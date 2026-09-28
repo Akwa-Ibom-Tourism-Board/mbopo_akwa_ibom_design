@@ -22,6 +22,7 @@ export interface MockUserRecord {
   email: string;
   passwordDigest: string;
   applicationStatus: "not_started" | "submitted";
+  avatarUrl?: string;
   createdAt: number;
 }
 
@@ -97,6 +98,22 @@ export function markApplicationSubmitted(userId: string): void {
         : user,
     ),
   );
+}
+
+export function updateUserAvatar(
+  userId: string,
+  avatarUrl: string,
+): MockUserRecord | undefined {
+  const users = readUsers();
+  let updated: MockUserRecord | undefined;
+  writeUsers(
+    users.map((user) => {
+      if (user.id !== userId) return user;
+      updated = { ...user, avatarUrl };
+      return updated;
+    }),
+  );
+  return updated;
 }
 
 // A fake, non-cryptographic "session token" — just enough shape (subject +

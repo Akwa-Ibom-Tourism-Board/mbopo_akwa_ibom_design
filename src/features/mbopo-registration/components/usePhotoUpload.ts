@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState, type ChangeEvent } from "react";
-import { toPersistableDataUrl } from "../utils/photoEncoding";
+import { toPersistableDataUrl } from "@/lib/photoEncoding";
 
 export interface UsePhotoUploadOptions {
   accept?: string;

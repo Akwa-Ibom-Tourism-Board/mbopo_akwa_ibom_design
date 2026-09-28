@@ -10,10 +10,10 @@ export const SidebarFrame = styled.aside<{ $open: boolean }>`
   left: 0;
   display: flex;
   flex-direction: column;
-  width: 260px;
-  padding: 24px 16px;
-  background: ${({ theme }) => theme.colors.card};
-  border-right: 1px solid ${({ theme }) => theme.colors.border};
+  width: 264px;
+  padding: 22px 14px;
+  background: ${({ theme }) => theme.colors.sectionDark};
+  color: ${({ theme }) => theme.colors.white};
   transform: translateX(${({ $open }) => ($open ? "0" : "-100%")});
   transition: transform ${({ theme }) => theme.transitions.base};
 
@@ -44,15 +44,37 @@ export const SidebarOverlay = styled.button<{ $visible: boolean }>`
 
 export const SidebarBrand = styled(Link)`
   display: block;
-  padding: 0 8px 20px;
+  padding: 4px 8px 18px;
+  margin-bottom: 14px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+`;
+
+export const GovLogoRow = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 8px;
   margin-bottom: 12px;
-  border-bottom: 1px solid ${({ theme }) => theme.colors.border};
+`;
+
+export const GovLogoImage = styled.img`
+  height: 26px;
+  width: auto;
+  object-fit: contain;
 `;
 
 export const SidebarLogo = styled.img`
-  height: 34px;
+  height: 40px;
   width: auto;
   object-fit: contain;
+`;
+
+export const SectionLabel = styled.p`
+  margin: 4px 8px 10px;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.45);
 `;
 
 export const NavList = styled.nav`
@@ -69,13 +91,13 @@ export const NavItem = styled(Link)<{ $active: boolean }>`
   border-radius: ${({ theme }) => theme.radii.md};
   font-size: 0.875rem;
   font-weight: 600;
-  color: ${({ theme, $active }) => ($active ? theme.colors.primary.foreground : theme.colors.foreground)};
-  background: ${({ theme, $active }) => ($active ? theme.colors.primary.DEFAULT : "transparent")};
+  color: ${({ theme, $active }) => ($active ? theme.colors.white : "rgba(255, 255, 255, 0.72)")};
+  background: ${({ theme, $active }) => ($active ? theme.colors.secondary.DEFAULT : "transparent")};
   transition: background-color ${({ theme }) => theme.transitions.fast};
 
   &:hover {
-    background: ${({ theme, $active }) => ($active ? theme.colors.primary.DEFAULT : theme.colors.accent.DEFAULT)};
-    color: ${({ theme, $active }) => ($active ? theme.colors.primary.foreground : theme.colors.accent.foreground)};
+    background: ${({ theme, $active }) => ($active ? theme.colors.secondary.DEFAULT : "rgba(255, 255, 255, 0.08)")};
+    color: ${({ theme }) => theme.colors.white};
   }
 
   svg {
@@ -83,23 +105,16 @@ export const NavItem = styled(Link)<{ $active: boolean }>`
   }
 `;
 
-export const NavButton = styled.button`
-  display: flex;
-  align-items: center;
-  gap: 12px;
+export const SidebarFooter = styled.div`
   margin-top: auto;
-  padding: 11px 12px;
-  border: none;
-  border-radius: ${({ theme }) => theme.radii.md};
-  background: transparent;
-  color: ${({ theme }) => theme.colors.destructive.DEFAULT};
-  font-size: 0.875rem;
-  font-weight: 600;
-  font-family: inherit;
-  cursor: pointer;
-  transition: background-color ${({ theme }) => theme.transitions.fast};
+  padding-top: 16px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+`;
 
-  &:hover {
-    background: ${({ theme }) => theme.alpha(theme.colors.destructive.DEFAULT, 0.1)};
-  }
+export const SidebarFooterText = styled.p`
+  margin: 0;
+  padding: 0 8px;
+  font-size: 0.6875rem;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.4);
 `;

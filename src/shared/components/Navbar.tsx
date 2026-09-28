@@ -1,20 +1,40 @@
 import { useEffect, useState } from "react";
-import { ArrowRight, LayoutDashboard, Menu, X } from "lucide-react";
+import {
+  ArrowRight,
+  ChevronRight,
+  LayoutDashboard,
+  Menu,
+  X,
+} from "lucide-react";
+import { useLocation } from "react-router-dom";
 import akwaIbomLogo from "@/assets/akwa-ibom-logo-main.png";
 import ariseLogo from "@/assets/arise-logo-main.png";
-import akhtdcLogo from "@/assets/akhtdc-new-logo.png";
 import { useAuth } from "@/features/auth";
 import {
   Header,
   NavOverlay,
   Bar,
+  BrandCluster,
   LogoCluster,
   LogoImage,
+  BrandDivider,
+  BrandText,
+  BrandName,
+  BrandSubtitle,
   RightCluster,
   NavLinks,
   NavAnchor,
   CtaLink,
+  SignInLink,
   MenuButton,
+  MobileDrawer,
+  MobileDrawerHeader,
+  MobileDrawerClose,
+  MobileNavList,
+  MobileNavRow,
+  MobileDrawerActions,
+  MobileSignInLink,
+  MobileCtaLink,
 } from "./Navbar.styles";
 
 export interface NavbarProps {
@@ -24,10 +44,31 @@ export interface NavbarProps {
   variant?: "overlay" | "solid";
 }
 
+const NAV_ITEMS = [
+  { to: "/", label: "Home" },
+  { to: "/#about", label: "About" },
+  { to: "/#eligibility", label: "Eligibility" },
+  { to: "/#why-enter", label: "Why" },
+  { to: "/privacy", label: "Privacy" },
+  { to: "/terms", label: "Terms" },
+];
+
+// Matches "/some-path" against the current location, and "/#hash" against
+// the current hash while on "/" — so the reference's underline/highlight
+// treatment works for both plain routes and the homepage's anchor links.
+function isNavActive(to: string, pathname: string, hash: string): boolean {
+  const [toPath, toHash] = to.split("#");
+  if (toHash) {
+    return pathname === (toPath || "/") && hash === `#${toHash}`;
+  }
+  return pathname === to && hash === "";
+}
+
 export function Navbar({ variant = "solid" }: NavbarProps) {
   const [scrolled, setScrolled] = useState(variant === "solid");
   const [menuOpen, setMenuOpen] = useState(false);
   const { isAuthenticated } = useAuth();
+  const location = useLocation();
 
   useEffect(() => {
     if (variant === "solid") return;
@@ -53,46 +94,44 @@ export function Navbar({ variant = "solid" }: NavbarProps) {
       />
       <Header $scrolled={scrolled}>
         <Bar>
-          <LogoCluster>
-            <LogoImage
-              src={akwaIbomLogo}
-              alt="Akwa Ibom State Government logo"
-            />
-            <LogoImage src={ariseLogo} alt="ARISE Akwa Ibom logo" />
-          </LogoCluster>
+          <BrandCluster>
+            <LogoCluster>
+              <LogoImage
+                src={akwaIbomLogo}
+                alt="Akwa Ibom State Government logo"
+              />
+              <LogoImage src={ariseLogo} alt="ARISE Akwa Ibom logo" />
+            </LogoCluster>
+            <BrandDivider $light={light} aria-hidden />
+            <BrandText>
+              <BrandName $light={light}>Mbopo Akwa Ibom</BrandName>
+              <BrandSubtitle $light={light}>
+                Akwa Ibom State Hotels and Tourism Development Commission
+              </BrandSubtitle>
+            </BrandText>
+          </BrandCluster>
 
-          <NavLinks $open={menuOpen} $light={light}>
-            <NavAnchor to="/" $light={light} onClick={closeMenu}>
-              Home
-            </NavAnchor>
-            <NavAnchor to="/#about" $light={light} onClick={closeMenu}>
-              About
-            </NavAnchor>
-            <NavAnchor to="/#eligibility" $light={light} onClick={closeMenu}>
-              Eligibility
-            </NavAnchor>
-            <NavAnchor to="/#why-enter" $light={light} onClick={closeMenu}>
-              Why
-            </NavAnchor>
-            {/* <NavAnchor to="/#faq" $light={light} onClick={closeMenu}>
-              FAQ
-            </NavAnchor> */}
-            <NavAnchor to="/privacy" $light={light} onClick={closeMenu}>
-              Privacy
-            </NavAnchor>
-            <NavAnchor to="/terms" $light={light} onClick={closeMenu}>
-              Terms
-            </NavAnchor>
+          <NavLinks>
+            {NAV_ITEMS.map(({ to, label }) => (
+              <NavAnchor
+                key={to}
+                to={to}
+                $light={light}
+                $active={isNavActive(to, location.pathname, location.hash)}
+              >
+                {label}
+              </NavAnchor>
+            ))}
             {isAuthenticated ? (
-              <CtaLink to="/dashboard" onClick={closeMenu}>
+              <CtaLink to="/dashboard">
                 Dashboard <LayoutDashboard size={15} />
               </CtaLink>
             ) : (
               <>
-                <NavAnchor to="/login" $light={light} onClick={closeMenu}>
+                <SignInLink to="/login" $light={light}>
                   Sign In
-                </NavAnchor>
-                <CtaLink to="/register" onClick={closeMenu}>
+                </SignInLink>
+                <CtaLink to="/register">
                   Register Now <ArrowRight size={15} />
                 </CtaLink>
               </>
@@ -100,10 +139,6 @@ export function Navbar({ variant = "solid" }: NavbarProps) {
           </NavLinks>
 
           <RightCluster>
-            {/*<LogoImage
-              src={akhtdcLogo}
-              alt="Akwa Ibom State Hotels and Tourism Development Commission logo"
-            /> */}
             <MenuButton
               type="button"
               $light={light}
@@ -115,6 +150,62 @@ export function Navbar({ variant = "solid" }: NavbarProps) {
           </RightCluster>
         </Bar>
       </Header>
+
+      <MobileDrawer $open={menuOpen}>
+        <MobileDrawerHeader>
+          <BrandCluster>
+            <LogoCluster>
+              <LogoImage
+                src={akwaIbomLogo}
+                alt="Akwa Ibom State Government logo"
+              />
+              <LogoImage src={ariseLogo} alt="ARISE Akwa Ibom logo" />
+            </LogoCluster>
+          </BrandCluster>
+          <MobileDrawerClose
+            type="button"
+            aria-label="Close menu"
+            onClick={closeMenu}
+          >
+            <X size={18} />
+          </MobileDrawerClose>
+        </MobileDrawerHeader>
+
+        <MobileNavList>
+          {NAV_ITEMS.map(({ to, label }) => (
+            <MobileNavRow
+              key={to}
+              to={to}
+              onClick={closeMenu}
+              $active={isNavActive(to, location.pathname, location.hash)}
+            >
+              {label}
+              <ChevronRight size={16} />
+            </MobileNavRow>
+          ))}
+          {isAuthenticated && (
+            <MobileNavRow to="/dashboard" onClick={closeMenu}>
+              Dashboard
+              <ChevronRight size={16} />
+            </MobileNavRow>
+          )}
+        </MobileNavList>
+
+        <MobileDrawerActions>
+          {isAuthenticated ? null : (
+            <MobileSignInLink to="/login" onClick={closeMenu}>
+              Sign In
+            </MobileSignInLink>
+          )}
+          <MobileCtaLink
+            to={isAuthenticated ? "/dashboard" : "/register"}
+            onClick={closeMenu}
+          >
+            {isAuthenticated ? "Dashboard" : "Register Now"}
+            <ArrowRight size={15} />
+          </MobileCtaLink>
+        </MobileDrawerActions>
+      </MobileDrawer>
     </>
   );
 }

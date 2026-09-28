@@ -4,9 +4,16 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useMutation } from "@tanstack/react-query";
 import { Navigate, useNavigate } from "react-router-dom";
-import { PageShell, PageHeroBanner, Container } from "@/shared/components";
+import { AuthLayout } from "@/shared/components";
+import {
+  Heading,
+  Subtitle,
+  FormBlock,
+  ErrorText,
+  SubmitButton,
+} from "@/shared/components/AuthForm.styles";
 import { usePendingRegistration } from "@/shared/hooks";
-import { Button, sonnerToast } from "@/shared/ui";
+import { sonnerToast } from "@/shared/ui";
 import {
   OTP_LENGTH,
   OtpExpiredError,
@@ -16,13 +23,6 @@ import { useAuth } from "@/features/auth";
 import { OtpForm } from "../components/OtpForm";
 import { CreatePasswordForm } from "../components/CreatePasswordForm";
 import { verifyOtpAndCreateAccount, resendOtp } from "../api";
-import {
-  PageFrame,
-  FormCard,
-  FormTitle,
-  FormCopy,
-  ErrorBanner,
-} from "./VerifyEmailPage.styles";
 
 const RESEND_COOLDOWN_SECONDS = 30;
 
@@ -108,50 +108,38 @@ export function VerifyEmailPage() {
   });
 
   return (
-    <PageShell>
-      <PageHeroBanner eyebrow="One last step" title="Verify your email" />
-      <PageFrame>
-        <Container>
-          <FormCard>
-            <FormTitle>Enter your verification code</FormTitle>
-            <FormCopy>
-              We sent a {OTP_LENGTH}-digit code to{" "}
-              <strong>{pending.email}</strong>.
-            </FormCopy>
+    <AuthLayout>
+      <Heading>One Last Step</Heading>
+      <Subtitle>
+        We sent a {OTP_LENGTH}-digit code to <strong>{pending.email}</strong>.
+      </Subtitle>
 
-            {errorMessage && <ErrorBanner>{errorMessage}</ErrorBanner>}
+      <FormBlock onSubmit={onSubmit} noValidate>
+        <OtpForm
+          value={otp}
+          onChange={setOtp}
+          onResend={() =>
+            resendMutation.mutate({ pendingId: pending.pendingId })
+          }
+          resendDisabled={cooldown > 0 || resendMutation.isPending}
+          resendLabel={cooldown > 0 ? `Resend in ${cooldown}s` : "Resend code"}
+        />
 
-            <form onSubmit={onSubmit} noValidate>
-              <OtpForm
-                value={otp}
-                onChange={setOtp}
-                onResend={() =>
-                  resendMutation.mutate({ pendingId: pending.pendingId })
-                }
-                resendDisabled={cooldown > 0 || resendMutation.isPending}
-                resendLabel={
-                  cooldown > 0 ? `Resend in ${cooldown}s` : "Resend code"
-                }
-              />
+        {errorMessage && <ErrorText>{errorMessage}</ErrorText>}
 
-              {otpComplete && (
-                <CreatePasswordForm register={register} errors={errors} />
-              )}
+        {otpComplete && (
+          <CreatePasswordForm register={register} errors={errors} />
+        )}
 
-              <Button
-                type="submit"
-                size="lg"
-                style={{ width: "100%" }}
-                disabled={!otpComplete || verifyMutation.isPending}
-              >
-                {verifyMutation.isPending
-                  ? "Verifying…"
-                  : "Verify and continue"}
-              </Button>
-            </form>
-          </FormCard>
-        </Container>
-      </PageFrame>
-    </PageShell>
+        <SubmitButton
+          type="submit"
+          size="lg"
+          variant="secondary"
+          disabled={!otpComplete || verifyMutation.isPending}
+        >
+          {verifyMutation.isPending ? "Verifying…" : "Verify and continue"}
+        </SubmitButton>
+      </FormBlock>
+    </AuthLayout>
   );
 }

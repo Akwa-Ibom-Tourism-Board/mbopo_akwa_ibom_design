@@ -5,6 +5,7 @@ import {
   verifyPendingRegistrationCode,
 } from "@/lib/pendingRegistrationStore";
 import { createUser, mintToken } from "@/lib/mockUsersStore";
+import { createNotification } from "@/lib/mockNotificationsStore";
 import { sonnerToast } from "@/shared/ui";
 import type {
   ResendOtpInput,
@@ -35,6 +36,13 @@ export async function verifyOtpAndCreateAccount({
   });
 
   clearPendingRegistration();
+
+  createNotification({
+    userId: record.id,
+    title: "Welcome to Mbopo Akwa Ibom",
+    body: "Your email has been verified. You can now complete your application.",
+    type: "account",
+  });
 
   return {
     token: mintToken(record.id),

@@ -1,29 +1,26 @@
-import { useState } from "react";
-import { LayoutDashboard, LogOut } from "lucide-react";
-import { useLocation, useNavigate } from "react-router-dom";
-import { useAuth } from "@/features/auth";
-import {
-  Button,
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-  DialogFooter,
-} from "@/shared/ui";
+import { Bell, FileEdit, LayoutDashboard } from "lucide-react";
+import { useLocation } from "react-router-dom";
+import akwaIbomLogo from "@/assets/akwa-ibom-logo-main.png";
+import ariseLogo from "@/assets/arise-logo-main.png";
 import mbopoLogo from "@/assets/mbopo-logo.webp";
 import {
   SidebarFrame,
   SidebarOverlay,
   SidebarBrand,
+  GovLogoRow,
+  GovLogoImage,
   SidebarLogo,
+  SectionLabel,
   NavList,
   NavItem,
-  NavButton,
+  SidebarFooter,
+  SidebarFooterText,
 } from "./DashboardSidebar.styles";
 
 const NAV_ITEMS = [
-  { to: "/dashboard", label: "Overview", icon: LayoutDashboard },
+  { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
+  { to: "/mbopo-registration", label: "Mbopo Registration", icon: FileEdit },
+  { to: "/notifications", label: "Notifications", icon: Bell },
 ];
 
 export interface DashboardSidebarProps {
@@ -33,16 +30,6 @@ export interface DashboardSidebarProps {
 
 export function DashboardSidebar({ open, onClose }: DashboardSidebarProps) {
   const location = useLocation();
-  const navigate = useNavigate();
-  const { logout } = useAuth();
-  const [confirmOpen, setConfirmOpen] = useState(false);
-
-  const handleLogout = () => {
-    setConfirmOpen(false);
-    onClose();
-    logout();
-    navigate("/login", { replace: true });
-  };
 
   return (
     <>
@@ -53,8 +40,14 @@ export function DashboardSidebar({ open, onClose }: DashboardSidebarProps) {
       />
       <SidebarFrame $open={open}>
         <SidebarBrand to="/dashboard" onClick={onClose}>
+          <GovLogoRow>
+            <GovLogoImage src={akwaIbomLogo} alt="Akwa Ibom State Government" />
+            <GovLogoImage src={ariseLogo} alt="ARISE Akwa Ibom" />
+          </GovLogoRow>
           <SidebarLogo src={mbopoLogo} alt="Mbopo Akwa Ibom" />
         </SidebarBrand>
+
+        <SectionLabel>Menu</SectionLabel>
         <NavList>
           {NAV_ITEMS.map(({ to, label, icon: Icon }) => (
             <NavItem
@@ -68,31 +61,13 @@ export function DashboardSidebar({ open, onClose }: DashboardSidebarProps) {
             </NavItem>
           ))}
         </NavList>
-        <NavButton type="button" onClick={() => setConfirmOpen(true)}>
-          <LogOut size={18} />
-          Log out
-        </NavButton>
-      </SidebarFrame>
 
-      <Dialog open={confirmOpen} onOpenChange={setConfirmOpen}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Log out?</DialogTitle>
-            <DialogDescription>
-              You&apos;ll need to sign in again to access your dashboard and
-              application.
-            </DialogDescription>
-          </DialogHeader>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setConfirmOpen(false)}>
-              Cancel
-            </Button>
-            <Button variant="destructive" onClick={handleLogout}>
-              Log out
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+        <SidebarFooter>
+          <SidebarFooterText>
+            Akwa Ibom State Hotels &amp; Tourism Development Commission
+          </SidebarFooterText>
+        </SidebarFooter>
+      </SidebarFrame>
     </>
   );
 }

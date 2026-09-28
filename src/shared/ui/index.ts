@@ -7,6 +7,7 @@ export * from "./input";
 export * from "./password-input";
 export * from "./textarea";
 export * from "./select";
+export * from "./dropdown-menu";
 export * from "./checkbox";
 export * from "./label";
 export * from "./avatar";
