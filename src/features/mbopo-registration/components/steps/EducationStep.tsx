@@ -27,6 +27,9 @@ export interface EducationStepProps {
   fullImageUrl: string;
   fullImageError?: string;
   onFullImageChange: (event: ChangeEvent<HTMLInputElement>) => void;
+  fullImage2Url: string;
+  fullImage2Error?: string;
+  onFullImage2Change: (event: ChangeEvent<HTMLInputElement>) => void;
 }
 
 export function EducationStep({
@@ -36,6 +39,9 @@ export function EducationStep({
   fullImageUrl,
   fullImageError,
   onFullImageChange,
+  fullImage2Url,
+  fullImage2Error,
+  onFullImage2Change,
 }: EducationStepProps) {
   return (
     <StepContent>
@@ -94,10 +100,18 @@ export function EducationStep({
         </Field>
       </FieldGrid>
       <PhotoUpload
-        label="Upload Full Image"
+        label="Full Image 1"
+        hint="A clear, full-length photo facing the camera"
         previewUrl={fullImageUrl}
         error={fullImageError}
         onChange={onFullImageChange}
+      />
+      <PhotoUpload
+        label="Full Image 2"
+        hint="A second full-length photo from a different angle or pose"
+        previewUrl={fullImage2Url}
+        error={fullImage2Error}
+        onChange={onFullImage2Change}
       />
     </StepContent>
   );

@@ -1,4 +1,4 @@
-import type { FieldErrors, UseFormRegister } from "react-hook-form";
+import type { UseFormRegisterReturn } from "react-hook-form";
 import { Label, PasswordInput } from "@/shared/ui";
 import {
   PasswordFields,
@@ -7,19 +7,21 @@ import {
   HintText,
 } from "./CreatePasswordForm.styles";
 
-export interface CreatePasswordFormValues {
-  password: string;
-  confirmPassword: string;
-}
-
+// Takes already-bound `register(...)` results rather than the `register`
+// function itself, so this doesn't need to be generic over the host form's
+// full field-values shape — it only ever touches these two fields.
 export interface CreatePasswordFormProps {
-  register: UseFormRegister<CreatePasswordFormValues>;
-  errors: FieldErrors<CreatePasswordFormValues>;
+  passwordField: UseFormRegisterReturn;
+  confirmPasswordField: UseFormRegisterReturn;
+  passwordError?: string;
+  confirmPasswordError?: string;
 }
 
 export function CreatePasswordForm({
-  register,
-  errors,
+  passwordField,
+  confirmPasswordField,
+  passwordError,
+  confirmPasswordError,
 }: CreatePasswordFormProps) {
   return (
     <PasswordFields>
@@ -28,23 +30,21 @@ export function CreatePasswordForm({
         <PasswordInput
           id="password"
           autoComplete="new-password"
-          invalid={Boolean(errors.password)}
-          {...register("password")}
+          invalid={Boolean(passwordError)}
+          {...passwordField}
         />
         <HintText>At least 8 characters.</HintText>
-        {errors.password && <ErrorText>{errors.password.message}</ErrorText>}
+        {passwordError && <ErrorText>{passwordError}</ErrorText>}
       </Field>
       <Field>
         <Label htmlFor="confirmPassword">Confirm password</Label>
         <PasswordInput
           id="confirmPassword"
           autoComplete="new-password"
-          invalid={Boolean(errors.confirmPassword)}
-          {...register("confirmPassword")}
+          invalid={Boolean(confirmPasswordError)}
+          {...confirmPasswordField}
         />
-        {errors.confirmPassword && (
-          <ErrorText>{errors.confirmPassword.message}</ErrorText>
-        )}
+        {confirmPasswordError && <ErrorText>{confirmPasswordError}</ErrorText>}
       </Field>
     </PasswordFields>
   );
