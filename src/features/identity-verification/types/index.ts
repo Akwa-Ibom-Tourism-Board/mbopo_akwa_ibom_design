@@ -34,12 +34,23 @@ export class VinNotFoundError extends Error {
   }
 }
 
-export interface RequestEmailVerificationInput {
+export interface VerifyIdentityInput {
+  userId: string;
   ninRecord: NinRecord;
-  email: string;
+  captchaToken: string;
 }
 
-export interface RequestEmailVerificationResult {
-  pendingId: string;
-  email: string;
+// The subset of `User` this step fills in — kept here (rather than
+// re-exported from `@/features/auth`) so this feature doesn't need to
+// import auth's types just to describe its own mutation's return shape.
+export interface VerifiedIdentityPatch {
+  firstName: string;
+  lastName: string;
+  nin: string;
+  vin: string;
+  lga: string;
+  ward: string;
+  gender: Gender;
+  dateOfBirth: string;
+  identityVerified: true;
 }
