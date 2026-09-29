@@ -4,9 +4,16 @@ export const PhotoField = styled.div`
   margin-top: 24px;
 `;
 
+// A passport photo or full-length image is naturally portrait — a wide,
+// short box (the old fixed 170px height at full field width) cropped both
+// down to an unusable sliver. Sized and shaped like an actual ID-photo
+// preview instead: fixed portrait aspect ratio, modest width, so it stays
+// consistent whether it's showing the upload prompt or the picked photo.
 export const PhotoDrop = styled.label<{ $hasPhoto: boolean }>`
   display: flex;
-  min-height: 125px;
+  width: 200px;
+  max-width: 100%;
+  aspect-ratio: 3 / 4;
   flex-direction: column;
   align-items: center;
   justify-content: center;
@@ -27,6 +34,7 @@ export const PhotoDrop = styled.label<{ $hasPhoto: boolean }>`
   }
 
   span {
+    padding: 0 12px;
     font-size: 11px;
   }
 
@@ -47,7 +55,7 @@ export const PhotoIcon = styled.span`
 
 export const PhotoPreview = styled.img`
   width: 100%;
-  height: 170px;
+  height: 100%;
   object-fit: cover;
   object-position: center;
 `;

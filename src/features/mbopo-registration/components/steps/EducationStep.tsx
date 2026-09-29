@@ -5,6 +5,7 @@ import {
   type FieldErrors,
   type UseFormRegister,
 } from "react-hook-form";
+import { ShieldCheck } from "lucide-react";
 import {
   Input,
   Select,
@@ -18,7 +19,12 @@ import { EDUCATION_LEVELS } from "../../constants";
 import { Field } from "../Field";
 import { FieldGrid } from "../Field.styles";
 import { PhotoUpload } from "../PhotoUpload";
-import { StepContent, StepTitle, StepHint } from "../StepShell.styles";
+import {
+  StepContent,
+  StepTitle,
+  StepHint,
+  PrivacyNote,
+} from "../StepShell.styles";
 
 export interface EducationStepProps {
   register: UseFormRegister<RegistrationFormValues>;
@@ -113,6 +119,17 @@ export function EducationStep({
         error={fullImage2Error}
         onChange={onFullImage2Change}
       />
+      <PrivacyNote>
+        <ShieldCheck size={14} aria-hidden />
+        <span>
+          Used only for judging and presenting your application — never sold,
+          rented, or shared beyond the Mbopo Akwa Ibom programme. See our{" "}
+          <a href="/privacy" target="_blank" rel="noopener noreferrer">
+            Privacy Policy
+          </a>
+          .
+        </span>
+      </PrivacyNote>
     </StepContent>
   );
 }

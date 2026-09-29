@@ -60,7 +60,7 @@ const SIGNUP_SLIDES: CarouselSlide[] = [
     eyebrow: "Rooted In Heritage",
     heading: "Carrying Culture Forward",
     quote:
-      "Every bead and braid tells a story generations in the making — Mbopo Akwa Ibom carries that heritage into a new era.",
+      "Every bead and braid tells a story to generations in the making. Mbopo Akwa Ibom carries that heritage into a new era.",
   },
   {
     image: woman2,
@@ -68,7 +68,7 @@ const SIGNUP_SLIDES: CarouselSlide[] = [
     eyebrow: "Grace With Purpose",
     heading: "More Than A Crown",
     quote:
-      "Built on grace, confidence and purposeful leadership — for the woman ready to represent her state with pride.",
+      "Built on grace, confidence and purposeful leadership, for the woman ready to represent her state with pride.",
   },
   {
     image: woman3,
@@ -96,7 +96,7 @@ const LOGIN_SLIDES: CarouselSlide[] = [
     eyebrow: "Elegance & Ambition",
     heading: "Welcome Back",
     quote:
-      "Sign in to continue your journey — Akwa Ibom is proud of every woman who steps forward to represent her state.",
+      "Sign in to continue your journey, Akwa Ibom is proud of every woman who steps forward to represent her state.",
   },
   {
     image: woman5,
@@ -105,7 +105,7 @@ const LOGIN_SLIDES: CarouselSlide[] = [
     eyebrow: "A Warm Welcome Back",
     heading: "Step Back Into Your Story",
     quote:
-      "Every visit brings you closer to the stage — sign in and keep building the story only you can tell.",
+      "Every visit brings you closer to the stage. Sign in and keep building the story only you can tell.",
   },
   {
     image: woman6,

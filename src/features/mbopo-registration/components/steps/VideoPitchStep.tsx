@@ -122,6 +122,15 @@ export function VideoPitchStep({
               if you save the rest of your application as a draft and finish it
               later.
             </li>
+            <li>
+              Used only for judging and presenting your application — never
+              sold, rented, or shared beyond the Mbopo Akwa Ibom programme. See
+              our{" "}
+              <a href="/privacy" target="_blank" rel="noopener noreferrer">
+                Privacy Policy
+              </a>
+              .
+            </li>
           </ul>
         </span>
       </InstructionsCard>

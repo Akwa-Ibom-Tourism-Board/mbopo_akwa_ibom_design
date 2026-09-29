@@ -27,6 +27,11 @@ export const InstructionsCard = styled.div`
     margin: 6px 0 0;
     padding-left: 18px;
   }
+
+  a {
+    color: inherit;
+    text-decoration: underline;
+  }
 `;
 
 // The inviting, compact call-to-action shown inline on the step — the
