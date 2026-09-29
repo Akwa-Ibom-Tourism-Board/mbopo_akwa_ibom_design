@@ -135,6 +135,18 @@ export function RegistrationForm({
     [queryClient, user.id],
   );
 
+  // The multi-step form is one single route — react-router's own
+  // scroll-to-top (see ScrollRestoration.tsx) never fires between steps,
+  // so without this, "Continue"/"Back" from partway down a long step would
+  // otherwise land the next step's content off-screen below the fold.
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [currentStepIndex]);
+
+  useEffect(() => {
+    if (submitMutation.isSuccess) window.scrollTo(0, 0);
+  }, [submitMutation.isSuccess]);
+
   const saveDraftMutation = useMutation({
     mutationFn: saveRegistrationDraft,
     onSuccess: () => {
