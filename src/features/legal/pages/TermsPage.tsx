@@ -47,9 +47,11 @@ const SECTIONS: LegalSection[] = [
     ],
   },
   {
-    heading: "7. Use of Photographs & Media",
+    heading: "7. Photographs, Documents & Video Pitch",
     paragraphs: [
-      "Photographs and images submitted as part of your application may be used by the Akwa Ibom State Hotels & Tourism Development Commission for purposes directly related to the program, including promotional and archival use.",
+      "As part of your application, you will submit a passport photograph, a Certificate of Origin, two full-length images, and record a short video pitch. These are required to verify your identity and eligibility documents and to allow the selection panel to review and judge your application at every stage. If you are selected, they may also be used by the Akwa Ibom State Hotels & Tourism Development Commission for promotional and archival purposes directly related to the program.",
+      "We do not sell, rent, or transfer your photographs, documents, or video recording to any third party. See our Privacy Policy for full details on how this data is handled.",
+      "Your video pitch is recorded live on the platform and, once submitted, becomes a permanent part of your application — it cannot be re-recorded, edited, or replaced afterward, even if you save the rest of your application as a draft and complete it later.",
     ],
   },
   {
@@ -78,7 +80,7 @@ export function TermsPage() {
       documentTitle="Terms & Conditions"
       eyebrow="Legal"
       title="Terms & Conditions"
-      updatedAt="14 September 2026"
+      updatedAt="29 September 2026"
       sections={SECTIONS}
     />
   );

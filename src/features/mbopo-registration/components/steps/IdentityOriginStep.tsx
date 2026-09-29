@@ -6,6 +6,7 @@ import {
   type UseFormRegister,
 } from "react-hook-form";
 import { format } from "date-fns";
+import { ShieldCheck } from "lucide-react";
 import {
   Input,
   Textarea,
@@ -26,6 +27,7 @@ import {
   StepTitle,
   StepHint,
   LockedFieldsNote,
+  PrivacyNote,
 } from "../StepShell.styles";
 
 export interface IdentityOriginStepProps {
@@ -146,6 +148,17 @@ export function IdentityOriginStep({
         accept="image/png,image/jpeg,application/pdf"
         hint="JPG, PNG or PDF · Max 5MB"
       />
+      <PrivacyNote>
+        <ShieldCheck size={14} aria-hidden />
+        <span>
+          Used only to confirm your indigeneship for this application — never
+          sold, rented, or shared beyond the Mbopo Akwa Ibom programme. See our{" "}
+          <a href="/privacy" target="_blank" rel="noopener noreferrer">
+            Privacy Policy
+          </a>
+          .
+        </span>
+      </PrivacyNote>
     </StepContent>
   );
 }

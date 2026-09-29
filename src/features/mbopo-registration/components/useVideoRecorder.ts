@@ -69,6 +69,21 @@ export function useVideoRecorder({
   const chunksRef = useRef<Blob[]>([]);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const lockedRef = useRef(Boolean(initialLockedUrl));
+  // Closes the window between "camera requested" and "stream assigned":
+  // without this, two near-simultaneous requestCamera() calls (a double
+  // click, a stray re-render) would both pass the streamRef.current check
+  // before either await resolves, open two getUserMedia streams, and leak
+  // whichever one loses the race to streamRef.current.
+  const requestingCameraRef = useRef(false);
+  // The latest previewUrl, mirrored for the unmount cleanup below — that
+  // effect's own closure only ever sees the value from first render (its
+  // dependency array is intentionally empty so it doesn't re-run mid
+  // recording), so it needs a ref, not the state variable, to revoke the
+  // right URL if the component unmounts mid-flow.
+  const previewUrlRef = useRef(previewUrl);
+  useEffect(() => {
+    previewUrlRef.current = previewUrl;
+  }, [previewUrl]);
 
   useEffect(() => {
     if (initialLockedUrl && !lockedRef.current) {
@@ -91,11 +106,20 @@ export function useVideoRecorder({
   useEffect(
     () => () => {
       stopTimer();
+      // A recorder left running past unmount (navigating away mid-take)
+      // would otherwise keep the camera/mic stream alive indefinitely —
+      // stop it before releasing the tracks, guarded the same way
+      // stopRecording is, since it may already be inactive.
+      if (recorderRef.current?.state === "recording") {
+        recorderRef.current.stop();
+      }
       releaseCamera();
-      // Never revoke a locked preview's URL on unmount — it's the same
-      // object URL mockVideoStore hands back on the next visit, not a
-      // throwaway created by this component instance.
-      if (previewUrl && !lockedRef.current) URL.revokeObjectURL(previewUrl);
+      // Never revoke a locked preview's URL — it's the same object URL
+      // mockVideoStore hands back on the next visit, not a throwaway
+      // created by this component instance.
+      if (previewUrlRef.current && !lockedRef.current) {
+        URL.revokeObjectURL(previewUrlRef.current);
+      }
     },
     // Cleanup only — intentionally not re-run when previewUrl/etc. change.
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -103,7 +127,10 @@ export function useVideoRecorder({
   );
 
   const requestCamera = useCallback(async () => {
-    if (lockedRef.current) return;
+    if (lockedRef.current || streamRef.current || requestingCameraRef.current) {
+      return;
+    }
+    requestingCameraRef.current = true;
     setStatus("requesting");
     setErrorMessage(undefined);
     try {
@@ -124,16 +151,24 @@ export function useVideoRecorder({
           : "We couldn't access your camera and microphone. Please check your device and try again.";
       setErrorMessage(message);
       setStatus("error");
+    } finally {
+      requestingCameraRef.current = false;
     }
   }, []);
 
   const stopRecording = useCallback(() => {
-    recorderRef.current?.stop();
+    // Guards against a double call (a click landing the same tick as the
+    // max-duration auto-stop) — MediaRecorder throws InvalidStateError if
+    // stop() is called while already inactive.
+    if (recorderRef.current?.state === "recording") {
+      recorderRef.current.stop();
+    }
   }, []);
 
   const startRecording = useCallback(() => {
     const stream = streamRef.current;
-    if (!stream) return;
+    // Also refuses to start a second recorder over a first still-active one.
+    if (!stream || recorderRef.current?.state === "recording") return;
 
     chunksRef.current = [];
     const mimeType = pickSupportedMimeType();
@@ -148,12 +183,21 @@ export function useVideoRecorder({
     recorder.onstop = () => {
       stopTimer();
       releaseCamera();
+      recorderRef.current = null;
       const blob = new Blob(chunksRef.current, {
         type: mimeType ?? "video/webm",
       });
       const url = URL.createObjectURL(blob);
+      // Functional update so this never depends on this callback's own
+      // (necessarily stale, since it's captured once per recording) view
+      // of previewUrl — an unsubmitted take replaced by a re-record would
+      // otherwise leave its object URL unrevoked for the rest of the
+      // session.
+      setPreviewUrl((currentUrl) => {
+        if (currentUrl) URL.revokeObjectURL(currentUrl);
+        return url;
+      });
       setRecordedBlob(blob);
-      setPreviewUrl(url);
       setStatus("preview");
     };
 
@@ -166,21 +210,23 @@ export function useVideoRecorder({
       setElapsedSeconds((seconds) => {
         const next = seconds + 1;
         if (next >= VIDEO_PITCH_MAX_SECONDS) {
-          recorder.stop();
+          stopRecording();
         }
         return next;
       });
     }, 1000);
-  }, [releaseCamera, stopTimer]);
+  }, [releaseCamera, stopRecording, stopTimer]);
 
   const reset = useCallback(() => {
-    if (previewUrl) URL.revokeObjectURL(previewUrl);
-    setPreviewUrl("");
+    setPreviewUrl((currentUrl) => {
+      if (currentUrl) URL.revokeObjectURL(currentUrl);
+      return "";
+    });
     setRecordedBlob(null);
     setElapsedSeconds(0);
     setErrorMessage(undefined);
     setStatus("idle");
-  }, [previewUrl]);
+  }, []);
 
   // From "preview" (after stopping) — discard this take and start over.
   const retake = reset;
@@ -188,17 +234,24 @@ export function useVideoRecorder({
   // From "live"/"recording" — bail out entirely without keeping anything.
   const cancelRecording = useCallback(() => {
     stopTimer();
-    recorderRef.current?.stop();
+    if (recorderRef.current?.state === "recording") {
+      recorderRef.current.stop();
+    }
     recorderRef.current = null;
     releaseCamera();
     reset();
   }, [releaseCamera, reset, stopTimer]);
 
   const submitVideo = useCallback(() => {
-    if (!recordedBlob) return;
-    const url = saveVideoPitch(userId, recordedBlob);
+    // Guards against a double click locking twice (mockVideoStore would
+    // just silently overwrite, but there's no reason to let it happen).
+    if (!recordedBlob || lockedRef.current) return;
+    const newUrl = saveVideoPitch(userId, recordedBlob);
+    setPreviewUrl((currentUrl) => {
+      if (currentUrl) URL.revokeObjectURL(currentUrl);
+      return newUrl;
+    });
     lockedRef.current = true;
-    setPreviewUrl(url);
     setStatus("locked");
   }, [recordedBlob, userId]);
 

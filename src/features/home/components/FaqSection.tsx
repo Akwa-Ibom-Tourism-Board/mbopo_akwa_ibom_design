@@ -40,7 +40,12 @@ const FAQS = [
   {
     question: "What documents do I need to have ready?",
     answer:
-      "You'll need your NIN, VIN, Certificate of Origin, a recent passport photograph and proof of your academic qualification before you start.",
+      "You'll need your NIN, VIN, Certificate of Origin, a recent passport photograph, two full-length images and proof of your academic qualification. You'll also record a short video pitch live on the platform as part of your application.",
+  },
+  {
+    question: "Will my photos, video and personal data be sold or shared?",
+    answer:
+      "No. Your photographs, video pitch and personal data are never sold, rented or transferred to any third party. They're used only to verify your identity and eligibility, for judging your application, and — if you're selected — for promotional and archival use by the Commission. See our Privacy Policy for full details.",
   },
   {
     question: "What is Mbopo judged on?",

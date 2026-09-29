@@ -41,3 +41,28 @@ export const LockedFieldsNote = styled.p`
   color: ${({ theme }) => theme.colors.primary.DEFAULT};
   font-size: 12px;
 `;
+
+// Reused wherever a step asks for a photo or the video pitch — see
+// PrivacyPage's "Photographs & Video Pitch" section for the full policy
+// this is summarizing.
+export const PrivacyNote = styled.p`
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  max-width: 460px;
+  margin: 10px 0 0;
+  color: ${({ theme }) => theme.colors.muted.foreground};
+  font-size: 11.5px;
+  line-height: 1.55;
+
+  svg {
+    flex: 0 0 auto;
+    margin-top: 1px;
+    color: ${({ theme }) => theme.colors.primary.DEFAULT};
+  }
+
+  a {
+    color: ${({ theme }) => theme.colors.primary.DEFAULT};
+    text-decoration: underline;
+  }
+`;

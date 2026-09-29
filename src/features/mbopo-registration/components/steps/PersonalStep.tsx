@@ -1,12 +1,18 @@
 import type { ChangeEvent } from "react";
 import type { FieldErrors, UseFormRegister } from "react-hook-form";
+import { ShieldCheck } from "lucide-react";
 import { Input } from "@/shared/ui";
 import type { VerifiedUser } from "@/features/auth";
 import type { RegistrationFormValues } from "../../schema";
 import { Field } from "../Field";
 import { FieldGrid, LockedValue } from "../Field.styles";
 import { PhotoUpload } from "../PhotoUpload";
-import { StepContent, StepTitle, StepHint } from "../StepShell.styles";
+import {
+  StepContent,
+  StepTitle,
+  StepHint,
+  PrivacyNote,
+} from "../StepShell.styles";
 
 export interface PersonalStepProps {
   user: VerifiedUser;
@@ -85,6 +91,17 @@ export function PersonalStep({
         error={passportPhotoError}
         onChange={onPassportPhotoChange}
       />
+      <PrivacyNote>
+        <ShieldCheck size={14} aria-hidden />
+        <span>
+          Used only to verify your identity and present your application — never
+          sold, rented, or shared beyond the Mbopo Akwa Ibom programme. See our{" "}
+          <a href="/privacy" target="_blank" rel="noopener noreferrer">
+            Privacy Policy
+          </a>
+          .
+        </span>
+      </PrivacyNote>
     </StepContent>
   );
 }

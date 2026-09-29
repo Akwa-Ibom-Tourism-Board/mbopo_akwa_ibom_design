@@ -47,16 +47,16 @@ export function ProfileSummaryCard({
                 <DetailLabel>Last name</DetailLabel>
                 <DetailValue>{user.lastName}</DetailValue>
               </DetailItem>
-              <DetailItem>
+              <DetailItem $wide>
                 <DetailLabel>NIN</DetailLabel>
                 <DetailValue>{user.nin}</DetailValue>
               </DetailItem>
-              <DetailItem>
+              <DetailItem $wide>
                 <DetailLabel>VIN</DetailLabel>
                 <DetailValue>{user.vin}</DetailValue>
               </DetailItem>
               <DetailItem>
-                <DetailLabel>Local Government Area</DetailLabel>
+                <DetailLabel>LGA</DetailLabel>
                 <DetailValue>{user.lga}</DetailValue>
               </DetailItem>
               <DetailItem>
@@ -77,12 +77,12 @@ export function ProfileSummaryCard({
               </DetailItem>
             </>
           )}
-          <DetailItem>
+          <DetailItem $wide={!verified}>
             <DetailLabel>Email</DetailLabel>
             <DetailValue>{user.email}</DetailValue>
           </DetailItem>
           {referenceCode && (
-            <DetailItem>
+            <DetailItem $wide>
               <DetailLabel>Reference number</DetailLabel>
               <DetailValue>{referenceCode}</DetailValue>
             </DetailItem>

@@ -25,13 +25,13 @@ export const CtaCopy = styled.div`
 export const CtaTitle = styled.h3`
   margin: 0 0 6px;
   font-family: ${({ theme }) => theme.fonts.display};
-  font-size: 1.25rem;
+  font-size: clamp(1.0625rem, 1rem + 0.4vw, 1.25rem);
   font-weight: 600;
 `;
 
 export const CtaText = styled.p`
   margin: 0;
   color: rgba(255, 255, 255, 0.82);
-  font-size: 0.875rem;
+  font-size: clamp(0.8125rem, 0.78rem + 0.2vw, 0.875rem);
   line-height: 1.6;
 `;
