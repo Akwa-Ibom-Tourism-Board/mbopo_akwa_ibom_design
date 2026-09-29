@@ -138,20 +138,37 @@ export const RecordingDialogContent = styled(DialogContent)`
 
 export const Stage = styled.div`
   position: relative;
-  width: auto;
-  height: min(60vh, 640px);
+  /* Driven by width, capped by height — not the other way around. The old
+     height-first version (height: min(60vh, 640px) + aspect-ratio) let the
+     derived width exceed the dialog's own content width on tall, narrow
+     phone screens (e.g. 60vh taller than the dialog is wide), so the video
+     genuinely overflowed past the dialog's right edge — that's what looked
+     like it was "stuck to the right", not a centering bug. width: 100%
+     guarantees it always fits; max-height only kicks in to stop it getting
+     absurdly tall on short/wide viewports.
+     */
+  width: 100%;
   aspect-ratio: 3 / 4;
-  margin: 18px auto 0;
+  max-height: min(58vh, 560px);
+  margin: 18px 0 0;
   overflow: hidden;
   border-radius: ${({ theme }) => theme.radii.lg};
   background: #0a0f0c;
 `;
 
-export const StageVideo = styled.video`
+export const StageVideo = styled.video<{ $mirror?: boolean }>`
   width: 100%;
   height: 100%;
   object-fit: cover;
   background: #0a0f0c;
+  /* Only the live preview mirrors, matching every other camera app — you
+     watch yourself as if in a mirror while recording (bend right, your
+     reflection bends right), but the saved file stays true-to-life, the
+     way everyone else already sees you. Flipping it here is purely a
+     preview transform: MediaRecorder captures straight from the camera
+     track, never from this rendered element, so the recording itself is
+     never affected. */
+  transform: ${({ $mirror }) => ($mirror ? "scaleX(-1)" : "none")};
 `;
 
 export const StagePlaceholder = styled.div`

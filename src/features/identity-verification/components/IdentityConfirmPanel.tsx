@@ -6,6 +6,7 @@ import {
   DetailItem,
   DetailLabel,
   DetailValue,
+  IdNumberValue,
   ConfirmActions,
   ChangeNinButton,
 } from "./IdentityConfirmPanel.styles";
@@ -34,13 +35,13 @@ export function IdentityConfirmPanel({
           <DetailLabel>Last name</DetailLabel>
           <DetailValue>{record.lastName}</DetailValue>
         </DetailItem>
-        <DetailItem>
-          <DetailLabel>NIN</DetailLabel>
-          <DetailValue>{record.nin}</DetailValue>
+        <DetailItem $wide>
+          <DetailLabel>National Identification Number</DetailLabel>
+          <IdNumberValue>{record.nin}</IdNumberValue>
         </DetailItem>
-        <DetailItem>
-          <DetailLabel>VIN</DetailLabel>
-          <DetailValue>{record.vin}</DetailValue>
+        <DetailItem $wide>
+          <DetailLabel>Voter Identification Number</DetailLabel>
+          <IdNumberValue>{record.vin}</IdNumberValue>
         </DetailItem>
         <DetailItem>
           <DetailLabel>Local Government Area</DetailLabel>
