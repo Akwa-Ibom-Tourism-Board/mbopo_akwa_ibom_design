@@ -1,7 +1,7 @@
 import { BrowserRouter } from "react-router-dom";
 import { AppProviders } from "./providers";
 import { AppRoutes } from "./routes";
-import { ScrollToHash } from "./ScrollToHash";
+import { ScrollRestoration } from "./ScrollRestoration";
 import { ErrorBoundary } from "./ErrorBoundary";
 
 function App() {
@@ -9,7 +9,7 @@ function App() {
     <ErrorBoundary>
       <AppProviders>
         <BrowserRouter>
-          <ScrollToHash />
+          <ScrollRestoration />
           <AppRoutes />
         </BrowserRouter>
       </AppProviders>

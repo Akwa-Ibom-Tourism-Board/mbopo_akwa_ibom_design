@@ -45,7 +45,11 @@ export function DashboardPage() {
             user={displayUser}
             referenceCode={referenceCode}
           />
-          <ApplicationStatusCard status={displayUser.applicationStatus} />
+          <ApplicationStatusCard
+            status={displayUser.applicationStatus}
+            hasDraft={hasDraft}
+            memberSince={summaryQuery.data?.memberSince}
+          />
         </CardGrid>
       </Stack>
     </DashboardShell>
