@@ -207,6 +207,7 @@ export function VideoPitchStep({
               autoPlay
               muted
               playsInline
+              $mirror
               style={{
                 display:
                   status === "live" || status === "recording"

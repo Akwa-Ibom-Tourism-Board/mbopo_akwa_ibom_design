@@ -42,11 +42,22 @@ export const MenuToggle = styled.button`
   }
 `;
 
+// flex: 1 alone doesn't let a flex item shrink below its own content's
+// width (min-width defaults to auto) — on a narrow phone that forced
+// "Mbopo Registration" to wrap to two lines rather than shrink, bloating
+// the header's height. min-width: 0 lets it actually shrink; the
+// ellipsis rules are the safety net for whatever's still too long once it
+// does. Font size scales down on small screens instead of staying fixed
+// at the desktop size.
 export const Title = styled.h1`
   flex: 1;
+  min-width: 0;
   margin: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
   font-family: ${({ theme }) => theme.fonts.display};
-  font-size: 1.25rem;
+  font-size: clamp(1rem, 0.9rem + 1vw, 1.25rem);
   font-weight: 600;
 `;
 
