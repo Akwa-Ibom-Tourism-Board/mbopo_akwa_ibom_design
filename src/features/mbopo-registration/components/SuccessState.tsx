@@ -1,6 +1,5 @@
 import { ArrowRight, Check } from "lucide-react";
 import { Link } from "react-router-dom";
-import { Button } from "@/shared/ui";
 import {
   SuccessPage,
   SuccessCard,
@@ -9,6 +8,7 @@ import {
   SuccessTitle,
   SuccessCopy,
   Reference,
+  DashboardButton,
 } from "./SuccessState.styles";
 
 export function SuccessState({ referenceCode }: { referenceCode: string }) {
@@ -32,11 +32,11 @@ export function SuccessState({ referenceCode }: { referenceCode: string }) {
         <Reference>
           REFERENCE NUMBER <strong>{referenceCode}</strong>
         </Reference>
-        <Button asChild variant="secondary" size="lg">
+        <DashboardButton asChild variant="secondary" size="lg">
           <Link to="/dashboard">
-            Return to your dashboard <ArrowRight size={16} />
+            Return to dashboard <ArrowRight size={16} />
           </Link>
-        </Button>
+        </DashboardButton>
       </SuccessCard>
     </SuccessPage>
   );

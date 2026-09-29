@@ -1,4 +1,5 @@
 import styled, { keyframes } from "styled-components";
+import { Button } from "@/shared/ui";
 
 const pop = keyframes`
   from {
@@ -106,4 +107,12 @@ export const Reference = styled.p`
     font-size: 17px;
     letter-spacing: 0.06em;
   }
+`;
+
+// Full width, always — an auto-width button here had no ceiling of its
+// own, so on a narrow phone its text ("Return to your dashboard" plus the
+// arrow icon) could ask for more width than the card actually had to give,
+// running past the card's edge instead of respecting it.
+export const DashboardButton = styled(Button)`
+  width: 100%;
 `;
