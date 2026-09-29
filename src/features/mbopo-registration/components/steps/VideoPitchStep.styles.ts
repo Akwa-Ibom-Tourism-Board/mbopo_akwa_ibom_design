@@ -125,11 +125,18 @@ export const LockedHint = styled.p`
 
 // Deliberately generous — this is the whole point of moving recording into
 // a dialog: room for a real, portrait-friendly "face to chest" frame
-// instead of the cramped 16:9 strip the inline card allowed.
+// instead of the cramped 16:9 strip the inline card allowed. display: flex
+// (overriding DialogContent's own display: grid) is what makes that
+// trustworthy on short phone screens: the header and the action buttons
+// below the stage keep their natural size, and only the stage itself gives
+// up height when there isn't enough to go around — see Stage's comment.
 export const RecordingDialogContent = styled(DialogContent)`
+  display: flex;
+  flex-direction: column;
   width: 94vw;
   max-width: 560px;
-  padding: 22px;
+  max-height: 88vh;
+  padding: 20px;
 
   ${media.sm} {
     padding: 28px;
@@ -138,19 +145,18 @@ export const RecordingDialogContent = styled(DialogContent)`
 
 export const Stage = styled.div`
   position: relative;
-  /* Driven by width, capped by height — not the other way around. The old
-     height-first version (height: min(60vh, 640px) + aspect-ratio) let the
-     derived width exceed the dialog's own content width on tall, narrow
-     phone screens (e.g. 60vh taller than the dialog is wide), so the video
-     genuinely overflowed past the dialog's right edge — that's what looked
-     like it was "stuck to the right", not a centering bug. width: 100%
-     guarantees it always fits; max-height only kicks in to stop it getting
-     absurdly tall on short/wide viewports.
-     */
+  flex: 0 1 auto;
+  /* max-height used to be a generous 58vh, sized as if the stage were the
+     only thing in the dialog. On a short phone, header + a 58vh-tall stage
+     + the action buttons no longer fit inside the dialog's own max-height,
+     and the buttons ended up squeezed against — visually, behind — the
+     bottom edge of the video instead of clearly below it. A materially
+     smaller, fixed cap leaves guaranteed room for everything below it,
+     every time, instead of hoping there's space left over. */
   width: 100%;
   aspect-ratio: 3 / 4;
-  max-height: min(58vh, 560px);
-  margin: 18px 0 0;
+  max-height: 34vh;
+  margin: 16px 0 0;
   overflow: hidden;
   border-radius: ${({ theme }) => theme.radii.lg};
   background: #0a0f0c;
@@ -231,6 +237,7 @@ export const RecordingDot = styled.span`
 
 export const StageActions = styled.div`
   display: flex;
+  flex-shrink: 0;
   flex-wrap: wrap;
   align-items: center;
   justify-content: center;
