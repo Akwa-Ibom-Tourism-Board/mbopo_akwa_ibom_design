@@ -135,7 +135,7 @@ export const RecordingDialogContent = styled(DialogContent)`
   flex-direction: column;
   width: 94vw;
   max-width: 560px;
-  max-height: 88vh;
+  max-height: 92vh;
   padding: 20px;
 
   ${media.sm} {
@@ -146,20 +146,28 @@ export const RecordingDialogContent = styled(DialogContent)`
 export const Stage = styled.div`
   position: relative;
   flex: 0 1 auto;
-  /* max-height used to be a generous 58vh, sized as if the stage were the
-     only thing in the dialog. On a short phone, header + a 58vh-tall stage
-     + the action buttons no longer fit inside the dialog's own max-height,
-     and the buttons ended up squeezed against — visually, behind — the
-     bottom edge of the video instead of clearly below it. A materially
-     smaller, fixed cap leaves guaranteed room for everything below it,
-     every time, instead of hoping there's space left over. */
+  /* The earlier 34vh cap under-sized this on ordinary phones too, not just
+     short ones: once max-height clips below the height aspect-ratio wants
+     (width * 4/3), the box stops reading as a portrait frame at all — it
+     just gets shorter and wider. The real fix for the short-screen overlap
+     this was guarding against is min-height: 0 below, which is what
+     actually lets this flex item shrink under pressure; flex items default
+     to min-height: auto, which can refuse to shrink past its aspect-ratio
+     size even with flex-shrink enabled (the same min-width: auto bug class
+     fixed elsewhere in this app, just on the cross axis here). With that in
+     place, this cap only needs to be a sensible ceiling for spacious
+     screens, not a defensive floor. */
+  min-height: 0;
   width: 100%;
   aspect-ratio: 3 / 4;
-  max-height: 34vh;
+  max-height: min(58vh, 520px);
   margin: 16px 0 0;
   overflow: hidden;
-  border-radius: ${({ theme }) => theme.radii.lg};
+  border-radius: ${({ theme }) => theme.radii.xl};
   background: #0a0f0c;
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.08),
+    ${({ theme }) => theme.shadows.lg};
 `;
 
 export const StageVideo = styled.video<{ $mirror?: boolean }>`
@@ -211,6 +219,7 @@ export const RecordingBadge = styled.div`
   border-radius: 999px;
   background: rgba(0, 0, 0, 0.55);
   backdrop-filter: blur(4px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
   color: #fff;
   font-size: 12px;
   font-weight: 700;
