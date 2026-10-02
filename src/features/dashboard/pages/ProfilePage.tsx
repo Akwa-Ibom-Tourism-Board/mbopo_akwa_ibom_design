@@ -6,6 +6,7 @@ import { AvatarImage, AvatarFallback, sonnerToast } from "@/shared/ui";
 import { useAuth, updateAvatar } from "@/features/auth";
 import { toPersistableDataUrl } from "@/lib/photoEncoding";
 import { ProfileSummaryCard } from "../components/ProfileSummaryCard";
+import { ChangePasswordCard } from "../components/ChangePasswordCard";
 import {
   Stack,
   AvatarCard,
@@ -97,6 +98,7 @@ export function ProfilePage() {
         </AvatarCard>
 
         <ProfileSummaryCard user={user} />
+        <ChangePasswordCard />
       </Stack>
     </DashboardShell>
   );

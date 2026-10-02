@@ -87,3 +87,15 @@ export class SessionExpiredError extends Error {
     this.name = "SessionExpiredError";
   }
 }
+
+export interface ChangePasswordInput {
+  currentPassword: string;
+  newPassword: string;
+}
+
+export class IncorrectPasswordError extends Error {
+  constructor() {
+    super("Your current password is incorrect.");
+    this.name = "IncorrectPasswordError";
+  }
+}

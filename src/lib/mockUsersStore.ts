@@ -29,6 +29,13 @@ export interface MockUserRecord {
   emailOtpExpiresAt?: number;
   emailOtpAttempts: number;
 
+  // Set only while a forgot-password link is outstanding; cleared the
+  // moment it's used (or replaced by a newer request). Mirrors the real
+  // backend's passwordResetTokenHash/passwordResetExpiresAt columns, minus
+  // the hashing — there's no secret worth protecting in a localStorage mock.
+  passwordResetToken?: string;
+  passwordResetExpiresAt?: number;
+
   // Unset until the applicant completes the NIN/VIN identity check from
   // their dashboard — a one-time step, gated by `identityVerified`.
   identityVerified: boolean;
@@ -44,6 +51,8 @@ export interface MockUserRecord {
 
 const OTP_TTL_MS = 10 * 60 * 1000;
 const MAX_OTP_ATTEMPTS = 5;
+// Matches the real backend's RESET_TOKEN_TTL_MS.
+const PASSWORD_RESET_TTL_MS = 60 * 60 * 1000;
 
 function digestPassword(password: string): string {
   return btoa(unescape(encodeURIComponent(password)));
@@ -52,6 +61,12 @@ function digestPassword(password: string): string {
 function generateOtpCode(): string {
   return Array.from({ length: OTP_LENGTH }, () =>
     Math.floor(Math.random() * 10),
+  ).join("");
+}
+
+function generateResetToken(): string {
+  return Array.from({ length: 32 }, () =>
+    Math.floor(Math.random() * 16).toString(16),
   ).join("");
 }
 
@@ -117,6 +132,20 @@ export class DuplicateIdentityError extends Error {
       "This NIN or VIN is already linked to another account. Please contact support if you believe this is a mistake.",
     );
     this.name = "DuplicateIdentityError";
+  }
+}
+
+export class InvalidResetTokenError extends Error {
+  constructor() {
+    super("This reset link is invalid. Please request a new one.");
+    this.name = "InvalidResetTokenError";
+  }
+}
+
+export class ResetTokenExpiredError extends Error {
+  constructor() {
+    super("This reset link has expired. Please request a new one.");
+    this.name = "ResetTokenExpiredError";
   }
 }
 
@@ -215,6 +244,60 @@ export function regenerateUserEmailOtp(
   });
   if (!updated) return undefined;
   return { record: updated, code };
+}
+
+// Mirrors the real backend's forgot-password service: always looks the user
+// up silently and returns undefined if there's no match, so the calling
+// api/mock.ts layer never has anything to throw — the UI can't be used to
+// enumerate which emails have accounts, same as the real endpoint's "always
+// 200" response.
+export function generatePasswordResetToken(
+  email: string,
+): { record: MockUserRecord; token: string } | undefined {
+  const user = findUserByEmail(email);
+  if (!user) return undefined;
+
+  const token = generateResetToken();
+  const updated = updateUser(user.id, {
+    passwordResetToken: token,
+    passwordResetExpiresAt: Date.now() + PASSWORD_RESET_TTL_MS,
+  });
+  if (!updated) return undefined;
+  return { record: updated, token };
+}
+
+export function resetUserPassword(
+  token: string,
+  newPassword: string,
+): MockUserRecord {
+  const user = readUsers().find((u) => u.passwordResetToken === token);
+  if (!user) {
+    throw new InvalidResetTokenError();
+  }
+  if (!user.passwordResetExpiresAt || Date.now() > user.passwordResetExpiresAt) {
+    updateUser(user.id, {
+      passwordResetToken: undefined,
+      passwordResetExpiresAt: undefined,
+    });
+    throw new ResetTokenExpiredError();
+  }
+
+  const updated = updateUser(user.id, {
+    passwordDigest: digestPassword(newPassword),
+    passwordResetToken: undefined,
+    passwordResetExpiresAt: undefined,
+  });
+  if (!updated) throw new InvalidResetTokenError();
+  return updated;
+}
+
+// Used by the authenticated change-password flow, once the caller has
+// already verified the current password itself (see auth/api/mock.ts).
+export function updateUserPasswordDigest(
+  userId: string,
+  newPassword: string,
+): MockUserRecord | undefined {
+  return updateUser(userId, { passwordDigest: digestPassword(newPassword) });
 }
 
 export function markApplicationSubmitted(userId: string): void {
