@@ -134,6 +134,7 @@ export function LoginPage() {
             />
             Remember me
           </RememberRow>
+          <InlineLink to="/forgot-password">Forgot password?</InlineLink>
         </OptionsRow>
 
         <CaptchaField>
