@@ -6,12 +6,15 @@ import {
   readTokenPayload,
   verifyPassword,
   updateUserAvatar,
+  updateUserPasswordDigest,
   type MockUserRecord,
 } from "@/lib/mockUsersStore";
 import {
   EmailNotVerifiedError,
+  IncorrectPasswordError,
   InvalidCredentialsError,
   SessionExpiredError,
+  type ChangePasswordInput,
   type LoginInput,
   type Session,
   type User,
@@ -82,4 +85,24 @@ export async function updateAvatar(
   }
 
   return toPublicUser(record);
+}
+
+// Mirrors the real backend's authenticated POST /auth/change-password:
+// re-checks the current password server-side (never trust the client just
+// because it rendered the form) before accepting the new one.
+export async function changePassword(
+  userId: string,
+  { currentPassword, newPassword }: ChangePasswordInput,
+): Promise<void> {
+  await delay();
+
+  const record = findUserById(userId);
+  if (!record) {
+    throw new SessionExpiredError();
+  }
+  if (!verifyPassword(record, currentPassword)) {
+    throw new IncorrectPasswordError();
+  }
+
+  updateUserPasswordDigest(userId, newPassword);
 }

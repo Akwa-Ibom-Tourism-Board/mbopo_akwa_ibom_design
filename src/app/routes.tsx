@@ -4,6 +4,7 @@ import { HomePage } from "@/features/home";
 import { RegisterPage } from "@/features/register";
 import { VerifyEmailPage } from "@/features/verify-email";
 import { LoginPage } from "@/features/auth";
+import { ForgotPasswordPage, ResetPasswordPage } from "@/features/forgot-password";
 import { DashboardPage, ProfilePage } from "@/features/dashboard";
 import { NotificationsPage } from "@/features/notifications";
 import { MbopoRegistrationPage } from "@/features/mbopo-registration";
@@ -26,6 +27,8 @@ export function AppRoutes() {
       <Route path="/register" element={<RegisterPage />} />
       <Route path="/verify-email" element={<VerifyEmailPage />} />
       <Route path="/login" element={<LoginPage />} />
+      <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+      <Route path="/reset-password" element={<ResetPasswordPage />} />
       <Route path="/terms" element={<TermsPage />} />
       <Route path="/privacy" element={<PrivacyPage />} />
       <Route

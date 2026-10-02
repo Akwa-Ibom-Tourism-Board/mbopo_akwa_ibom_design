@@ -1,1 +1,1 @@
-export { login, getCurrentUser, updateAvatar } from "./mock";
+export { login, getCurrentUser, updateAvatar, changePassword } from "./mock";

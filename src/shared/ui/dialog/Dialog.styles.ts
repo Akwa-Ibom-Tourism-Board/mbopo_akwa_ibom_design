@@ -89,11 +89,13 @@ export const StyledHeader = styled.div`
 export const StyledFooter = styled.div`
   display: flex;
   flex-direction: column-reverse;
+  /* Was only set inside the >=640px branch below, so stacked buttons on
+     small screens (the column-reverse layout) had zero gap and touched. */
+  gap: 0.5rem;
 
   @media (min-width: 640px) {
     flex-direction: row;
     justify-content: flex-end;
-    gap: 0.5rem;
   }
 `;
 
