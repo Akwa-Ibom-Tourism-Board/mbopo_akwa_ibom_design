@@ -18,6 +18,7 @@ import {
   changePassword,
   IncorrectPasswordError,
 } from "@/features/auth";
+import { friendlyMessage } from "@/lib/http";
 import { CreatePasswordForm } from "@/features/register";
 import {
   PasswordForm,
@@ -55,7 +56,7 @@ export function ChangePasswordCard() {
 
   const changePasswordMutation = useMutation({
     mutationFn: (values: ChangePasswordFormValues) =>
-      changePassword(user!.id, {
+      changePassword({
         currentPassword: values.currentPassword,
         newPassword: values.newPassword,
       }),
@@ -68,7 +69,12 @@ export function ChangePasswordCard() {
         setError("currentPassword", { message: error.message });
         return;
       }
-      sonnerToast.error("We couldn't change your password. Please try again.");
+      sonnerToast.error(
+        friendlyMessage(
+          error,
+          "We couldn't change your password. Please try again.",
+        ),
+      );
     },
   });
 

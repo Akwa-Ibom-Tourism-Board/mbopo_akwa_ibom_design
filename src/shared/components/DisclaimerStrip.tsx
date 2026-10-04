@@ -8,8 +8,7 @@ export function DisclaimerStrip() {
         <AlertTriangle size={14} />
       </StripIcon>
       <StripText>
-        Applying is completely free, never pay anyone at any stage. Submitting
-        an application does not guarantee selection.
+        Applying is free. No payment needed. Closing Date: 26th October, 2026
       </StripText>
     </Strip>
   );

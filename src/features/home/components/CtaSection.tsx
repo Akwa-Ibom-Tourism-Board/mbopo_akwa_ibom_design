@@ -34,7 +34,7 @@ export function CtaSection() {
             <RegisterLink to="/register">
               Begin your application <ArrowRight size={17} />
             </RegisterLink>
-            <GhostLink to="/#eligibility">View Requirements</GhostLink>
+            {/* <GhostLink to="/#eligibility">View Requirements</GhostLink> */}
           </Actions>
         </Inner>
       </Reveal>

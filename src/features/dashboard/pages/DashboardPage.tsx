@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { DashboardShell } from "@/shared/components";
 import { useAuth } from "@/features/auth";
-import { getDashboardSummary } from "../api";
+import { getMyApplication } from "@/features/mbopo-registration";
 import { ProfileSummaryCard } from "../components/ProfileSummaryCard";
 import { ApplicationStatusCard } from "../components/ApplicationStatusCard";
 import { StartRegistrationCta } from "../components/StartRegistrationCta";
@@ -15,40 +15,33 @@ export function DashboardPage() {
     document.title = "Dashboard | Mbopo Akwa Ibom";
   }, []);
 
-  const summaryQuery = useQuery({
-    queryKey: ["dashboard", "summary", user?.id],
-    queryFn: () => getDashboardSummary(user!.id),
+  // Same query key mbopo-registration's own page uses — the two share one
+  // cache entry for "my application," so a submit/draft-save made there
+  // is already reflected here without a second round-trip.
+  const applicationQuery = useQuery({
+    queryKey: ["mbopo-registration", "application", user?.id],
+    queryFn: getMyApplication,
     enabled: Boolean(user),
   });
 
   if (!user) return null;
 
-  const displayUser = summaryQuery.data?.user ?? user;
-  const referenceCode = summaryQuery.data?.referenceCode;
-  const hasDraft = summaryQuery.data?.hasDraft ?? false;
+  const application = applicationQuery.data ?? undefined;
+  const referenceCode = application?.referenceCode ?? undefined;
 
   return (
     <DashboardShell title="Dashboard" referenceCode={referenceCode}>
       <Stack>
-        <Greeting>
-          Welcome back, {displayUser.firstName ?? displayUser.email}.
-        </Greeting>
-        {summaryQuery.isLoading && (
+        <Greeting>Welcome back, {user.firstName ?? user.email}.</Greeting>
+        {applicationQuery.isLoading && (
           <LoadingText>Loading your dashboard…</LoadingText>
         )}
-        <StartRegistrationCta
-          status={displayUser.applicationStatus}
-          hasDraft={hasDraft}
-        />
+        <StartRegistrationCta application={application} />
         <CardGrid>
-          <ProfileSummaryCard
-            user={displayUser}
-            referenceCode={referenceCode}
-          />
+          <ProfileSummaryCard user={user} referenceCode={referenceCode} />
           <ApplicationStatusCard
-            status={displayUser.applicationStatus}
-            hasDraft={hasDraft}
-            memberSince={summaryQuery.data?.memberSince}
+            application={application}
+            memberSince={user.createdAt}
           />
         </CardGrid>
       </Stack>

@@ -4,7 +4,11 @@ export const Button = styled.button<{ $visible: boolean }>`
   position: fixed;
   z-index: ${({ theme }) => theme.zIndex.floatingAction};
   right: 20px;
-  bottom: 20px;
+  /* Stacked well above the Ask Me trigger (bottom: 1.5rem, a 56px button
+     plus its "Ask Me" label — see
+     features/ask-me/components/AskMeTrigger.styles.ts) rather than beside
+     it, with enough clearance that the two never feel cramped together. */
+  bottom: 170px;
   display: grid;
   place-items: center;
   width: 48px;

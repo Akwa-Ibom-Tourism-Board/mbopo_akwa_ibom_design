@@ -4,7 +4,7 @@ import { useMutation } from "@tanstack/react-query";
 import { DashboardShell } from "@/shared/components";
 import { AvatarImage, AvatarFallback, sonnerToast } from "@/shared/ui";
 import { useAuth, updateAvatar } from "@/features/auth";
-import { toPersistableDataUrl } from "@/lib/photoEncoding";
+import { uploadToCloudinary } from "@/lib/cloudinary";
 import { ProfileSummaryCard } from "../components/ProfileSummaryCard";
 import { ChangePasswordCard } from "../components/ChangePasswordCard";
 import {
@@ -28,8 +28,14 @@ export function ProfilePage() {
   }, []);
 
   const uploadMutation = useMutation({
-    mutationFn: (avatarDataUrl: string) =>
-      updateAvatar(user!.id, avatarDataUrl),
+    mutationFn: async (file: File) => {
+      const uploaded = await uploadToCloudinary("avatar", file);
+      return updateAvatar({
+        url: uploaded.url,
+        publicId: uploaded.publicId,
+        bytes: uploaded.bytes,
+      });
+    },
     onSuccess: (updated) => {
       updateUser({ avatarUrl: updated.avatarUrl });
       sonnerToast.success("Profile photo updated.");
@@ -50,7 +56,7 @@ export function ProfilePage() {
       : (user.email[0] ?? "")
   ).toUpperCase();
 
-  const onFileChange = async (event: ChangeEvent<HTMLInputElement>) => {
+  const onFileChange = (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     event.target.value = "";
     if (!file) return;
@@ -61,8 +67,7 @@ export function ProfilePage() {
     }
 
     setError(undefined);
-    const dataUrl = await toPersistableDataUrl(file);
-    uploadMutation.mutate(dataUrl);
+    uploadMutation.mutate(file);
   };
 
   return (

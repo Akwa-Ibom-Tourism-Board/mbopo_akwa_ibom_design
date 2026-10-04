@@ -34,7 +34,7 @@ export function NotificationsPage() {
 
   const notificationsQuery = useQuery({
     queryKey: [...NOTIFICATIONS_QUERY_KEY, user?.id],
-    queryFn: () => listNotifications(user!.id),
+    queryFn: listNotifications,
     enabled: Boolean(user),
   });
 
@@ -42,13 +42,12 @@ export function NotificationsPage() {
     queryClient.invalidateQueries({ queryKey: NOTIFICATIONS_QUERY_KEY });
 
   const markReadMutation = useMutation({
-    mutationFn: (notificationId: string) =>
-      markAsRead(user!.id, notificationId),
+    mutationFn: markAsRead,
     onSuccess: invalidate,
   });
 
   const markAllMutation = useMutation({
-    mutationFn: () => markAllAsRead(user!.id),
+    mutationFn: markAllAsRead,
     onSuccess: invalidate,
   });
 

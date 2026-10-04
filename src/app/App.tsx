@@ -3,6 +3,7 @@ import { AppProviders } from "./providers";
 import { AppRoutes } from "./routes";
 import { ScrollRestoration } from "./ScrollRestoration";
 import { ErrorBoundary } from "./ErrorBoundary";
+import { AskMeWidget } from "@/features/ask-me";
 
 function App() {
   return (
@@ -11,6 +12,7 @@ function App() {
         <BrowserRouter>
           <ScrollRestoration />
           <AppRoutes />
+          <AskMeWidget />
         </BrowserRouter>
       </AppProviders>
     </ErrorBoundary>

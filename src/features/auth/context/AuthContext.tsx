@@ -9,7 +9,7 @@ import {
 } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { localStore, STORAGE_KEYS } from "@/lib/storage";
-import { getCurrentUser } from "../api";
+import { getCurrentUser, logout as logoutRequest } from "../api";
 import type { Session, User } from "../types";
 
 export type AuthStatus = "restoring" | "authenticated" | "anonymous";
@@ -37,7 +37,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const sessionQuery = useQuery({
     queryKey: [...SESSION_QUERY_KEY, token],
-    queryFn: () => getCurrentUser(token as string),
+    queryFn: getCurrentUser,
     enabled: Boolean(token),
     initialData: () =>
       token ? localStore.get<User>(STORAGE_KEYS.authUser) : undefined,
@@ -46,7 +46,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   });
 
   const logout = useCallback(() => {
+    // Best-effort — invalidates the refresh token server-side, but a
+    // network failure here must never block logging out locally; the
+    // user's own intent to leave shouldn't depend on connectivity.
+    void logoutRequest().catch(() => {});
     localStore.remove(STORAGE_KEYS.authToken);
+    localStore.remove(STORAGE_KEYS.authRefreshToken);
     localStore.remove(STORAGE_KEYS.authUser);
     queryClient.removeQueries({ queryKey: SESSION_QUERY_KEY });
     setToken(undefined);
@@ -55,6 +60,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const login = useCallback(
     (session: Session) => {
       localStore.set(STORAGE_KEYS.authToken, session.token);
+      localStore.set(STORAGE_KEYS.authRefreshToken, session.refreshToken);
       localStore.set(STORAGE_KEYS.authUser, session.user);
       queryClient.setQueryData(
         [...SESSION_QUERY_KEY, session.token],
@@ -81,9 +87,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     [queryClient, token],
   );
 
-  // A stored token that fails validation (expired/revoked) means the
-  // cached session was stale — fall back to anonymous rather than getting
-  // stuck showing a dead "restoring" state.
+  // A stored token that fails validation (expired/revoked, or the refresh
+  // token that would have saved it is itself invalid — see lib/http.ts)
+  // means the cached session was stale — fall back to anonymous rather
+  // than getting stuck showing a dead "restoring" state.
   useEffect(() => {
     if (token && sessionQuery.isError) {
       logout();

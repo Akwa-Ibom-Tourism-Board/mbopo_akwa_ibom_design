@@ -32,9 +32,11 @@ export interface EducationStepProps {
   errors: FieldErrors<RegistrationFormValues>;
   fullImageUrl: string;
   fullImageError?: string;
+  fullImageUploading?: boolean;
   onFullImageChange: (event: ChangeEvent<HTMLInputElement>) => void;
   fullImage2Url: string;
   fullImage2Error?: string;
+  fullImage2Uploading?: boolean;
   onFullImage2Change: (event: ChangeEvent<HTMLInputElement>) => void;
 }
 
@@ -44,9 +46,11 @@ export function EducationStep({
   errors,
   fullImageUrl,
   fullImageError,
+  fullImageUploading,
   onFullImageChange,
   fullImage2Url,
   fullImage2Error,
+  fullImage2Uploading,
   onFullImage2Change,
 }: EducationStepProps) {
   return (
@@ -111,6 +115,7 @@ export function EducationStep({
         previewUrl={fullImageUrl}
         error={fullImageError}
         onChange={onFullImageChange}
+        isUploading={fullImageUploading}
       />
       <PhotoUpload
         label="Full Image 2"
@@ -118,6 +123,7 @@ export function EducationStep({
         previewUrl={fullImage2Url}
         error={fullImage2Error}
         onChange={onFullImage2Change}
+        isUploading={fullImage2Uploading}
       />
       <PrivacyNote>
         <ShieldCheck size={14} aria-hidden />

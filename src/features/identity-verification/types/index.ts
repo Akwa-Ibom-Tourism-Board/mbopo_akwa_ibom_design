@@ -7,50 +7,34 @@ export interface NinRecord {
   lastName: string;
   gender: Gender;
   dateOfBirth: string; // ISO date, YYYY-MM-DD
-  lga: string; // derived from the VIN lookup
-  ward: string; // derived from the VIN lookup, formatted "Ward <n>"
+  localGovernment: string; // derived from the VIN lookup
+  ward: string; // derived from the VIN lookup
 }
 
-export interface EligibilityResult {
+// What POST /auth/identity-check returns — eligibility is decided entirely
+// server-side (gender, calendar-year age, Akwa Ibom indigene — see the
+// backend's identity-check.service.ts), never recomputed here, so this
+// feature can't silently drift from the rules the backend actually
+// enforces at verify time.
+export interface IdentityCheckResult {
   eligible: boolean;
   reasons: string[];
-}
-
-export class NinNotFoundError extends Error {
-  constructor(
-    message = "No record was found for this NIN. Please check the number and try again.",
-  ) {
-    super(message);
-    this.name = "NinNotFoundError";
-  }
-}
-
-export class VinNotFoundError extends Error {
-  constructor(
-    message = "No record was found for this VIN. Please check the number and try again.",
-  ) {
-    super(message);
-    this.name = "VinNotFoundError";
-  }
+  identity: NinRecord;
 }
 
 export interface VerifyIdentityInput {
-  userId: string;
-  ninRecord: NinRecord;
-  captchaToken: string;
-}
-
-// The subset of `User` this step fills in — kept here (rather than
-// re-exported from `@/features/auth`) so this feature doesn't need to
-// import auth's types just to describe its own mutation's return shape.
-export interface VerifiedIdentityPatch {
-  firstName: string;
-  lastName: string;
   nin: string;
   vin: string;
-  lga: string;
-  ward: string;
-  gender: Gender;
-  dateOfBirth: string;
-  identityVerified: true;
+}
+
+// verify-identity.service.ts double-checks eligibility again at commit
+// time (never trusting the client-held result of an earlier identity-check
+// call) and responds 422 with these reasons if it no longer holds —
+// unlikely in normal use, but the UI needs to show the real reasons rather
+// than a generic failure message when it happens.
+export class IneligibleAfterVerificationError extends Error {
+  constructor(public reasons: string[]) {
+    super("You are not eligible to register");
+    this.name = "IneligibleAfterVerificationError";
+  }
 }
