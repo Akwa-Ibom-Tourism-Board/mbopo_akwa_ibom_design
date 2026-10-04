@@ -20,6 +20,7 @@ export interface PersonalStepProps {
   errors: FieldErrors<RegistrationFormValues>;
   passportPhotoUrl: string;
   passportPhotoError?: string;
+  passportPhotoUploading?: boolean;
   onPassportPhotoChange: (event: ChangeEvent<HTMLInputElement>) => void;
 }
 
@@ -29,6 +30,7 @@ export function PersonalStep({
   errors,
   passportPhotoUrl,
   passportPhotoError,
+  passportPhotoUploading,
   onPassportPhotoChange,
 }: PersonalStepProps) {
   return (
@@ -87,9 +89,11 @@ export function PersonalStep({
       </FieldGrid>
       <PhotoUpload
         label="Passport photograph"
+        hint="JPG or PNG · Max 5MB · Recent photo, white background"
         previewUrl={passportPhotoUrl}
         error={passportPhotoError}
         onChange={onPassportPhotoChange}
+        isUploading={passportPhotoUploading}
       />
       <PrivacyNote>
         <ShieldCheck size={14} aria-hidden />

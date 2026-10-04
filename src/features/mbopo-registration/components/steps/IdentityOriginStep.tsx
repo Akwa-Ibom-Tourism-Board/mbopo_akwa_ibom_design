@@ -37,6 +37,7 @@ export interface IdentityOriginStepProps {
   errors: FieldErrors<RegistrationFormValues>;
   certificateUrl: string;
   certificateError?: string;
+  certificateUploading?: boolean;
   onCertificateChange: (event: ChangeEvent<HTMLInputElement>) => void;
 }
 
@@ -47,6 +48,7 @@ export function IdentityOriginStep({
   errors,
   certificateUrl,
   certificateError,
+  certificateUploading,
   onCertificateChange,
 }: IdentityOriginStepProps) {
   return (
@@ -83,7 +85,7 @@ export function IdentityOriginStep({
           <LockedValue>{user.vin}</LockedValue>
         </Field>
         <Field label="Local Government Area of origin">
-          <LockedValue>{user.lga}</LockedValue>
+          <LockedValue>{user.localGovernment}</LockedValue>
         </Field>
         <Field label="Ward">
           <LockedValue>{user.ward}</LockedValue>
@@ -147,6 +149,7 @@ export function IdentityOriginStep({
         onChange={onCertificateChange}
         accept="image/png,image/jpeg,application/pdf"
         hint="JPG, PNG or PDF · Max 5MB"
+        isUploading={certificateUploading}
       />
       <PrivacyNote>
         <ShieldCheck size={14} aria-hidden />

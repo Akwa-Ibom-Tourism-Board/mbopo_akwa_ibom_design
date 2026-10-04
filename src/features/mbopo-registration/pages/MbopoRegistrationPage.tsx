@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { DashboardShell } from "@/shared/components";
 import { useAuth, isVerifiedUser } from "@/features/auth";
 import { IdentityVerificationGate } from "@/features/identity-verification";
-import { getSubmittedApplication, getRegistrationDraft } from "../api";
+import { getMyApplication } from "../api";
 import { RegistrationForm } from "../components/RegistrationForm";
 import { SubmittedApplicationView } from "../components/SubmittedApplicationView";
 import { LoadingShell } from "../components/RegistrationForm.styles";
@@ -15,30 +15,15 @@ export function MbopoRegistrationPage() {
     document.title = "Mbopo Registration | Mbopo Akwa Ibom";
   }, []);
 
-  // The source of truth for "has this user submitted" is whether a
-  // submitted-application record exists — not the (react-query-cached,
-  // occasionally stale) user.applicationStatus — so a fresh submit is
-  // reflected immediately on the next visit without relying on that
-  // cache's timing. Neither query is worth running until identity is
-  // verified — there's nothing to submit or draft before that gate.
+  // One row is both the draft and the eventual submission (see the
+  // backend's Application model) — a single fetch, gated on identity
+  // verification since there's nothing to have started before that.
   const identityVerified = Boolean(user?.identityVerified);
 
-  const submittedQuery = useQuery({
-    queryKey: ["mbopo-registration", "submitted", user?.id],
-    queryFn: () => getSubmittedApplication(user!.id),
+  const applicationQuery = useQuery({
+    queryKey: ["mbopo-registration", "application", user?.id],
+    queryFn: getMyApplication,
     enabled: Boolean(user) && identityVerified,
-  });
-
-  const hasSubmission = Boolean(submittedQuery.data);
-
-  const draftQuery = useQuery({
-    queryKey: ["mbopo-registration", "draft", user?.id],
-    queryFn: () => getRegistrationDraft(user!.id),
-    enabled:
-      Boolean(user) &&
-      identityVerified &&
-      !submittedQuery.isLoading &&
-      !hasSubmission,
   });
 
   if (!user) return null;
@@ -46,26 +31,23 @@ export function MbopoRegistrationPage() {
   if (!isVerifiedUser(user)) {
     return (
       <DashboardShell title="Mbopo Registration">
-        <IdentityVerificationGate user={user} onVerified={updateUser} />
+        <IdentityVerificationGate onVerified={updateUser} />
       </DashboardShell>
     );
   }
 
-  const referenceCode = submittedQuery.data?.referenceCode;
-  const stillLoading =
-    submittedQuery.isLoading || (!hasSubmission && draftQuery.isLoading);
+  const application = applicationQuery.data;
+  const hasSubmission = application?.status === "submitted";
+  const referenceCode = application?.referenceCode ?? undefined;
 
   return (
     <DashboardShell title="Mbopo Registration" referenceCode={referenceCode}>
-      {stillLoading ? (
+      {applicationQuery.isLoading ? (
         <LoadingShell>Loading your application…</LoadingShell>
-      ) : submittedQuery.data ? (
-        <SubmittedApplicationView
-          user={user}
-          application={submittedQuery.data}
-        />
+      ) : hasSubmission && application ? (
+        <SubmittedApplicationView user={user} application={application} />
       ) : (
-        <RegistrationForm user={user} initialDraft={draftQuery.data} />
+        <RegistrationForm user={user} initialDraft={application} />
       )}
     </DashboardShell>
   );
