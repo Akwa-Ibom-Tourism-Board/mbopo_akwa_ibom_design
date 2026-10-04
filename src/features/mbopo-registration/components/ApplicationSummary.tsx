@@ -3,7 +3,7 @@ import { FileText, ImageOff } from "lucide-react";
 import { format } from "date-fns";
 import type { VerifiedUser } from "@/features/auth";
 import type { RegistrationFormValues } from "../schema";
-import type { RegistrationPhotoDataUrls } from "../types";
+import type { RegistrationPhotoUrls } from "../types";
 import {
   Section,
   SectionTitle,
@@ -19,22 +19,20 @@ import {
 
 export interface ApplicationSummaryProps {
   user: VerifiedUser;
-  values: RegistrationFormValues;
-  // Preview sources for display only — object URLs while still on the
-  // form, data URLs once persisted. Optional/partial because a record
-  // saved by an older version of this app (or otherwise incomplete) may
-  // be missing one or all of these — never assume the whole object, or
-  // any given key, is present. See PhotoOrPlaceholder below.
-  photos?: Partial<RegistrationPhotoDataUrls>;
-  // Object URL while still on the form; only persists for the lifetime of
-  // the in-memory mock video store once submitted (see mockVideoStore.ts).
+  values: Partial<RegistrationFormValues>;
+  // Preview sources for display only — a local object URL while still on
+  // the form (not yet confirmed uploaded), a Cloudinary URL once saved.
+  // Optional/partial because an in-progress draft may be missing any of
+  // these — never assume the whole object, or any given key, is present.
+  // See PhotoOrPlaceholder below.
+  photos?: Partial<RegistrationPhotoUrls>;
+  // Local object URL while still on the form, or the Cloudinary URL once
+  // the video pitch has been submitted and locked.
   videoPreviewUrl?: string;
 }
 
 function isPdf(src: string) {
-  return (
-    src.startsWith("data:application/pdf") || src.toLowerCase().endsWith(".pdf")
-  );
+  return src.toLowerCase().endsWith(".pdf");
 }
 
 function PhotoOrPlaceholder({ src, alt }: { src?: string; alt: string }) {
@@ -55,11 +53,10 @@ function PhotoOrPlaceholder({ src, alt }: { src?: string; alt: string }) {
   return <img src={src} alt={alt} />;
 }
 
-// The mock video store only holds the recording's Blob for the lifetime of
-// the tab (see mockVideoStore.ts) — its object URL stops resolving after a
-// reload, which the browser otherwise shows as a video element stuck
-// loading forever. Falling back to the same placeholder as a missing photo
-// is more honest than that silent spin.
+// A video element given a URL that fails to load (network hiccup, a stale
+// local object URL from before a reload) would otherwise sit stuck
+// "loading" forever — falling back to the same placeholder as a missing
+// photo is more honest than that silent spin.
 function VideoOrPlaceholder({ src }: { src?: string }) {
   const [failed, setFailed] = useState(false);
 
@@ -165,7 +162,7 @@ export function ApplicationSummary({
           </DetailItem>
           <DetailItem>
             <DetailLabel>Local Government Area</DetailLabel>
-            <DetailValue>{user.lga}</DetailValue>
+            <DetailValue>{user.localGovernment}</DetailValue>
           </DetailItem>
           <DetailItem>
             <DetailLabel>Ward</DetailLabel>

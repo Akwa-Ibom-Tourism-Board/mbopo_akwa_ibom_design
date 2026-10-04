@@ -14,7 +14,7 @@ import {
 } from "../schema";
 import { REGISTRATION_STEPS } from "../constants";
 import { submitApplication, saveRegistrationDraft } from "../api";
-import type { RegistrationDraft, RegistrationPhotoDataUrls } from "../types";
+import type { Application } from "../types";
 import { StepProgress } from "./StepProgress";
 import { usePhotoUpload } from "./usePhotoUpload";
 import { useVideoRecorder } from "./useVideoRecorder";
@@ -42,6 +42,31 @@ const IDENTITY_STEP = 1;
 const EDUCATION_STEP = 2;
 const VIDEO_STEP = 3;
 
+// A resumed draft has no notion of "which step was I on" on the backend —
+// the Application row is just the fields themselves, not a UI cursor — so
+// the initial step is derived from which fields/photos are actually
+// missing, the same rule findFirstInvalidStep applies interactively later,
+// just checked against the raw fetched row instead of live form state.
+function findInitialStep(draft: Application | null | undefined): number {
+  if (!draft) return 0;
+  for (let index = 0; index < STEP_FIELDS.length; index += 1) {
+    const missingField = (STEP_FIELDS[index] ?? []).some((name) => {
+      const value = draft[name as keyof Application];
+      return (
+        value === undefined || value === null || value === "" || value === false
+      );
+    });
+    const missingPhoto =
+      (index === PERSONAL_STEP && !draft.passportPhotoUrl) ||
+      (index === IDENTITY_STEP && !draft.certificateOfOriginUrl) ||
+      (index === EDUCATION_STEP &&
+        (!draft.fullImageUrl || !draft.fullImageUrl2)) ||
+      (index === VIDEO_STEP && !draft.videoPitchUrl);
+    if (missingField || missingPhoto) return index;
+  }
+  return REGISTRATION_STEPS.length - 1;
+}
+
 // Everything except the video pitch can be saved as a draft and resumed —
 // see "Save & Exit" below. The video is different: once it's been
 // submitted (useVideoRecorder's "locked" status), it can never be
@@ -52,16 +77,13 @@ export function RegistrationForm({
   initialDraft,
 }: {
   user: VerifiedUser;
-  initialDraft?: RegistrationDraft | null;
+  initialDraft?: Application | null;
 }) {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
   const [currentStepIndex, setCurrentStepIndex] = useState(() =>
-    Math.min(
-      Math.max(initialDraft?.currentStepIndex ?? 0, 0),
-      REGISTRATION_STEPS.length - 1,
-    ),
+    findInitialStep(initialDraft),
   );
   const [requirePassportPhoto, setRequirePassportPhoto] = useState(false);
   const [requireCertificate, setRequireCertificate] = useState(false);
@@ -70,23 +92,29 @@ export function RegistrationForm({
   const [requireVideo, setRequireVideo] = useState(false);
   const [reviewOpen, setReviewOpen] = useState(false);
 
+  // Every photo/video field uploads and saves itself the moment it's
+  // picked (see usePhotoUpload/useVideoRecorder) — there's no "gather
+  // everything, send it all with the draft" step any more.
   const passportPhoto = usePhotoUpload({
-    initialDataUrl: initialDraft?.photos.passportPhoto,
+    field: "passportPhoto",
+    initialUrl: initialDraft?.passportPhotoUrl ?? undefined,
   });
   const certificate = usePhotoUpload({
+    field: "certificateOfOrigin",
     allowPdf: true,
     invalidTypeMessage: "Please choose an image or PDF file.",
-    initialDataUrl: initialDraft?.photos.certificateOfOrigin,
+    initialUrl: initialDraft?.certificateOfOriginUrl ?? undefined,
   });
   const fullImage = usePhotoUpload({
-    initialDataUrl: initialDraft?.photos.fullImage,
+    field: "fullImage",
+    initialUrl: initialDraft?.fullImageUrl ?? undefined,
   });
   const fullImage2 = usePhotoUpload({
-    initialDataUrl: initialDraft?.photos.fullImage2,
+    field: "fullImage2",
+    initialUrl: initialDraft?.fullImageUrl2 ?? undefined,
   });
   const videoRecorder = useVideoRecorder({
-    userId: user.id,
-    initialLockedUrl: initialDraft?.videoPitchUrl,
+    initialLockedUrl: initialDraft?.videoPitchUrl ?? undefined,
   });
 
   const {
@@ -100,22 +128,20 @@ export function RegistrationForm({
     resolver: zodResolver(registrationSchema),
     defaultValues: {
       ...DEFAULT_REGISTRATION_FORM_VALUES,
-      ...initialDraft?.values,
+      ...initialDraft,
     },
   });
 
   const submitMutation = useMutation({
     mutationFn: submitApplication,
     onSuccess: () => {
-      // Deliberately not invalidating the mbopo-registration "submitted"
+      // Deliberately not invalidating the mbopo-registration "application"
       // query here: that query belongs to the outer MbopoRegistrationPage,
       // and refetching it immediately would flip its branch over to the
       // read-only view mid-render, cutting off the SuccessState screen
       // below before the user ever sees it. It's invalidated on unmount
       // instead, once they've actually moved on.
-      queryClient.invalidateQueries({
-        queryKey: ["dashboard", "summary", user.id],
-      });
+      queryClient.invalidateQueries({ queryKey: ["dashboard", "summary"] });
     },
     onError: () =>
       sonnerToast.error(
@@ -126,13 +152,10 @@ export function RegistrationForm({
   useEffect(
     () => () => {
       queryClient.invalidateQueries({
-        queryKey: ["mbopo-registration", "submitted", user.id],
-      });
-      queryClient.invalidateQueries({
-        queryKey: ["mbopo-registration", "draft", user.id],
+        queryKey: ["mbopo-registration", "application"],
       });
     },
-    [queryClient, user.id],
+    [queryClient],
   );
 
   // The multi-step form is one single route — react-router's own
@@ -151,11 +174,9 @@ export function RegistrationForm({
     mutationFn: saveRegistrationDraft,
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ["mbopo-registration", "draft", user.id],
+        queryKey: ["mbopo-registration", "application"],
       });
-      queryClient.invalidateQueries({
-        queryKey: ["dashboard", "summary", user.id],
-      });
+      queryClient.invalidateQueries({ queryKey: ["dashboard", "summary"] });
       sonnerToast.success("Draft saved. Pick up anytime from your dashboard.");
       navigate("/dashboard");
     },
@@ -167,12 +188,11 @@ export function RegistrationForm({
     return <SuccessState referenceCode={submitMutation.data.referenceCode} />;
   }
 
-  const gatherPhotos = async (): Promise<RegistrationPhotoDataUrls> => ({
-    passportPhoto: await passportPhoto.getPersistableDataUrl(),
-    certificateOfOrigin: await certificate.getPersistableDataUrl(),
-    fullImage: await fullImage.getPersistableDataUrl(),
-    fullImage2: await fullImage2.getPersistableDataUrl(),
-  });
+  const anyPhotoUploading =
+    passportPhoto.isUploading ||
+    certificate.isUploading ||
+    fullImage.isUploading ||
+    fullImage2.isUploading;
 
   const goToNextStep = async () => {
     const fieldsValid = await trigger(STEP_FIELDS[currentStepIndex]);
@@ -208,17 +228,7 @@ export function RegistrationForm({
       );
       return;
     }
-    const photos = await gatherPhotos();
-    saveDraftMutation.mutate({
-      userId: user.id,
-      values: getValues(),
-      currentStepIndex,
-      photos,
-      videoPitchUrl:
-        videoRecorder.status === "locked"
-          ? videoRecorder.previewUrl
-          : undefined,
-    });
+    saveDraftMutation.mutate(getValues());
   };
 
   // Every step's fields are validated as the user moves forward, but a
@@ -269,17 +279,15 @@ export function RegistrationForm({
 
   const handleConfirmSubmit = async () => {
     if (videoRecorder.status !== "locked") return;
-    const photos = await gatherPhotos();
-    submitMutation.mutate({
-      userId: user.id,
-      values: getValues(),
-      photos,
-      videoPitchUrl: videoRecorder.previewUrl,
-    });
+    submitMutation.mutate(getValues());
   };
 
   const isLastStep = currentStepIndex === REGISTRATION_STEPS.length - 1;
-  const isBusy = submitMutation.isPending || saveDraftMutation.isPending;
+  const isBusy =
+    submitMutation.isPending ||
+    saveDraftMutation.isPending ||
+    anyPhotoUploading ||
+    videoRecorder.status === "submitting";
 
   return (
     <Main>
@@ -318,6 +326,7 @@ export function RegistrationForm({
                 passportPhoto.error ??
                 (requirePassportPhoto ? REQUIRED_PHOTO_MESSAGE : undefined)
               }
+              passportPhotoUploading={passportPhoto.isUploading}
               onPassportPhotoChange={passportPhoto.onChange}
             />
           )}
@@ -332,6 +341,7 @@ export function RegistrationForm({
                 certificate.error ??
                 (requireCertificate ? REQUIRED_PHOTO_MESSAGE : undefined)
               }
+              certificateUploading={certificate.isUploading}
               onCertificateChange={certificate.onChange}
             />
           )}
@@ -345,12 +355,14 @@ export function RegistrationForm({
                 fullImage.error ??
                 (requireFullImage ? REQUIRED_PHOTO_MESSAGE : undefined)
               }
+              fullImageUploading={fullImage.isUploading}
               onFullImageChange={fullImage.onChange}
               fullImage2Url={fullImage2.previewUrl}
               fullImage2Error={
                 fullImage2.error ??
                 (requireFullImage2 ? REQUIRED_PHOTO_MESSAGE : undefined)
               }
+              fullImage2Uploading={fullImage2.isUploading}
               onFullImage2Change={fullImage2.onChange}
             />
           )}
