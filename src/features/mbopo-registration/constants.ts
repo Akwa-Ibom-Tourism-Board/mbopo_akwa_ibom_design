@@ -6,7 +6,7 @@ export const REGISTRATION_STEPS = [
   "Your Story",
 ] as const;
 
-export const VIDEO_PITCH_MAX_SECONDS = 60;
+export const VIDEO_PITCH_MAX_SECONDS = 30;
 
 export const EDUCATION_LEVELS = [
   "HND",
