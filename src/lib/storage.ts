@@ -1,14 +1,12 @@
-// Typed, JSON-safe wrappers around localStorage/sessionStorage. Every mock
-// "database" and session value in the app is keyed through here so the
-// storage keys live in one place instead of being repeated as string
-// literals across features.
+// Typed, JSON-safe wrappers around localStorage/sessionStorage. Every
+// client-side session value the app keeps (tokens, the cached user,
+// pending-verification state) is keyed through here so the storage keys
+// live in one place instead of being repeated as string literals across
+// features.
 export const STORAGE_KEYS = {
   authToken: "mbopo-auth-token",
+  authRefreshToken: "mbopo-auth-refresh-token",
   authUser: "mbopo-auth-user",
-  mockUsersDb: "mbopo-mock-users-db",
-  mockApplicationsDb: "mbopo-mock-applications-db",
-  mockRegistrationDraftsDb: "mbopo-mock-registration-drafts-db",
-  mockNotificationsDb: "mbopo-mock-notifications-db",
   pendingRegistration: "mbopo-pending-registration",
   themeMode: "mbopo-theme-mode",
 } as const;

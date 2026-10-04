@@ -57,7 +57,7 @@ export function ProfileSummaryCard({
               </DetailItem>
               <DetailItem>
                 <DetailLabel>LGA</DetailLabel>
-                <DetailValue>{user.lga}</DetailValue>
+                <DetailValue>{user.localGovernment}</DetailValue>
               </DetailItem>
               <DetailItem>
                 <DetailLabel>Ward</DetailLabel>

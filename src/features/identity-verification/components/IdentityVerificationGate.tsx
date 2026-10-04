@@ -17,8 +17,7 @@ import {
   SubmitButton,
 } from "@/shared/components/AuthForm.styles";
 import { lookupNin, verifyIdentity } from "../api";
-import { evaluateEligibility } from "../eligibility";
-import type { NinRecord, VerifiedIdentityPatch } from "../types";
+import { IneligibleAfterVerificationError, type NinRecord } from "../types";
 import { IneligibleNotice } from "./IneligibleNotice";
 import { IdentityConfirmPanel } from "./IdentityConfirmPanel";
 import {
@@ -50,12 +49,10 @@ type NinVinFormValues = z.infer<typeof ninVinSchema>;
 type GateStage = "lookup" | "confirm" | "ineligible";
 
 export interface IdentityVerificationGateProps {
-  user: User;
-  onVerified: (patch: VerifiedIdentityPatch) => void;
+  onVerified: (user: User) => void;
 }
 
 export function IdentityVerificationGate({
-  user,
   onVerified,
 }: IdentityVerificationGateProps) {
   const [stage, setStage] = useState<GateStage>("lookup");
@@ -71,21 +68,17 @@ export function IdentityVerificationGate({
   const [captchaToken, setCaptchaToken] = useState<string | null>(null);
   const recaptchaRef = useRef<ReCAPTCHA>(null);
 
+  // The reCAPTCHA widget is a client-side anti-bot gate only — neither
+  // /auth/identity-check nor /applicants/verify-identity accept or check a
+  // captcha token, so it's never sent, only required to enable submit.
   const lookupMutation = useMutation({
-    mutationFn: ({
-      values,
-      token,
-    }: {
-      values: NinVinFormValues;
-      token: string;
-    }) => lookupNin(values.nin, values.vin, token),
-    onSuccess: (record) => {
-      const eligibility = evaluateEligibility(record);
-      if (eligibility.eligible) {
-        setNinRecord(record);
+    mutationFn: (values: NinVinFormValues) => lookupNin(values.nin, values.vin),
+    onSuccess: (result) => {
+      if (result.eligible) {
+        setNinRecord(result.identity);
         setStage("confirm");
       } else {
-        setIneligibleReasons(eligibility.reasons);
+        setIneligibleReasons(result.reasons);
         setStage("ineligible");
       }
     },
@@ -101,11 +94,19 @@ export function IdentityVerificationGate({
 
   const verifyMutation = useMutation({
     mutationFn: verifyIdentity,
-    onSuccess: (patch) => {
+    onSuccess: (user) => {
       sonnerToast.success("Your identity has been verified.");
-      onVerified(patch);
+      onVerified(user);
     },
-    onError: () => {
+    onError: (error) => {
+      // The backend re-checks eligibility at commit time too (never trusts
+      // the earlier identity-check result) — rare, but if it no longer
+      // holds, show the real reasons instead of a generic failure.
+      if (error instanceof IneligibleAfterVerificationError) {
+        setIneligibleReasons(error.reasons);
+        setStage("ineligible");
+        return;
+      }
       sonnerToast.error("We couldn't verify your identity. Please try again.");
     },
   });
@@ -142,11 +143,7 @@ export function IdentityVerificationGate({
             isSubmitting={verifyMutation.isPending}
             onChangeNin={resetToLookup}
             onConfirm={() =>
-              verifyMutation.mutate({
-                userId: user.id,
-                ninRecord,
-                captchaToken: captchaToken ?? "",
-              })
+              verifyMutation.mutate({ nin: ninRecord.nin, vin: ninRecord.vin })
             }
           />
         )}
@@ -155,7 +152,7 @@ export function IdentityVerificationGate({
           <form
             onSubmit={handleSubmit((values) => {
               if (!captchaToken) return;
-              lookupMutation.mutate({ values, token: captchaToken });
+              lookupMutation.mutate(values);
             })}
             noValidate
           >

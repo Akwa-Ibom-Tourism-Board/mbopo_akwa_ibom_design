@@ -26,12 +26,13 @@ import {
 const ELIGIBILITY_CRITERIA = [
   "Must be female",
   "Must be an indigene of Akwa Ibom State",
-  "Must be a graduate (minimum of B.Sc. or HND)",
+  "Must be a graduate (minimum of B.Sc., HND or equivalent)",
   "Must be between 22 and 27 years old",
   "Must have a National Identification Number (NIN)",
   "Must have a Certificate of Origin",
   "Must have a Voter Identification Number (VIN)",
   "Must have a passport photograph",
+  "Passport photograph must be recent and on white background",
 ];
 
 export function EligibilitySection() {
@@ -48,8 +49,7 @@ export function EligibilitySection() {
             <Title>Who can apply?</Title>
             <Subtitle>
               Applicants must meet the following requirements to be eligible to
-              apply. Meeting these requirements does not guarantee selection;
-              every application is reviewed through the full, competitive
+              apply. Every application is reviewed through the full, competitive
               selection process.
             </Subtitle>
           </Header>
@@ -78,14 +78,14 @@ export function EligibilitySection() {
                   <CriteriaText>{text}</CriteriaText>
                 </CriteriaCard>
               ))}
-              <CtaCell>
+              {/* <CtaCell>
                 <CtaCellText>
                   Meet all {ELIGIBILITY_CRITERIA.length} conditions?
                 </CtaCellText>
                 <RegisterLink to="/register">
                   Register Now <ArrowRight size={15} />
                 </RegisterLink>
-              </CtaCell>
+              </CtaCell> */}
             </CriteriaGrid>
           </Panel>
         </Reveal>

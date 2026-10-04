@@ -1,7 +1,7 @@
 import { CheckCircle2 } from "lucide-react";
 import { format } from "date-fns";
 import type { VerifiedUser } from "@/features/auth";
-import type { SubmittedApplication } from "../types";
+import type { Application } from "../types";
 import { ApplicationSummary } from "./ApplicationSummary";
 import {
   ViewFrame,
@@ -18,7 +18,7 @@ export function SubmittedApplicationView({
   application,
 }: {
   user: VerifiedUser;
-  application: SubmittedApplication;
+  application: Application;
 }) {
   return (
     <ViewFrame>
@@ -31,13 +31,15 @@ export function SubmittedApplicationView({
             />
             Application received
           </StatusTitle>
-          <StatusMeta>
-            Submitted{" "}
-            {format(
-              new Date(application.submittedAt),
-              "d MMMM yyyy 'at' h:mm a",
-            )}
-          </StatusMeta>
+          {application.submittedAt && (
+            <StatusMeta>
+              Submitted{" "}
+              {format(
+                new Date(application.submittedAt),
+                "d MMMM yyyy 'at' h:mm a",
+              )}
+            </StatusMeta>
+          )}
         </StatusCopy>
         <ReferencePill>
           Reference number
@@ -48,9 +50,14 @@ export function SubmittedApplicationView({
       <SummaryCard>
         <ApplicationSummary
           user={user}
-          values={application.values}
-          photos={application.photos}
-          videoPreviewUrl={application.videoPitchUrl}
+          values={application}
+          photos={{
+            passportPhoto: application.passportPhotoUrl ?? "",
+            certificateOfOrigin: application.certificateOfOriginUrl ?? "",
+            fullImage: application.fullImageUrl ?? "",
+            fullImage2: application.fullImageUrl2 ?? "",
+          }}
+          videoPreviewUrl={application.videoPitchUrl ?? undefined}
         />
       </SummaryCard>
     </ViewFrame>

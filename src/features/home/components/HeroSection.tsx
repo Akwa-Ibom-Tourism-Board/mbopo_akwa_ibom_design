@@ -63,7 +63,7 @@ const SLIDES: HeroSlide[] = [
     title: "Crowned",
     accent: "in heritage",
     tagline: "Every strand tells a story",
-    copy: "From coral beads to hand styled crowns, Mbopo Akwa Ibom celebrates the artistry of our local hairstylists and the heritage woven into every look.",
+    copy: "From coral beads to hand styled crowns, mbopo akwa ibom celebrates the artistry of our local skills and the heritage woven into every look",
   },
   {
     image: governorPortraitOne,
@@ -72,7 +72,7 @@ const SLIDES: HeroSlide[] = [
     title: "Championing",
     accent: "Akwa Ibom's daughters",
     tagline: "Supported by the State Government",
-    copy: "Mbopo Akwa Ibom is proudly backed by the Akwa Ibom State Government, part of a wider commitment to empowering women across every Local Government Area.",
+    copy: "Mbopo akwa Ibom is part of a wider commitment to empowering akwa Ibom daughters across all 31 local Government areas.",
   },
   {
     image: governorPortraitTwo,
@@ -131,9 +131,9 @@ export function HeroSection() {
             <HeroCopy>{activeSlide.copy}</HeroCopy>
           </TextStage>
           <HeroActions>
-            <PrimaryLink to="/register">
+            {/* <PrimaryLink to="/register">
               Register Now <ArrowRight size={17} />
-            </PrimaryLink>
+            </PrimaryLink> */}
             {/* <GhostLink to="/presentation">Learn More</GhostLink> */}
             <Dots>
               {SLIDES.map((slide, index) => (

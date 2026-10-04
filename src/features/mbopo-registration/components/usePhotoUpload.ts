@@ -5,61 +5,64 @@ import {
   useState,
   type ChangeEvent,
 } from "react";
-import { toPersistableDataUrl } from "@/lib/photoEncoding";
+import { uploadToCloudinary, type UploadField } from "@/lib/cloudinary";
+import { savePhoto } from "../api";
 
 export interface UsePhotoUploadOptions {
+  field: UploadField;
   accept?: string;
   allowPdf?: boolean;
   invalidTypeMessage?: string;
-  // A previously-saved photo (draft or submitted application) to show
-  // until the user picks a new file. Arrives asynchronously — set once
-  // the draft/submission fetch resolves — so it's applied via an effect
-  // rather than read only at first render.
-  initialDataUrl?: string;
+  // A previously-saved photo's URL (draft or submitted application) —
+  // arrives asynchronously once the draft fetch resolves, so it's applied
+  // via an effect rather than read only at first render.
+  initialUrl?: string;
 }
 
 export interface UsePhotoUploadResult {
-  file: File | null;
   previewUrl: string;
   error: string | undefined;
   hasPhoto: boolean;
+  isUploading: boolean;
   onChange: (event: ChangeEvent<HTMLInputElement>) => void;
-  // The value to persist (draft save or submit): re-encodes a freshly
-  // picked file, or passes a hydrated one through unchanged.
-  getPersistableDataUrl: () => Promise<string>;
 }
 
-// Replaces the three near-identical onPhotoChange/onFullImageChange/
-// onCertificateChange handlers from the original single-file form with one
-// reusable hook, shared by every PhotoUpload instance on this page.
+// Each photo is uploaded (direct to Cloudinary) and saved to the
+// application the moment it's picked, not gathered up for a later batch
+// save — see api/index.ts's savePhoto. `previewUrl` shows the local object
+// URL immediately for instant feedback, falling back to the last
+// successfully *persisted* URL if a re-upload fails, so a failed replace
+// never leaves the field looking emptier than it actually is.
 export function usePhotoUpload({
+  field,
   accept = "image/png,image/jpeg",
   allowPdf = false,
   invalidTypeMessage = "Please choose an image file.",
-  initialDataUrl,
-}: UsePhotoUploadOptions = {}): UsePhotoUploadResult {
-  const [file, setFile] = useState<File | null>(null);
+  initialUrl,
+}: UsePhotoUploadOptions): UsePhotoUploadResult {
+  const [persistedUrl, setPersistedUrl] = useState(initialUrl ?? "");
   const [objectUrl, setObjectUrl] = useState("");
-  const [hydratedUrl, setHydratedUrl] = useState(initialDataUrl ?? "");
+  const [isUploading, setIsUploading] = useState(false);
   const [error, setError] = useState<string>();
-  // Mirrors objectUrl for the unmount cleanup below, which needs the
-  // latest value without re-running (and re-registering a new cleanup)
-  // every time it changes.
+
   const objectUrlRef = useRef(objectUrl);
   useEffect(() => {
     objectUrlRef.current = objectUrl;
   }, [objectUrl]);
 
   useEffect(() => {
-    if (initialDataUrl && !file) setHydratedUrl(initialDataUrl);
-  }, [initialDataUrl, file]);
+    if (initialUrl) setPersistedUrl(initialUrl);
+  }, [initialUrl]);
+
+  useEffect(() => {
+    return () => {
+      if (objectUrlRef.current) URL.revokeObjectURL(objectUrlRef.current);
+    };
+  }, []);
 
   const onChange = useCallback(
     (event: ChangeEvent<HTMLInputElement>) => {
       const selected = event.target.files?.[0];
-      // Clear the input value up front so re-picking the same file still
-      // fires a change event, matching the video recorder's "revoke the
-      // old one before setting the new one" rule for every object URL.
       event.target.value = "";
       if (!selected) return;
 
@@ -70,40 +73,46 @@ export function usePhotoUpload({
         return;
       }
 
-      setFile(selected);
+      setError(undefined);
       setObjectUrl((currentUrl) => {
         if (currentUrl) URL.revokeObjectURL(currentUrl);
         return URL.createObjectURL(selected);
       });
-      setError(undefined);
+      setIsUploading(true);
+
+      void (async () => {
+        try {
+          const uploaded = await uploadToCloudinary(field, selected);
+          await savePhoto({
+            field,
+            url: uploaded.url,
+            publicId: uploaded.publicId,
+            bytes: uploaded.bytes,
+          });
+          setPersistedUrl(uploaded.url);
+        } catch (uploadError) {
+          setObjectUrl((currentUrl) => {
+            if (currentUrl) URL.revokeObjectURL(currentUrl);
+            return "";
+          });
+          setError(
+            uploadError instanceof Error
+              ? uploadError.message
+              : "We couldn't upload that file. Please try again.",
+          );
+        } finally {
+          setIsUploading(false);
+        }
+      })();
     },
-    [allowPdf, invalidTypeMessage],
+    [allowPdf, field, invalidTypeMessage],
   );
 
-  // Revokes whatever object URL is outstanding when this upload slot's
-  // component unmounts (e.g. leaving the registration form entirely) —
-  // the replace-on-reselect case above is already covered inline. Reads
-  // the ref rather than objectUrl directly so this effect is registered
-  // once, not torn down and reattached on every file pick.
-  useEffect(() => {
-    return () => {
-      if (objectUrlRef.current) URL.revokeObjectURL(objectUrlRef.current);
-    };
-  }, []);
-
-  const previewUrl = objectUrl || hydratedUrl;
-
-  const getPersistableDataUrl = useCallback(async () => {
-    if (file) return toPersistableDataUrl(file);
-    return hydratedUrl;
-  }, [file, hydratedUrl]);
-
   return {
-    file,
-    previewUrl,
+    previewUrl: objectUrl || persistedUrl,
     error,
-    hasPhoto: Boolean(previewUrl),
+    hasPhoto: Boolean(persistedUrl),
+    isUploading,
     onChange,
-    getPersistableDataUrl,
   };
 }

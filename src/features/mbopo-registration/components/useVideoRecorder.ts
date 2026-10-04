@@ -1,9 +1,17 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { saveVideoPitch } from "@/lib/mockVideoStore";
+import { uploadToCloudinary } from "@/lib/cloudinary";
+import { savePhoto } from "../api";
 import { VIDEO_PITCH_MAX_SECONDS } from "../constants";
 
 export type VideoRecorderStatus =
-  "idle" | "requesting" | "live" | "recording" | "preview" | "locked" | "error";
+  | "idle"
+  | "requesting"
+  | "live"
+  | "recording"
+  | "preview"
+  | "submitting"
+  | "locked"
+  | "error";
 
 export interface UseVideoRecorderResult {
   status: VideoRecorderStatus;
@@ -19,10 +27,10 @@ export interface UseVideoRecorderResult {
   stopRecording: () => void;
   retake: () => void;
   cancelRecording: () => void;
-  // Locks the current preview in permanently — mirrors a real backend's
-  // upload-then-lock (see upload-photo.service.ts's videoPitch check): from
-  // this point on there is no more redo/cancel, only a read-only playback.
-  submitVideo: () => void;
+  // Uploads to Cloudinary and locks the pitch in permanently (see
+  // upload-photo.service.ts's videoPitch check) — from this point on there
+  // is no more redo/cancel, only a read-only playback.
+  submitVideo: () => Promise<void>;
 }
 
 // Picks the first mime type the browser's MediaRecorder actually supports —
@@ -42,16 +50,14 @@ function pickSupportedMimeType(): string | undefined {
 }
 
 export interface UseVideoRecorderOptions {
-  userId: string;
   // A previously-locked video pitch, from a resumed draft — arrives
   // asynchronously (once the draft fetch resolves), so it's applied via an
   // effect rather than read only at first render, same pattern as
-  // usePhotoUpload's initialDataUrl.
+  // usePhotoUpload's initialUrl.
   initialLockedUrl?: string;
 }
 
 export function useVideoRecorder({
-  userId,
   initialLockedUrl,
 }: UseVideoRecorderOptions): UseVideoRecorderResult {
   const [status, setStatus] = useState<VideoRecorderStatus>(
@@ -114,10 +120,12 @@ export function useVideoRecorder({
         recorderRef.current.stop();
       }
       releaseCamera();
-      // Never revoke a locked preview's URL — it's the same object URL
-      // mockVideoStore hands back on the next visit, not a throwaway
-      // created by this component instance.
-      if (previewUrlRef.current && !lockedRef.current) {
+      // Safe to revoke even when locked: a locked preview here is either
+      // this session's own blob URL (nothing after unmount reads it again
+      // on this instance) or the remote Cloudinary URL passed in via
+      // initialLockedUrl (never created by this hook, so never ours to
+      // revoke — revokeObjectURL on a non-blob URL is simply a no-op).
+      if (previewUrlRef.current) {
         URL.revokeObjectURL(previewUrlRef.current);
       }
     },
@@ -242,18 +250,36 @@ export function useVideoRecorder({
     reset();
   }, [releaseCamera, reset, stopTimer]);
 
-  const submitVideo = useCallback(() => {
-    // Guards against a double click locking twice (mockVideoStore would
-    // just silently overwrite, but there's no reason to let it happen).
+  const submitVideo = useCallback(async () => {
+    // Guards against a double click locking twice — the backend also
+    // rejects a second lock (409), but there's no reason to let it happen
+    // from here either.
     if (!recordedBlob || lockedRef.current) return;
-    const newUrl = saveVideoPitch(userId, recordedBlob);
-    setPreviewUrl((currentUrl) => {
-      if (currentUrl) URL.revokeObjectURL(currentUrl);
-      return newUrl;
-    });
-    lockedRef.current = true;
-    setStatus("locked");
-  }, [recordedBlob, userId]);
+    setStatus("submitting");
+    setErrorMessage(undefined);
+    try {
+      const uploaded = await uploadToCloudinary("videoPitch", recordedBlob);
+      await savePhoto({
+        field: "videoPitch",
+        url: uploaded.url,
+        publicId: uploaded.publicId,
+        bytes: uploaded.bytes,
+      });
+      lockedRef.current = true;
+      setStatus("locked");
+      // Deliberately not swapping previewUrl to the Cloudinary URL here —
+      // the local object URL plays back identically and swapping would
+      // revoke the blob preview mid-display; it's only revoked on retake
+      // or unmount, same as any other preview.
+    } catch (error) {
+      setErrorMessage(
+        error instanceof Error
+          ? error.message
+          : "We couldn't submit your video. Please try again.",
+      );
+      setStatus("preview");
+    }
+  }, [recordedBlob]);
 
   return {
     status,

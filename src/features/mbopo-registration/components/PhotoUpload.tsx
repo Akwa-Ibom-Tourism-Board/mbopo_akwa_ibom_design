@@ -15,6 +15,7 @@ export interface PhotoUploadProps {
   onChange: (event: ChangeEvent<HTMLInputElement>) => void;
   accept?: string;
   hint?: string;
+  isUploading?: boolean;
 }
 
 export function PhotoUpload({
@@ -24,6 +25,7 @@ export function PhotoUpload({
   onChange,
   accept = "image/png,image/jpeg",
   hint = "JPG or PNG · Max 5MB",
+  isUploading = false,
 }: PhotoUploadProps) {
   const inputId = `${label.toLowerCase().replace(/\s+/g, "-")}-upload`;
 
@@ -39,10 +41,16 @@ export function PhotoUpload({
                 <Upload size={18} />
               </PhotoIcon>
               <strong>Upload {label}</strong>
-              <span>{hint}</span>
+              <span>{isUploading ? "Uploading…" : hint}</span>
             </>
           )}
-          <input id={inputId} type="file" accept={accept} onChange={onChange} />
+          <input
+            id={inputId}
+            type="file"
+            accept={accept}
+            onChange={onChange}
+            disabled={isUploading}
+          />
         </PhotoDrop>
       </Field>
     </PhotoField>

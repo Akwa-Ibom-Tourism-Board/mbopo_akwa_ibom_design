@@ -9,7 +9,7 @@ import ReCAPTCHA from "react-google-recaptcha";
 import { AuthLayout } from "@/shared/components";
 import { sonnerToast } from "@/shared/ui";
 import { RECAPTCHA_SITE_KEY } from "@/lib/config";
-import { EmailAlreadyRegisteredError } from "@/lib/mockUsersStore";
+import { friendlyMessage } from "@/lib/http";
 import {
   Heading,
   Subtitle,
@@ -65,11 +65,12 @@ export function RegisterPage() {
       navigate("/verify-email", { state: { email } });
     },
     onError: (error) => {
-      const message =
-        error instanceof EmailAlreadyRegisteredError
-          ? error.message
-          : "We couldn't create your account. Please try again.";
-      sonnerToast.error(message);
+      sonnerToast.error(
+        friendlyMessage(
+          error,
+          "We couldn't create your account. Please try again.",
+        ),
+      );
       // A reCAPTCHA token is single-use, so a failed submit needs a fresh
       // one before trying again.
       recaptchaRef.current?.reset();

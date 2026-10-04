@@ -108,7 +108,7 @@ export function Navbar({ variant = "solid" }: NavbarProps) {
               </LogoCluster>
               <BrandDivider $light={light} aria-hidden />
               <BrandText>
-                <BrandName $light={light}>Mbopo Akwa Ibom</BrandName>
+                {/* <BrandName $light={light}>Mbopo Akwa Ibom</BrandName> */}
                 <BrandSubtitle $light={light}>
                   Akwa Ibom State Hotels and Tourism Development Commission
                 </BrandSubtitle>

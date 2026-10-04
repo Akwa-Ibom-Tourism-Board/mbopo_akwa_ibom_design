@@ -5,6 +5,8 @@ import { z } from "zod";
 import { useMutation } from "@tanstack/react-query";
 import { ArrowRight, MailCheck } from "lucide-react";
 import { AuthLayout } from "@/shared/components";
+import { sonnerToast } from "@/shared/ui";
+import { friendlyMessage } from "@/lib/http";
 import {
   Heading,
   Subtitle,
@@ -19,7 +21,10 @@ import {
   InlineLink,
 } from "@/shared/components/AuthForm.styles";
 import { requestPasswordReset } from "../api";
-import { ConfirmationIcon, ConfirmationCopy } from "./ForgotPasswordPage.styles";
+import {
+  ConfirmationIcon,
+  ConfirmationCopy,
+} from "./ForgotPasswordPage.styles";
 
 const forgotPasswordSchema = z.object({
   email: z
@@ -49,6 +54,7 @@ export function ForgotPasswordPage() {
   const requestMutation = useMutation({
     mutationFn: requestPasswordReset,
     onSuccess: (_, { email }) => setSubmittedEmail(email),
+    onError: (error) => sonnerToast.error(friendlyMessage(error)),
   });
 
   if (submittedEmail) {
@@ -59,9 +65,8 @@ export function ForgotPasswordPage() {
         </ConfirmationIcon>
         <Heading>Check your email</Heading>
         <ConfirmationCopy>
-          If an account exists for <strong>{submittedEmail}</strong>,
-          we&apos;ve sent a link to reset your password. It expires in 1
-          hour.
+          If an account exists for <strong>{submittedEmail}</strong>, we&apos;ve
+          sent a link to reset your password. It expires in 1 hour.
         </ConfirmationCopy>
         <FormFooter>
           <InlineLink to="/login">Back to login</InlineLink>
@@ -74,8 +79,8 @@ export function ForgotPasswordPage() {
     <AuthLayout carouselVariant="login">
       <Heading>Forgot your password?</Heading>
       <Subtitle>
-        Enter the email on your account and we&apos;ll send you a link to
-        reset it.
+        Enter the email on your account and we&apos;ll send you a link to reset
+        it.
       </Subtitle>
 
       <FormBlock
@@ -109,8 +114,7 @@ export function ForgotPasswordPage() {
       </FormBlock>
 
       <FormFooter>
-        Remembered your password?{" "}
-        <InlineLink to="/login">Log in</InlineLink>
+        Remembered your password? <InlineLink to="/login">Log in</InlineLink>
       </FormFooter>
     </AuthLayout>
   );

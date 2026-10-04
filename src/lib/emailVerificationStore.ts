@@ -35,21 +35,3 @@ export function readPendingEmailVerification():
 export function clearPendingEmailVerification(): void {
   sessionStore.remove(STORAGE_KEYS.pendingRegistration);
 }
-
-export class OtpExpiredError extends Error {
-  constructor() {
-    super("Your verification code expired. Please request a new one.");
-    this.name = "OtpExpiredError";
-  }
-}
-
-export class OtpIncorrectError extends Error {
-  constructor(public attemptsRemaining: number) {
-    super(
-      attemptsRemaining > 0
-        ? `Incorrect code. ${attemptsRemaining} attempt${attemptsRemaining === 1 ? "" : "s"} remaining.`
-        : "Too many incorrect attempts. Please request a new code.",
-    );
-    this.name = "OtpIncorrectError";
-  }
-}

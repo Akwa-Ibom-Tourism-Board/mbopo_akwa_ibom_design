@@ -9,9 +9,9 @@ import ReCAPTCHA from "react-google-recaptcha";
 import { AuthLayout } from "@/shared/components";
 import { Checkbox, sonnerToast } from "@/shared/ui";
 import { RECAPTCHA_SITE_KEY } from "@/lib/config";
+import { friendlyMessage } from "@/lib/http";
 import { useAuth } from "../context/AuthContext";
 import { login } from "../api";
-import { EmailNotVerifiedError, InvalidCredentialsError } from "../types";
 import {
   Heading,
   Subtitle,
@@ -64,11 +64,7 @@ export function LoginPage() {
       navigate(redirectTo, { replace: true });
     },
     onError: (error) => {
-      const message =
-        error instanceof InvalidCredentialsError ||
-        error instanceof EmailNotVerifiedError
-          ? error.message
-          : "Something went wrong. Please try again.";
+      const message = friendlyMessage(error);
       setError("password", { message });
       sonnerToast.error(message);
       // A reCAPTCHA token is single-use, so a failed submit needs a fresh

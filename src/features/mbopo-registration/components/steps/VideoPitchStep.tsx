@@ -78,6 +78,9 @@ export function VideoPitchStep({
   // submitted, rather than leaving a stream running or an unsubmitted take
   // sitting in memory behind a closed dialog.
   const handleOpenChange = (open: boolean) => {
+    // Never let an in-flight submit be interrupted (Escape key, etc.) —
+    // onInteractOutside below already blocks an overlay click.
+    if (!open && status === "submitting") return;
     if (
       !open &&
       (status === "live" || status === "recording" || status === "preview")
@@ -222,7 +225,9 @@ export function VideoPitchStep({
               playsInline
               style={{
                 display:
-                  status === "preview" || status === "locked"
+                  status === "preview" ||
+                  status === "submitting" ||
+                  status === "locked"
                     ? "block"
                     : "none",
               }}
@@ -305,7 +310,11 @@ export function VideoPitchStep({
             )}
             {status === "preview" && (
               <>
-                <Button type="button" variant="secondary" onClick={submitVideo}>
+                <Button
+                  type="button"
+                  variant="secondary"
+                  onClick={() => void submitVideo()}
+                >
                   <CheckCircle2 size={16} /> Submit Video
                 </Button>
                 <Button type="button" variant="outline" onClick={retake}>
@@ -313,9 +322,14 @@ export function VideoPitchStep({
                 </Button>
               </>
             )}
+            {status === "submitting" && (
+              <Button type="button" variant="secondary" disabled>
+                Submitting…
+              </Button>
+            )}
           </StageActions>
 
-          {status === "error" && errorMessage && (
+          {(status === "error" || status === "preview") && errorMessage && (
             <ErrorBanner>{errorMessage}</ErrorBanner>
           )}
         </RecordingDialogContent>

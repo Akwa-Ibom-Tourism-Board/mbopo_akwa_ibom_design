@@ -17,7 +17,8 @@ const SECTIONS: LegalSection[] = [
       "Be a graduate",
       "Be between 22 and 27 years of age",
       "Hold a valid National Identification Number (NIN)",
-      "Have a current passport photograph",
+      "Hold a valid Voter Identification Number (VIN)",
+      "Have a current passport photograph, recent and on a white background",
     ],
   },
   {
@@ -36,7 +37,7 @@ const SECTIONS: LegalSection[] = [
   {
     heading: "5. Registration & Identity Verification",
     paragraphs: [
-      "Applications begin with a lookup of your National Identification Number to confirm your identity, gender, and age before you may proceed. The name, date of birth, gender, and NIN returned by this lookup cannot be edited during registration, as they form the verified basis of your application.",
+      "You register with just your email and password, verify your email, and log in. Once logged in, you complete a one-time identity verification: a lookup of your National Identification Number and Voter Identification Number to confirm your identity, gender, age, and state of origin. This must be completed before you can start the application form. The name, date of birth, gender, NIN, and VIN returned by this lookup cannot be edited afterward, as they form the verified basis of your application.",
       "You are responsible for the accuracy of every other detail you submit, including your contact information, educational background, and personal statement. Providing false or misleading information may result in disqualification at any stage.",
     ],
   },
@@ -80,7 +81,7 @@ export function TermsPage() {
       documentTitle="Terms & Conditions"
       eyebrow="Legal"
       title="Terms & Conditions"
-      updatedAt="29 September 2026"
+      updatedAt="4 October 2026"
       sections={SECTIONS}
     />
   );

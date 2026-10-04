@@ -7,7 +7,7 @@ import {
   CardTitle,
   CardDescription,
 } from "@/shared/ui";
-import type { User } from "@/features/auth";
+import type { Application } from "@/features/mbopo-registration";
 import {
   StatusRow,
   StatusBadge,
@@ -20,18 +20,16 @@ import {
 } from "./ApplicationStatusCard.styles";
 
 export interface ApplicationStatusCardProps {
-  status: User["applicationStatus"];
-  hasDraft: boolean;
+  application: Application | undefined;
   memberSince?: string;
 }
 
 export function ApplicationStatusCard({
-  status,
-  hasDraft,
+  application,
   memberSince,
 }: ApplicationStatusCardProps) {
-  const submitted = status === "submitted";
-  const inProgress = !submitted && hasDraft;
+  const submitted = application?.status === "submitted";
+  const inProgress = !submitted && Boolean(application);
 
   const description = submitted
     ? "Your Mbopo Akwa Ibom application has been received."

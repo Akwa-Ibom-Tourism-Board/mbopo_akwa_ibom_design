@@ -8,7 +8,7 @@ import {
 } from "@/shared/ui";
 import type { VerifiedUser } from "@/features/auth";
 import type { RegistrationFormValues } from "../schema";
-import type { RegistrationPhotoDataUrls } from "../types";
+import type { RegistrationPhotoUrls } from "../types";
 import { ApplicationSummary } from "./ApplicationSummary";
 import {
   WideDialogContent,
@@ -21,7 +21,7 @@ export interface ReviewSubmitModalProps {
   onOpenChange: (open: boolean) => void;
   user: VerifiedUser;
   values: RegistrationFormValues;
-  photos: RegistrationPhotoDataUrls;
+  photos: RegistrationPhotoUrls;
   videoPreviewUrl?: string;
   isSubmitting: boolean;
   onConfirm: () => void;

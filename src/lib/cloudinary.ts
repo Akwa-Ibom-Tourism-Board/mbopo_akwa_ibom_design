@@ -1,56 +1,40 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { CLOUDINARY_CLOUD_NAME, CLOUDINARY_UPLOAD_PRESET } from "./config";
+import { request } from "./http";
 
-// Direct browser-to-Cloudinary upload — the file goes straight from the
-// applicant's device to Cloudinary, never through our own server, so
-// registration-form uploads (passport photo, certificate, the two full
-// images, the video pitch) don't cost our backend any bandwidth or disk.
-//
-// Unsigned-preset uploads, deliberately: this works standalone, with no
-// backend endpoint required, using only the public cloud name + preset
-// name from .env.example. Nothing here needs the account's API secret,
-// which must never reach frontend code.
-//
-// No feature wires this in yet — usePhotoUpload/useVideoRecorder still
-// hold picked files as local blob URLs, persisted as data URLs the way
-// the rest of the mock layer does. Swapping a given upload over to
-// Cloudinary means calling uploadToCloudinary() where that file is picked
-// and storing the returned `url` instead of re-encoding it locally; the
-// backend then just needs to accept & store that URL instead of receiving
-// the file itself.
-//
-// Signed uploads (recommended once the backend exists — an unsigned
-// preset can be hit by anyone who finds its name, not just this app) only
-// change how the request is authorized: have the backend compute a
-// signature and timestamp and pass them in here instead of
-// upload_preset. Everything else below stays the same.
+// Direct browser-to-Cloudinary upload, signed by the backend per request
+// (POST /uploads/cloudinary-signature). The backend decides the resource
+// type, the deterministic public_id, and every transformation/format
+// restriction, then signs all of it — the file's bytes still never pass
+// through our own server, but nothing about the upload is trusted from the
+// client beyond "here are the bytes for this field." See the backend's
+// src/configurations/cloudinary.ts for the other half of this contract.
+export type UploadField =
+  | "passportPhoto"
+  | "certificateOfOrigin"
+  | "fullImage"
+  | "fullImage2"
+  | "videoPitch"
+  | "avatar";
+
+interface SignedUpload {
+  cloudName: string;
+  apiKey: string;
+  timestamp: number;
+  signature: string;
+  publicId: string;
+  overwrite: true;
+  resourceType: "image" | "video";
+  uploadParams: Record<string, string | number | boolean>;
+}
 
 export interface CloudinaryUploadResult {
   url: string;
   publicId: string;
-  resourceType: string;
-  format: string;
   bytes: number;
 }
 
 export interface UploadToCloudinaryOptions {
-  // Cloudinary can auto-detect image vs. video from the file itself
-  // ("auto", the default) — set this explicitly only if you need to force
-  // one or the other.
-  resourceType?: "auto" | "image" | "video";
-  // Overrides the upload preset's own folder, if it has one.
-  folder?: string;
   onProgress?: (percent: number) => void;
   signal?: AbortSignal;
-}
-
-export class CloudinaryConfigError extends Error {
-  constructor() {
-    super(
-      "Cloudinary isn't configured — set VITE_CLOUDINARY_CLOUD_NAME and VITE_CLOUDINARY_UPLOAD_PRESET (see .env.example).",
-    );
-    this.name = "CloudinaryConfigError";
-  }
 }
 
 export class CloudinaryUploadError extends Error {
@@ -60,21 +44,24 @@ export class CloudinaryUploadError extends Error {
   }
 }
 
-export function uploadToCloudinary(
+function postToCloudinary(
+  signed: SignedUpload,
   file: File | Blob,
-  options: UploadToCloudinaryOptions = {},
+  options: UploadToCloudinaryOptions,
 ): Promise<CloudinaryUploadResult> {
-  if (!CLOUDINARY_CLOUD_NAME || !CLOUDINARY_UPLOAD_PRESET) {
-    return Promise.reject(new CloudinaryConfigError());
-  }
-
-  const resourceType = options.resourceType ?? "auto";
-  const endpoint = `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/${resourceType}/upload`;
-
   const formData = new FormData();
   formData.append("file", file);
-  formData.append("upload_preset", CLOUDINARY_UPLOAD_PRESET);
-  if (options.folder) formData.append("folder", options.folder);
+  formData.append("api_key", signed.apiKey);
+  formData.append("timestamp", String(signed.timestamp));
+  formData.append("signature", signed.signature);
+  // Every one of these was included in what the backend signed — sending
+  // anything different (or omitting one) makes Cloudinary reject the
+  // request as a signature mismatch.
+  for (const [key, value] of Object.entries(signed.uploadParams)) {
+    formData.append(key, String(value));
+  }
+
+  const endpoint = `https://api.cloudinary.com/v1_1/${signed.cloudName}/${signed.resourceType}/upload`;
 
   return new Promise((resolve, reject) => {
     const xhr = new XMLHttpRequest();
@@ -91,7 +78,12 @@ export function uploadToCloudinary(
     options.signal?.addEventListener("abort", () => xhr.abort());
 
     xhr.onload = () => {
-      let body: any;
+      let body: {
+        secure_url?: string;
+        public_id?: string;
+        bytes?: number;
+        error?: { message?: string };
+      };
       try {
         body = JSON.parse(xhr.responseText);
       } catch {
@@ -109,11 +101,9 @@ export function uploadToCloudinary(
       }
 
       resolve({
-        url: body.secure_url,
-        publicId: body.public_id,
-        resourceType: body.resource_type,
-        format: body.format,
-        bytes: body.bytes,
+        url: body.secure_url!,
+        publicId: body.public_id!,
+        bytes: body.bytes ?? 0,
       });
     };
 
@@ -123,4 +113,17 @@ export function uploadToCloudinary(
 
     xhr.send(formData);
   });
+}
+
+export async function uploadToCloudinary(
+  field: UploadField,
+  file: File | Blob,
+  options: UploadToCloudinaryOptions = {},
+): Promise<CloudinaryUploadResult> {
+  const signed = await request<SignedUpload>("/uploads/cloudinary-signature", {
+    method: "POST",
+    body: JSON.stringify({ field }),
+  });
+
+  return postToCloudinary(signed, file, options);
 }
