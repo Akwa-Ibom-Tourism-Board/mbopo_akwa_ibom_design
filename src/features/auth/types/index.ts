@@ -1,26 +1,28 @@
 import type { Gender } from "@/features/identity-verification/types";
 
+// Mirrors the backend's serializeUser exactly (see auth.helpers.ts) — note
+// there's no applicationStatus here: that lives on the separate
+// Application row (see @/features/mbopo-registration), fetched
+// independently rather than bundled onto the user.
 export interface User {
   id: string;
   email: string;
-  applicationStatus: "not_started" | "submitted";
-  // Data URL in the mock (see mockUsersStore.ts); a real backend serves
-  // this as an uploaded-file URL instead (POST /auth/avatar). Undefined
-  // until the applicant uploads one — the UI falls back to a placeholder.
-  avatarUrl?: string;
-
+  avatarUrl?: string | null;
+  emailVerified: boolean;
   // Unset until the applicant completes the one-time NIN/VIN identity
   // check from their dashboard (see @/features/identity-verification) —
   // not collected at registration time any more.
   identityVerified: boolean;
-  firstName?: string;
-  lastName?: string;
-  nin?: string;
-  vin?: string;
-  lga?: string;
-  ward?: string;
-  gender?: Gender;
-  dateOfBirth?: string;
+  firstName?: string | null;
+  lastName?: string | null;
+  phoneNumber?: string | null;
+  nin?: string | null;
+  vin?: string | null;
+  gender?: Gender | null;
+  dateOfBirth?: string | null;
+  localGovernment?: string | null;
+  ward?: string | null;
+  createdAt: string;
 }
 
 // `User` narrowed to the shape every step past the identity-verification
@@ -32,7 +34,7 @@ export interface VerifiedUser extends User {
   lastName: string;
   nin: string;
   vin: string;
-  lga: string;
+  localGovernment: string;
   ward: string;
   gender: Gender;
   dateOfBirth: string;
@@ -46,7 +48,7 @@ export function isVerifiedUser(user: User): user is VerifiedUser {
     Boolean(user.lastName) &&
     Boolean(user.nin) &&
     Boolean(user.vin) &&
-    Boolean(user.lga) &&
+    Boolean(user.localGovernment) &&
     Boolean(user.ward) &&
     Boolean(user.gender) &&
     Boolean(user.dateOfBirth)
@@ -55,38 +57,23 @@ export function isVerifiedUser(user: User): user is VerifiedUser {
 
 export interface Session {
   token: string;
+  refreshToken: string;
   user: User;
 }
 
 export interface LoginInput {
   email: string;
   password: string;
-  // Google reCAPTCHA token from the widget above the submit button. Mocked
-  // today (see api/mock.ts); a real backend must verify it server-side
-  // against Google's siteverify endpoint before checking credentials.
+  // Google reCAPTCHA token from the widget above the submit button. The
+  // real backend doesn't accept or verify one (see auth.routes.ts's
+  // loginSchema) — it's purely a client-side anti-bot gate, same as
+  // identity-verification's.
   captchaToken: string;
 }
 
-export class InvalidCredentialsError extends Error {
-  constructor() {
-    super("Incorrect email or password.");
-    this.name = "InvalidCredentialsError";
-  }
-}
-
-export class EmailNotVerifiedError extends Error {
-  constructor() {
-    super("Please verify your email before logging in.");
-    this.name = "EmailNotVerifiedError";
-  }
-}
-
-export class SessionExpiredError extends Error {
-  constructor() {
-    super("Your session has expired. Please log in again.");
-    this.name = "SessionExpiredError";
-  }
-}
+// Login's 400 (wrong credentials) and 403 (unverified email) are both
+// already friendly, user-safe messages — see lib/http.ts's
+// friendlyMessage, used instead of per-case error classes here.
 
 export interface ChangePasswordInput {
   currentPassword: string;
