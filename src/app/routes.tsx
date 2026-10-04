@@ -4,7 +4,10 @@ import { HomePage } from "@/features/home";
 import { RegisterPage } from "@/features/register";
 import { VerifyEmailPage } from "@/features/verify-email";
 import { LoginPage } from "@/features/auth";
-import { ForgotPasswordPage, ResetPasswordPage } from "@/features/forgot-password";
+import {
+  ForgotPasswordPage,
+  ResetPasswordPage,
+} from "@/features/forgot-password";
 import { DashboardPage, ProfilePage } from "@/features/dashboard";
 import { NotificationsPage } from "@/features/notifications";
 import { MbopoRegistrationPage } from "@/features/mbopo-registration";
