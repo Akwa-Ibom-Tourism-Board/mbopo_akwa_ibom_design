@@ -44,35 +44,30 @@ const STEPS: ProcessStep[] = [
   {
     icon: UserPlus,
     title: "Create Your Account",
-    text: "Sign up on the Mbopo Akwa Ibom portal with your personal details, including a National Identification Number (NIN) that matches your records.",
+    text: "Sign up with your email and password, verify your email with the code we send you, then log in.",
+    checklistLabel: "What you'll need",
+    checklist: ["A valid email address", "Password", "Access to your inbox"],
+  },
+  {
+    icon: ScanSearch,
+    title: "Verify Your Identity",
+    text: "From your dashboard, verify your NIN and VIN to confirm your eligibility. This is a one-time step, done once you're logged in and before you start the application form.",
     checklistLabel: "What you'll need",
     checklist: [
-      "Valid National Identification Number (NIN)",
-      "Active email address",
-      "Phone number",
+      "National Identification Number (NIN)",
+      "Voter Identification Number (VIN)",
     ],
   },
   {
     icon: ClipboardList,
     title: "Complete Your Application",
-    text: "Log in and fill out the application form: your personal details, LGA of origin, education history and your story. Upload a clear passport photograph.",
+    text: "Fill out the application form: your personal details, LGA of origin, education history and your story. Upload your documents and record your video pitch.",
     checklistLabel: "Required documents",
     checklist: [
       "Certificate of Origin",
-      "Voter Identification Number (VIN)",
-      "Passport photograph",
+      "Passport photograph (recent, white background)",
+      "Two full-length images",
       "Academic qualification (B.Sc. or HND)",
-    ],
-  },
-  {
-    icon: ScanSearch,
-    title: "Verification",
-    text: "Your application undergoes verification, checking your NIN, Certificate of Origin and academic qualification to confirm your eligibility.",
-    checklistLabel: "What happens",
-    checklist: [
-      "NIN matched against your application",
-      "Certificate of Origin confirmed",
-      "SMS and email updates on your status",
     ],
   },
   {

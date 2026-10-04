@@ -131,9 +131,9 @@ export function HeroSection() {
             <HeroCopy>{activeSlide.copy}</HeroCopy>
           </TextStage>
           <HeroActions>
-            <PrimaryLink to="/register">
+            {/* <PrimaryLink to="/register">
               Register Now <ArrowRight size={17} />
-            </PrimaryLink>
+            </PrimaryLink> */}
             {/* <GhostLink to="/presentation">Learn More</GhostLink> */}
             <Dots>
               {SLIDES.map((slide, index) => (

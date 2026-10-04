@@ -27,12 +27,12 @@ export function HomePage() {
     <PageShell navVariant="overlay">
       <HeroSection />
       <AboutSection />
-      <EligibilitySection />
-      <HowItWorksSection />
       <PlatformPanel>
         <WhyEnterSection />
         <ValuesSection />
       </PlatformPanel>
+      <EligibilitySection />
+      <HowItWorksSection />
       <FaqSection />
       <CtaSection />
       <ScrollToTopButton />

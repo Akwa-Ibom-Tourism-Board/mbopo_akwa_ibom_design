@@ -45,7 +45,7 @@ export function IdentityConfirmPanel({
         </DetailItem>
         <DetailItem>
           <DetailLabel>Local Government Area</DetailLabel>
-          <DetailValue>{record.lga}</DetailValue>
+          <DetailValue>{record.localGovernment}</DetailValue>
         </DetailItem>
         <DetailItem>
           <DetailLabel>Ward</DetailLabel>
