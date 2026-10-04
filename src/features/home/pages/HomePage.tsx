@@ -5,6 +5,7 @@ import { HeroSection } from "../components/HeroSection";
 import { AboutSection } from "../components/AboutSection";
 import { EligibilitySection } from "../components/EligibilitySection";
 import { HowItWorksSection } from "../components/HowItWorksSection";
+import { RewardsSection } from "../components/RewardsSection";
 import { WhyEnterSection } from "../components/WhyEnterSection";
 import { ValuesSection } from "../components/ValuesSection";
 import { FaqSection } from "../components/FaqSection";
@@ -33,6 +34,7 @@ export function HomePage() {
       </PlatformPanel>
       <EligibilitySection />
       <HowItWorksSection />
+      <RewardsSection />
       <FaqSection />
       <CtaSection />
       <ScrollToTopButton />

@@ -8,7 +8,7 @@ export function DisclaimerStrip() {
         <AlertTriangle size={14} />
       </StripIcon>
       <StripText>
-        Applying is free. No payment needed. Closing Date: 26th October, 2026
+        Applying is free. No payment needed. Closing Date: 20th October, 2026
       </StripText>
     </Strip>
   );

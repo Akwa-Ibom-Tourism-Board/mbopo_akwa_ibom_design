@@ -96,6 +96,9 @@ export const LockedThumb = styled.div`
     width: 100%;
     height: 100%;
     object-fit: cover;
+    /* Same reasoning as StageVideo's $mirror — this thumbnail is the
+       applicant's own locked-in-pitch preview, so it mirrors too. */
+    transform: scaleX(-1);
   }
 `;
 
@@ -175,13 +178,17 @@ export const StageVideo = styled.video<{ $mirror?: boolean }>`
   height: 100%;
   object-fit: cover;
   background: #0a0f0c;
-  /* Only the live preview mirrors, matching every other camera app — you
-     watch yourself as if in a mirror while recording (bend right, your
-     reflection bends right), but the saved file stays true-to-life, the
-     way everyone else already sees you. Flipping it here is purely a
-     preview transform: MediaRecorder captures straight from the camera
-     track, never from this rendered element, so the recording itself is
-     never affected. */
+  /* Mirrored for both the live preview AND playback (here and in
+     LockedThumb below) — applicants watch themselves as if in a mirror
+     while recording, and if played-back footage then showed the true,
+     un-mirrored orientation instead, it reads as "wrong" to them (not
+     what they just watched themselves do), even though it's technically
+     accurate. This is purely a display transform on this <video> element:
+     MediaRecorder always captures straight from the camera track, never
+     from a rendered element, so the uploaded file itself is untouched —
+     true-to-life, the way everyone else (e.g. a judge reviewing it later,
+     without this transform) actually sees the applicant. Only how it's
+     *displayed back to the applicant themselves* changes here. */
   transform: ${({ $mirror }) => ($mirror ? "scaleX(-1)" : "none")};
 `;
 

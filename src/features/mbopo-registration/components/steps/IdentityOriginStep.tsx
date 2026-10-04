@@ -108,7 +108,7 @@ export function IdentityOriginStep({
             render={({ field }) => (
               <Select value={field.value} onValueChange={field.onChange}>
                 <SelectTrigger invalid={Boolean(errors.residenceState)}>
-                  <SelectValue placeholder="Select your state" />
+                  <SelectValue placeholder="Select state of residence" />
                 </SelectTrigger>
                 <SelectContent>
                   {NIGERIAN_STATES.map((state) => (

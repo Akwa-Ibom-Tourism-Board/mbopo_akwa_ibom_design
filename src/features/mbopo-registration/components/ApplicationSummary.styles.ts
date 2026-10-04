@@ -100,4 +100,10 @@ export const VideoPreview = styled.video`
   border-radius: ${({ theme }) => theme.radii.lg};
   border: 1px solid ${({ theme }) => theme.colors.border};
   background: #0a0f0c;
+  /* This is always shown to the applicant themselves (review-before-submit
+     or their own submitted application), never a separate judge/admin
+     view — mirrored for the same reason as VideoPitchStep's StageVideo:
+     matches what they watched themselves do while recording. The
+     underlying file is untouched, still true-to-life. */
+  transform: scaleX(-1);
 `;

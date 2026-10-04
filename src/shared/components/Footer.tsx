@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { Phone } from "lucide-react";
 import akwaIbomLogo from "@/assets/akwa-ibom-logo-main.png";
 import ariseLogo from "@/assets/arise-logo-main.png";
 import mbopoLogo from "@/assets/mbopo-logo.webp";
@@ -11,6 +12,7 @@ import {
   LogoImage,
   FooterAgency,
   FooterSubline,
+  FooterContact,
   ColumnHeading,
   ColumnLinks,
   Socials,
@@ -46,6 +48,9 @@ export function Footer() {
             <br />
             Under the A.R.I.S.E. Agenda
           </FooterSubline>
+          <FooterContact href="tel:+2348149110942">
+            <Phone size={13} aria-hidden /> For Enquiries: +234 814 911 0942
+          </FooterContact>
           <Socials>
             <Social href="#" aria-label="Instagram">
               ig
@@ -65,6 +70,7 @@ export function Footer() {
             <Link to="/">Home</Link>
             <Link to="/#about">About</Link>
             <Link to="/#eligibility">Eligibility</Link>
+            <Link to="/#rewards">Rewards</Link>
             <Link to="/#why-enter">Why Enter</Link>
             <Link to="/#faq">FAQ</Link>
           </ColumnLinks>
