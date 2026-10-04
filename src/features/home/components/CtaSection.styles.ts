@@ -90,8 +90,8 @@ export const RegisterLink = styled(Link)`
   border-radius: ${({ theme }) => theme.radii.full};
   background: ${({ theme }) => theme.colors.white};
   color: ${({ theme }) => theme.colors.primary.DEFAULT};
-  font-size: 12px;
-  font-weight: 800;
+  font-size: 14px;
+  font-weight: 900;
   letter-spacing: 0.06em;
   text-transform: uppercase;
   box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);

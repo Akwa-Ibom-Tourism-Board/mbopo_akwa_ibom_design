@@ -1,7 +1,7 @@
 import { ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/shared/ui";
-import type { User } from "@/features/auth";
+import type { Application } from "@/features/mbopo-registration";
 import {
   CtaCard,
   CtaCopy,
@@ -10,14 +10,12 @@ import {
 } from "./StartRegistrationCta.styles";
 
 export function StartRegistrationCta({
-  status,
-  hasDraft,
+  application,
 }: {
-  status: User["applicationStatus"];
-  hasDraft: boolean;
+  application: Application | undefined;
 }) {
-  const submitted = status === "submitted";
-  const inProgress = !submitted && hasDraft;
+  const submitted = application?.status === "submitted";
+  const inProgress = !submitted && Boolean(application);
 
   const title = submitted
     ? "Review your application"

@@ -7,10 +7,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 import { AuthLayout } from "@/shared/components";
 import { sonnerToast } from "@/shared/ui";
-import {
-  InvalidResetTokenError,
-  ResetTokenExpiredError,
-} from "@/lib/mockUsersStore";
+import { friendlyMessage } from "@/lib/http";
 import {
   Heading,
   Subtitle,
@@ -59,12 +56,7 @@ export function ResetPasswordPage() {
       navigate("/login", { replace: true });
     },
     onError: (error) => {
-      const message =
-        error instanceof InvalidResetTokenError ||
-        error instanceof ResetTokenExpiredError
-          ? error.message
-          : "Something went wrong. Please try again.";
-      sonnerToast.error(message);
+      sonnerToast.error(friendlyMessage(error));
     },
   });
 
@@ -72,9 +64,7 @@ export function ResetPasswordPage() {
     return (
       <AuthLayout carouselVariant="login">
         <Heading>Invalid reset link</Heading>
-        <Subtitle>
-          This password reset link is missing or malformed.
-        </Subtitle>
+        <Subtitle>This password reset link is missing or malformed.</Subtitle>
         <FormFooter>
           <InlineLink to="/forgot-password">Request a new link</InlineLink>
         </FormFooter>
@@ -82,11 +72,9 @@ export function ResetPasswordPage() {
     );
   }
 
-  const resetError =
-    resetMutation.error instanceof InvalidResetTokenError ||
-    resetMutation.error instanceof ResetTokenExpiredError
-      ? resetMutation.error.message
-      : undefined;
+  const resetError = resetMutation.isError
+    ? friendlyMessage(resetMutation.error)
+    : undefined;
 
   return (
     <AuthLayout carouselVariant="login">

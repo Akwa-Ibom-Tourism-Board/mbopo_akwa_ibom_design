@@ -4,10 +4,10 @@ const SECTIONS: LegalSection[] = [
   {
     heading: "1. Information We Collect",
     paragraphs: [
-      "When you register for Mbopo Akwa Ibom, we collect information including:",
+      "When you register, verify your identity, and apply for Mbopo Akwa Ibom, we collect information including:",
     ],
     list: [
-      "Identity details confirmed through your National Identification Number (name, gender, date of birth, NIN)",
+      "Identity details confirmed through your National Identification Number and Voter Identification Number (name, gender, date of birth, NIN, VIN, Local Government Area)",
       "Contact information, including your email address and phone number",
       "Personal and background details you provide, such as your Local Government Area of origin, education, and a personal statement",
       "Photographs you upload, including your passport photograph, your Certificate of Origin, and two full-length images",
@@ -32,9 +32,9 @@ const SECTIONS: LegalSection[] = [
     ],
   },
   {
-    heading: "4. NIN Verification",
+    heading: "4. NIN & VIN Verification",
     paragraphs: [
-      "Your National Identification Number is used solely to confirm your identity and eligibility (gender and age) before you continue with registration. It is not used for any purpose unrelated to this program.",
+      "After you register, verify your email, and log in, you'll complete a one-time identity verification using your National Identification Number and Voter Identification Number. This confirms your identity and eligibility (gender, age, and state of origin) before you begin the application form. Neither number is used for any purpose unrelated to this program.",
     ],
   },
   {
@@ -81,7 +81,7 @@ export function PrivacyPage() {
       documentTitle="Privacy Policy"
       eyebrow="Legal"
       title="Privacy Policy"
-      updatedAt="29 September 2026"
+      updatedAt="4 October 2026"
       sections={SECTIONS}
     />
   );
