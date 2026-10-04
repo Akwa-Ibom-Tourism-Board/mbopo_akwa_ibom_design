@@ -223,6 +223,7 @@ export function VideoPitchStep({
               src={previewUrl || undefined}
               controls
               playsInline
+              $mirror
               style={{
                 display:
                   status === "preview" ||

@@ -1,7 +1,13 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { uploadToCloudinary } from "@/lib/cloudinary";
 import { savePhoto } from "../api";
-import { VIDEO_PITCH_MAX_SECONDS } from "../constants";
+import { VIDEO_PITCH_MAX_BYTES, VIDEO_PITCH_MAX_SECONDS } from "../constants";
+
+// Tuned so a full 30-second take lands around ~7MB — comfortably under
+// VIDEO_PITCH_MAX_BYTES even with some encoder overshoot — while still
+// looking reasonable for a mostly-static talking-head shot.
+const VIDEO_BITS_PER_SECOND = 1_800_000;
+const AUDIO_BITS_PER_SECOND = 96_000;
 
 export type VideoRecorderStatus =
   | "idle"
@@ -180,10 +186,11 @@ export function useVideoRecorder({
 
     chunksRef.current = [];
     const mimeType = pickSupportedMimeType();
-    const recorder = new MediaRecorder(
-      stream,
-      mimeType ? { mimeType } : undefined,
-    );
+    const recorder = new MediaRecorder(stream, {
+      ...(mimeType ? { mimeType } : {}),
+      videoBitsPerSecond: VIDEO_BITS_PER_SECOND,
+      audioBitsPerSecond: AUDIO_BITS_PER_SECOND,
+    });
 
     recorder.ondataavailable = (event) => {
       if (event.data.size > 0) chunksRef.current.push(event.data);
@@ -195,6 +202,19 @@ export function useVideoRecorder({
       const blob = new Blob(chunksRef.current, {
         type: mimeType ?? "video/webm",
       });
+
+      // Backstop for the rare browser/device that doesn't honor the
+      // bitrate hints above — never let an oversized file reach preview
+      // (and from there, upload) in the first place.
+      if (blob.size > VIDEO_PITCH_MAX_BYTES) {
+        setElapsedSeconds(0);
+        setErrorMessage(
+          "That recording came out too large. Please try again — a shorter take usually helps.",
+        );
+        setStatus("error");
+        return;
+      }
+
       const url = URL.createObjectURL(blob);
       // Functional update so this never depends on this callback's own
       // (necessarily stale, since it's captured once per recording) view
