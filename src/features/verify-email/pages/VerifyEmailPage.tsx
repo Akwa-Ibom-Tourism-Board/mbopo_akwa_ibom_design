@@ -11,11 +11,8 @@ import {
 } from "@/shared/components/AuthForm.styles";
 import { usePendingRegistration } from "@/shared/hooks";
 import { sonnerToast } from "@/shared/ui";
-import {
-  OTP_LENGTH,
-  OtpExpiredError,
-  OtpIncorrectError,
-} from "@/lib/emailVerificationStore";
+import { OTP_LENGTH } from "@/lib/emailVerificationStore";
+import { friendlyMessage } from "@/lib/http";
 import { OtpForm } from "../components/OtpForm";
 import { verifyOtp, resendOtp } from "../api";
 
@@ -57,7 +54,18 @@ export function VerifyEmailPage() {
 
   const resendMutation = useMutation({
     mutationFn: resendOtp,
-    onSuccess: () => setCooldown(RESEND_COOLDOWN_SECONDS),
+    onSuccess: () => {
+      setCooldown(RESEND_COOLDOWN_SECONDS);
+      sonnerToast.success(`A new code was sent to ${pending?.email}`);
+    },
+    onError: (error) => {
+      sonnerToast.error(
+        friendlyMessage(
+          error,
+          "We couldn't resend your code. Please try again.",
+        ),
+      );
+    },
   });
 
   if (!pending) {
@@ -66,13 +74,9 @@ export function VerifyEmailPage() {
 
   const otpComplete = otp.length === OTP_LENGTH;
 
-  const errorMessage =
-    verifyMutation.error instanceof OtpExpiredError ||
-    verifyMutation.error instanceof OtpIncorrectError
-      ? verifyMutation.error.message
-      : verifyMutation.isError
-        ? "Something went wrong. Please try again."
-        : undefined;
+  const errorMessage = verifyMutation.isError
+    ? friendlyMessage(verifyMutation.error)
+    : undefined;
 
   const onSubmit = (event: FormEvent) => {
     event.preventDefault();
