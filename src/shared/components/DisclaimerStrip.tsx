@@ -7,10 +7,7 @@ export function DisclaimerStrip() {
       <StripIcon aria-hidden>
         <AlertTriangle size={14} />
       </StripIcon>
-      <StripText>
-        Applying is completely free, never pay anyone at any stage. Submitting
-        an application does not guarantee selection.
-      </StripText>
+      <StripText>Applying is free. No payment needed.</StripText>
     </Strip>
   );
 }
