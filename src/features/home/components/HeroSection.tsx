@@ -4,7 +4,15 @@ import heroBackdrop from "@/assets/hero-bg.webp";
 import ladyPortrait from "@/assets/mbopo-hero-1.webp";
 import localHairPortrait from "@/assets/mbopo-hero-local-hair.webp";
 import governorPortraitOne from "@/assets/governor_1.webp";
-import governorPortraitTwo from "@/assets/governor_2.webp";
+// A duplicate of woman_2.webp (also used by GovernorCarousel on the
+// login/register pages), not the original — woman_2 is a tight face/
+// shoulders crop with almost no transparent margin (unlike this stage's
+// other slides, which are full-figure shots with real breathing room
+// around them), so at this stage's fixed height it rendered edge-to-edge
+// and disproportionately large next to its siblings. This copy adds
+// transparent padding to match their margin-to-subject proportions,
+// without touching the shared original.
+import womanPortrait from "@/assets/woman-2-hero.webp";
 import mbopoLogo from "@/assets/mbopo-logo.webp";
 import { Reveal } from "@/shared/components";
 import {
@@ -75,8 +83,8 @@ const SLIDES: HeroSlide[] = [
     copy: "Mbopo akwa Ibom is part of a wider commitment to empowering akwa Ibom daughters across all 31 local Government areas.",
   },
   {
-    image: governorPortraitTwo,
-    imageAlt: "The Governor of Akwa Ibom State",
+    image: womanPortrait,
+    imageAlt: "A Mbopo Akwa Ibom contestant",
     kicker: <>THE A.R.I.S.E. AGENDA</>,
     title: "Driving",
     accent: "purposeful growth",

@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { spin } from "@/theme";
 
 export const PhotoField = styled.div`
   margin-top: 24px;
@@ -10,6 +11,7 @@ export const PhotoField = styled.div`
 // preview instead: fixed portrait aspect ratio, modest width, so it stays
 // consistent whether it's showing the upload prompt or the picked photo.
 export const PhotoDrop = styled.label<{ $hasPhoto: boolean }>`
+  position: relative;
   display: flex;
   width: 200px;
   max-width: 100%;
@@ -58,4 +60,26 @@ export const PhotoPreview = styled.img`
   height: 100%;
   object-fit: cover;
   object-position: center;
+`;
+
+// Shown over the (already-visible, locally-previewed) photo while the real
+// Cloudinary upload runs in the background — without this, picking a file
+// swaps straight to PhotoPreview and the upload becomes invisible, with
+// nothing on screen telling the user it hasn't actually been saved yet.
+export const UploadingOverlay = styled.div`
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: rgba(0, 0, 0, 0.55);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 600;
+
+  svg {
+    animation: ${spin} 0.8s linear infinite;
+  }
 `;

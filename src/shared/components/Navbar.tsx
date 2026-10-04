@@ -50,6 +50,7 @@ const NAV_ITEMS = [
   { to: "/", label: "Home" },
   { to: "/#about", label: "About" },
   { to: "/#eligibility", label: "Eligibility" },
+  { to: "/#rewards", label: "Rewards" },
   { to: "/#why-enter", label: "Why" },
   { to: "/privacy", label: "Privacy" },
   { to: "/terms", label: "Terms" },

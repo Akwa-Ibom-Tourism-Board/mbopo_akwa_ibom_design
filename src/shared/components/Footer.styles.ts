@@ -52,10 +52,29 @@ export const FooterAgency = styled.p`
 `;
 
 export const FooterSubline = styled.p`
-  margin: 0 0 20px;
+  margin: 0 0 16px;
   color: rgba(255, 255, 255, 0.55);
   font-size: 11px;
   line-height: 1.6;
+`;
+
+export const FooterContact = styled.a`
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0 0 20px;
+  color: ${({ theme }) => theme.colors.secondary.DEFAULT};
+  font-size: 12px;
+  font-weight: 700;
+  text-decoration: none;
+
+  svg {
+    flex: 0 0 auto;
+  }
+
+  &:hover {
+    text-decoration: underline;
+  }
 `;
 
 export const ColumnHeading = styled.h3`

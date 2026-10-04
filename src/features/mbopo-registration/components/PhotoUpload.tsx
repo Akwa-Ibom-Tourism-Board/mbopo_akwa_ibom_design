@@ -1,4 +1,4 @@
-import { Upload } from "lucide-react";
+import { Loader2, Upload } from "lucide-react";
 import type { ChangeEvent } from "react";
 import { Field } from "./Field";
 import {
@@ -6,6 +6,7 @@ import {
   PhotoDrop,
   PhotoIcon,
   PhotoPreview,
+  UploadingOverlay,
 } from "./PhotoUpload.styles";
 
 export interface PhotoUploadProps {
@@ -41,8 +42,14 @@ export function PhotoUpload({
                 <Upload size={18} />
               </PhotoIcon>
               <strong>Upload {label}</strong>
-              <span>{isUploading ? "Uploading…" : hint}</span>
+              <span>{hint}</span>
             </>
+          )}
+          {isUploading && (
+            <UploadingOverlay>
+              <Loader2 size={20} />
+              Uploading…
+            </UploadingOverlay>
           )}
           <input
             id={inputId}

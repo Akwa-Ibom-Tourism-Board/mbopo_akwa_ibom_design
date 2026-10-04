@@ -33,6 +33,11 @@ const FAQS = [
       "No. Registration for Mbopo Akwa Ibom is completely free. You should never be asked to pay to submit your application.",
   },
   {
+    question: "When does registration close?",
+    answer:
+      "Registration closes on 20th October, 2026. Applications are not accepted after this date, so make sure yours is complete and submitted before then.",
+  },
+  {
     question: "Can I apply from outside Akwa Ibom State?",
     answer:
       "Yes, you can apply from anywhere, as long as you are an indigene of Akwa Ibom State and hold a valid Certificate of Origin.",

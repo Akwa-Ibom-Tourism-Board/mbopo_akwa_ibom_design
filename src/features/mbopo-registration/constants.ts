@@ -6,7 +6,14 @@ export const REGISTRATION_STEPS = [
   "Your Story",
 ] as const;
 
-export const VIDEO_PITCH_MAX_SECONDS = 60;
+export const VIDEO_PITCH_MAX_SECONDS = 30;
+
+// Hard cap on the recorded file itself — a large video is what made
+// submit feel slow (the file has to actually reach Cloudinary before
+// submit can finish). useVideoRecorder's MediaRecorder bitrate settings
+// are tuned to stay well under this even at the full 30 seconds; this is
+// the backstop in case a given browser/device doesn't honor that hint.
+export const VIDEO_PITCH_MAX_BYTES = 10 * 1024 * 1024;
 
 export const EDUCATION_LEVELS = [
   "HND",
