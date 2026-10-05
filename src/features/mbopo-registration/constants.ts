@@ -2,7 +2,7 @@ export const REGISTRATION_STEPS = [
   "Personal",
   "Identity & Origin",
   "Education",
-  "Video Pitch",
+  "Pitch",
   "Your Story",
 ] as const;
 

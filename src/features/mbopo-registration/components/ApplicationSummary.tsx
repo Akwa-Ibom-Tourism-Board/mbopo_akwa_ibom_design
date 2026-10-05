@@ -149,7 +149,7 @@ export function ApplicationSummary({
           </DetailItem>
           <DetailItem $wide>
             <DetailLabel>Voter Identification Number (VIN)</DetailLabel>
-            <DetailValue>{user.vin}</DetailValue>
+            <DetailValue>{values.vin}</DetailValue>
           </DetailItem>
           <DetailItem>
             <DetailLabel>Local Government Area</DetailLabel>
@@ -217,6 +217,11 @@ export function ApplicationSummary({
             <DetailValue>{values.languages}</DetailValue>
           </DetailItem>
         </DetailGrid>
+      </Section>
+
+      <Section>
+        <SectionTitle>Pitch</SectionTitle>
+        <VideoOrPlaceholder src={videoPreviewUrl} />
         <PhotoRow>
           <PhotoThumb>
             <PhotoOrPlaceholder
@@ -233,11 +238,6 @@ export function ApplicationSummary({
             <figcaption>Full image 2</figcaption>
           </PhotoThumb>
         </PhotoRow>
-      </Section>
-
-      <Section>
-        <SectionTitle>Video pitch</SectionTitle>
-        <VideoOrPlaceholder src={videoPreviewUrl} />
       </Section>
 
       <Section>

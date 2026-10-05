@@ -34,6 +34,14 @@ export const FieldErrorText = styled.small`
   font-size: 10px;
 `;
 
+export const FieldHintText = styled.small`
+  display: block;
+  margin-top: 6px;
+  color: ${({ theme }) => theme.colors.muted.foreground};
+  font-size: 10px;
+  line-height: 1.5;
+`;
+
 export const LockedValue = styled.div`
   display: flex;
   align-items: center;

@@ -1,4 +1,3 @@
-import type { ChangeEvent } from "react";
 import {
   Controller,
   useWatch,
@@ -6,20 +5,13 @@ import {
   type FieldErrors,
   type UseFormRegister,
 } from "react-hook-form";
-import { ShieldCheck } from "lucide-react";
 import { Input, Combobox } from "@/shared/ui";
 import type { RegistrationFormValues } from "../../schema";
 import { EDUCATION_LEVELS, OCCUPATIONS } from "../../constants";
 import { NIGERIAN_INSTITUTIONS } from "../../data/institutions";
 import { Field } from "../Field";
 import { FieldGrid } from "../Field.styles";
-import { PhotoUpload } from "../PhotoUpload";
-import {
-  StepContent,
-  StepTitle,
-  StepHint,
-  PrivacyNote,
-} from "../StepShell.styles";
+import { StepContent, StepTitle, StepHint } from "../StepShell.styles";
 
 const INSTITUTION_OPTIONS = [...NIGERIAN_INSTITUTIONS, "Other"];
 
@@ -27,28 +19,12 @@ export interface EducationStepProps {
   register: UseFormRegister<RegistrationFormValues>;
   control: Control<RegistrationFormValues>;
   errors: FieldErrors<RegistrationFormValues>;
-  fullImageUrl: string;
-  fullImageError?: string;
-  fullImageUploading?: boolean;
-  onFullImageChange: (event: ChangeEvent<HTMLInputElement>) => void;
-  fullImage2Url: string;
-  fullImage2Error?: string;
-  fullImage2Uploading?: boolean;
-  onFullImage2Change: (event: ChangeEvent<HTMLInputElement>) => void;
 }
 
 export function EducationStep({
   register,
   control,
   errors,
-  fullImageUrl,
-  fullImageError,
-  fullImageUploading,
-  onFullImageChange,
-  fullImage2Url,
-  fullImage2Error,
-  fullImage2Uploading,
-  onFullImage2Change,
 }: EducationStepProps) {
   const occupation = useWatch({ control, name: "occupation" });
   const institution = useWatch({ control, name: "institution" });
@@ -157,33 +133,6 @@ export function EducationStep({
           />
         </Field>
       </FieldGrid>
-      <PhotoUpload
-        label="Full Image 1"
-        hint="A clear, full-length photo facing the camera"
-        previewUrl={fullImageUrl}
-        error={fullImageError}
-        onChange={onFullImageChange}
-        isUploading={fullImageUploading}
-      />
-      <PhotoUpload
-        label="Full Image 2"
-        hint="A second full-length photo from a different angle or pose"
-        previewUrl={fullImage2Url}
-        error={fullImage2Error}
-        onChange={onFullImage2Change}
-        isUploading={fullImage2Uploading}
-      />
-      <PrivacyNote>
-        <ShieldCheck size={14} aria-hidden />
-        <span>
-          Used only for judging and presenting your application — never sold,
-          rented, or shared beyond the Mbopo Akwa Ibom programme. See our{" "}
-          <a href="/privacy" target="_blank" rel="noopener noreferrer">
-            Privacy Policy
-          </a>
-          .
-        </span>
-      </PrivacyNote>
     </StepContent>
   );
 }

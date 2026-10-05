@@ -76,9 +76,8 @@ function findInitialStep(draft: Application | null | undefined): number {
       (draft.institution === "Other" && !draft.institutionOther);
     const missingPhoto =
       (index === IDENTITY_STEP && !draft.certificateOfOriginUrl) ||
-      (index === EDUCATION_STEP &&
-        (!draft.fullImageUrl || !draft.fullImageUrl2)) ||
-      (index === VIDEO_STEP && !draft.videoPitchUrl);
+      (index === VIDEO_STEP &&
+        (!draft.fullImageUrl || !draft.fullImageUrl2 || !draft.videoPitchUrl));
     if (missingField || missingOther || missingPhoto) return index;
   }
   return REGISTRATION_STEPS.length - 1;
@@ -218,13 +217,16 @@ export function RegistrationForm({
     if (currentStepIndex === IDENTITY_STEP) {
       setRequireCertificate(!certificate.hasPhoto);
       if (!certificate.hasPhoto) return;
-    } else if (currentStepIndex === EDUCATION_STEP) {
+    } else if (currentStepIndex === VIDEO_STEP) {
       setRequireFullImage(!fullImage.hasPhoto);
       setRequireFullImage2(!fullImage2.hasPhoto);
-      if (!fullImage.hasPhoto || !fullImage2.hasPhoto) return;
-    } else if (currentStepIndex === VIDEO_STEP) {
       setRequireVideo(videoRecorder.status !== "locked");
-      if (videoRecorder.status !== "locked") return;
+      if (
+        !fullImage.hasPhoto ||
+        !fullImage2.hasPhoto ||
+        videoRecorder.status !== "locked"
+      )
+        return;
     }
 
     setCurrentStepIndex((index) =>
@@ -256,9 +258,10 @@ export function RegistrationForm({
       );
       const missingPhoto =
         (index === IDENTITY_STEP && !certificate.hasPhoto) ||
-        (index === EDUCATION_STEP &&
-          (!fullImage.hasPhoto || !fullImage2.hasPhoto)) ||
-        (index === VIDEO_STEP && videoRecorder.status !== "locked");
+        (index === VIDEO_STEP &&
+          (!fullImage.hasPhoto ||
+            !fullImage2.hasPhoto ||
+            videoRecorder.status !== "locked"));
       if (hasFieldError || missingPhoto) return index;
     }
     return null;
@@ -349,6 +352,12 @@ export function RegistrationForm({
               register={register}
               control={control}
               errors={errors}
+            />
+          )}
+          {currentStepIndex === VIDEO_STEP && (
+            <VideoPitchStep
+              recorder={videoRecorder}
+              showRequiredNotice={requireVideo}
               fullImageUrl={fullImage.previewUrl}
               fullImageError={
                 fullImage.error ??
@@ -363,12 +372,6 @@ export function RegistrationForm({
               }
               fullImage2Uploading={fullImage2.isUploading}
               onFullImage2Change={fullImage2.onChange}
-            />
-          )}
-          {currentStepIndex === VIDEO_STEP && (
-            <VideoPitchStep
-              recorder={videoRecorder}
-              showRequiredNotice={requireVideo}
             />
           )}
           {isLastStep && (
