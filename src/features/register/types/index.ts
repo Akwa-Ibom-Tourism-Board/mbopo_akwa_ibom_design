@@ -1,9 +1,8 @@
 export interface RegisterInput {
   email: string;
   password: string;
-  // Google reCAPTCHA token from the widget above the submit button. The
-  // real backend doesn't accept or verify one (see its auth.routes.ts) —
-  // purely a client-side anti-bot gate, same as login's.
+  // Google reCAPTCHA token from the widget above the submit button;
+  // verified server-side (see the backend's configurations/captcha.ts).
   captchaToken: string;
 }
 

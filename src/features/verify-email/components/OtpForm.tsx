@@ -1,3 +1,4 @@
+import { REGEXP_ONLY_DIGITS } from "input-otp";
 import { OtpInput, OtpInputSlots } from "@/shared/ui";
 import { OTP_LENGTH } from "@/lib/emailVerificationStore";
 import { OtpFrame, ResendRow, ResendButton } from "./OtpForm.styles";
@@ -19,7 +20,13 @@ export function OtpForm({
 }: OtpFormProps) {
   return (
     <OtpFrame>
-      <OtpInput maxLength={OTP_LENGTH} value={value} onChange={onChange}>
+      <OtpInput
+        maxLength={OTP_LENGTH}
+        value={value}
+        onChange={onChange}
+        pattern={REGEXP_ONLY_DIGITS}
+        inputMode="numeric"
+      >
         <OtpInputSlots length={OTP_LENGTH} />
       </OtpInput>
       <ResendRow>

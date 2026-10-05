@@ -346,6 +346,7 @@ export function RegistrationForm({
               control={control}
               errors={errors}
               certificateUrl={certificate.previewUrl}
+              certificateIsPdf={certificate.isPdf}
               certificateError={
                 certificate.error ??
                 (requireCertificate ? REQUIRED_PHOTO_MESSAGE : undefined)

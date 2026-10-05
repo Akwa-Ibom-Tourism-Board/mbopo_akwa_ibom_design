@@ -5,6 +5,13 @@ import { useMutation } from "@tanstack/react-query";
 import { Loader2, Send } from "lucide-react";
 import { Input, Textarea, Label, Button } from "@/shared/ui";
 import { friendlyMessage } from "@/lib/http";
+import {
+  MAX_EMAIL_LENGTH,
+  NAME_REGEX,
+  NAME_MESSAGE,
+  NIGERIAN_PHONE_REGEX,
+  PHONE_MESSAGE,
+} from "@/lib/validation";
 import { WidgetContainer } from "./WidgetContainer";
 import { submitMessage } from "../api";
 import {
@@ -19,14 +26,24 @@ import {
 } from "./AskMeForm.styles";
 
 const askMeSchema = z.object({
-  name: z.string().trim().min(2, "Please enter your name"),
+  name: z
+    .string()
+    .trim()
+    .min(2, "Please enter your name")
+    .max(100, "Keep this under 100 characters")
+    .regex(NAME_REGEX, NAME_MESSAGE),
   email: z
     .string()
     .trim()
     .min(1, "Email is required")
+    .max(MAX_EMAIL_LENGTH, "That email address is too long")
     .email("Enter a valid email address"),
-  phoneNumber: z.string().trim().min(1, "Phone number is required"),
-  title: z.string().trim().optional(),
+  phoneNumber: z.string().trim().regex(NIGERIAN_PHONE_REGEX, PHONE_MESSAGE),
+  title: z
+    .string()
+    .trim()
+    .max(150, "Keep this under 150 characters")
+    .optional(),
   message: z
     .string()
     .trim()
@@ -99,6 +116,7 @@ export function AskMeForm({
               id="ask-me-name"
               placeholder="Your full name"
               autoComplete="name"
+              maxLength={100}
               invalid={Boolean(errors.name)}
               {...register("name")}
             />
@@ -114,6 +132,7 @@ export function AskMeForm({
               type="email"
               placeholder="you@example.com"
               autoComplete="email"
+              maxLength={MAX_EMAIL_LENGTH}
               invalid={Boolean(errors.email)}
               {...register("email")}
             />
@@ -127,8 +146,10 @@ export function AskMeForm({
             <Input
               id="ask-me-phone"
               type="tel"
+              inputMode="numeric"
               placeholder="080 0000 0000"
               autoComplete="tel"
+              maxLength={13}
               invalid={Boolean(errors.phoneNumber)}
               {...register("phoneNumber")}
             />
@@ -145,6 +166,7 @@ export function AskMeForm({
             <Input
               id="ask-me-title"
               placeholder="What is this about?"
+              maxLength={150}
               {...register("title")}
             />
           </Field>
@@ -157,6 +179,7 @@ export function AskMeForm({
               id="ask-me-message"
               rows={4}
               placeholder="Tell us what is on your mind…"
+              maxLength={5000}
               invalid={Boolean(errors.message)}
               {...register("message")}
             />

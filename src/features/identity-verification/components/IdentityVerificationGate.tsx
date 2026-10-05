@@ -68,11 +68,17 @@ export function IdentityVerificationGate({
   const [captchaToken, setCaptchaToken] = useState<string | null>(null);
   const recaptchaRef = useRef<ReCAPTCHA>(null);
 
-  // The reCAPTCHA widget is a client-side anti-bot gate only — neither
-  // /auth/identity-check nor /applicants/verify-identity accept or check a
-  // captcha token, so it's never sent, only required to enable submit.
+  // The token is verified server-side by /auth/identity-check. The later
+  // /applicants/verify-identity commit is authenticated and re-checks the
+  // identity itself, so it needs no token (reCAPTCHA tokens are single-use).
   const lookupMutation = useMutation({
-    mutationFn: (values: NinVinFormValues) => lookupNin(values.nin, values.vin),
+    mutationFn: ({
+      values,
+      token,
+    }: {
+      values: NinVinFormValues;
+      token: string;
+    }) => lookupNin(values.nin, values.vin, token),
     onSuccess: (result) => {
       if (result.eligible) {
         setNinRecord(result.identity);
@@ -152,7 +158,7 @@ export function IdentityVerificationGate({
           <form
             onSubmit={handleSubmit((values) => {
               if (!captchaToken) return;
-              lookupMutation.mutate(values);
+              lookupMutation.mutate({ values, token: captchaToken });
             })}
             noValidate
           >

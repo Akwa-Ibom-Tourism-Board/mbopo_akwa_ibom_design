@@ -42,6 +42,7 @@ export function StoryStep({ register, control, errors }: StoryStepProps) {
         <Textarea
           rows={5}
           placeholder="Share something you are proud to have started or contributed to..."
+          maxLength={1000}
           {...register("initiative")}
         />
       </Field>
@@ -54,6 +55,7 @@ export function StoryStep({ register, control, errors }: StoryStepProps) {
         <Textarea
           rows={7}
           placeholder="Write a short essay about your purpose, your community and what you hope to represent..."
+          maxLength={3000}
           {...register("why")}
         />
         <WordCount $over={wordCount > MAXIMUM_STORY_WORDS}>

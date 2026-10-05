@@ -30,6 +30,7 @@ export function CreatePasswordForm({
         <PasswordInput
           id="password"
           autoComplete="new-password"
+          maxLength={128}
           invalid={Boolean(passwordError)}
           {...passwordField}
         />
@@ -41,6 +42,7 @@ export function CreatePasswordForm({
         <PasswordInput
           id="confirmPassword"
           autoComplete="new-password"
+          maxLength={128}
           invalid={Boolean(confirmPasswordError)}
           {...confirmPasswordField}
         />
