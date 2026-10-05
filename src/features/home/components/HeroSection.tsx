@@ -13,7 +13,7 @@ import governorPortraitOne from "@/assets/governor_1.webp";
 // transparent padding to match their margin-to-subject proportions,
 // without touching the shared original.
 import womanPortrait from "@/assets/woman-2-hero.webp";
-import mbopoLogo from "@/assets/mbopo-logo.webp";
+import mbopoLogo from "@/assets/mbopo-logo-reversed.webp";
 import { Reveal } from "@/shared/components";
 import {
   Hero,
