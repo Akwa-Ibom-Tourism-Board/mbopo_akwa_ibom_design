@@ -84,7 +84,7 @@ const SLIDES: HeroSlide[] = [
     image: governorPortraitOne,
     imageAlt: "The Governor of Akwa Ibom State",
     imageScale: 1.2,
-    kicker: <>A GOVERNMENT SUPPORTED INITIATIVE</>,
+    kicker: <>Celebrating Beauty . Culture . Enterprise</>,
     title: "Championing",
     accent: "Akwa Ibom's daughters",
     tagline: "Supported by the State Government",
