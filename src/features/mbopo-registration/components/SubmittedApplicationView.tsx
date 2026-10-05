@@ -52,7 +52,6 @@ export function SubmittedApplicationView({
           user={user}
           values={application}
           photos={{
-            passportPhoto: application.passportPhotoUrl ?? "",
             certificateOfOrigin: application.certificateOfOriginUrl ?? "",
             fullImage: application.fullImageUrl ?? "",
             fullImage2: application.fullImageUrl2 ?? "",

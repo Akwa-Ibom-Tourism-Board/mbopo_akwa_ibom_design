@@ -1,7 +1,6 @@
 import type { RegistrationFormValues } from "../schema";
 
-export type PhotoFieldKey =
-  "passportPhoto" | "certificateOfOrigin" | "fullImage" | "fullImage2";
+export type PhotoFieldKey = "certificateOfOrigin" | "fullImage" | "fullImage2";
 
 // Display-only map of friendly field keys to their Cloudinary delivery
 // URLs, used by ApplicationSummary/ReviewSubmitModal.
@@ -22,6 +21,10 @@ export interface Application extends Partial<RegistrationFormValues> {
   referenceCode?: string | null;
   submittedAt?: string | null;
   createdAt: string;
+  // Legacy-only: passport photo upload was removed from the product (the
+  // NIN-verified profile photo replaces its purpose) — no new code writes
+  // this, but an already-submitted pre-rework application may still have
+  // one on file.
   passportPhotoUrl?: string | null;
   certificateOfOriginUrl?: string | null;
   fullImageUrl?: string | null;

@@ -8,15 +8,10 @@ import { request } from "./http";
 // client beyond "here are the bytes for this field." See the backend's
 // src/configurations/cloudinary.ts for the other half of this contract.
 export type UploadField =
-  | "passportPhoto"
-  | "certificateOfOrigin"
-  | "fullImage"
-  | "fullImage2"
-  | "videoPitch"
-  | "avatar";
+  "certificateOfOrigin" | "fullImage" | "fullImage2" | "videoPitch" | "avatar";
 
-// Every image/document field (passport photo, certificate of origin, the
-// two full-length images, the profile avatar) — videoPitch has its own,
+// Every image/document field (certificate of origin, the two full-length
+// images, the profile avatar) — videoPitch has its own,
 // much larger cap, enforced separately in useVideoRecorder. Checked
 // client-side by every caller before the file ever reaches this module,
 // not left to whatever Cloudinary itself would otherwise allow.

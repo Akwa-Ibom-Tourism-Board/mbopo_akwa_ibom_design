@@ -66,3 +66,79 @@ export const NIGERIAN_STATES = [
 
 export const MINIMUM_STORY_WORDS = 10;
 export const MAXIMUM_STORY_WORDS = 300;
+
+// The 31 Local Government Areas of Akwa Ibom State — mirrors the
+// backend's own AKWA_IBOM_LGAS exactly (src/configurations/constants.ts
+// in the backend repo). Deliberately no "Other" here: this is a closed,
+// fixed list of real LGAs, not a free-text-escape-hatch field like
+// Occupation/Institution below.
+export const AKWA_IBOM_LGAS = [
+  "Abak",
+  "Eastern Obolo",
+  "Eket",
+  "Esit Eket",
+  "Essien Udim",
+  "Etim Ekpo",
+  "Etinan",
+  "Ibeno",
+  "Ibesikpo Asutan",
+  "Ibiono Ibom",
+  "Ika",
+  "Ikono",
+  "Ikot Abasi",
+  "Ikot Ekpene",
+  "Ini",
+  "Itu",
+  "Mbo",
+  "Mkpat Enin",
+  "Nsit Atai",
+  "Nsit Ibom",
+  "Nsit Ubium",
+  "Obot Akara",
+  "Okobo",
+  "Onna",
+  "Oron",
+  "Oruk Anam",
+  "Udung Uko",
+  "Ukanafun",
+  "Uruan",
+  "Urue-Offong/Oruko",
+  "Uyo",
+] as const;
+
+// Deliberately not exhaustive — paired with an "Other" option in
+// EducationStep that reveals a free-text input (sanitized and sentence-
+// cased the same as any other free-text field — see schema.ts) for
+// anything not listed here.
+export const OCCUPATIONS = [
+  "Student",
+  "NYSC Corps Member",
+  "Entrepreneur / Business Owner",
+  "Civil Servant",
+  "Teacher / Educator",
+  "Banker / Finance Professional",
+  "Accountant",
+  "Medical Doctor",
+  "Nurse / Healthcare Worker",
+  "Pharmacist",
+  "Lawyer",
+  "Engineer",
+  "Software Developer / IT Professional",
+  "Architect",
+  "Fashion Designer",
+  "Make-up Artist",
+  "Hair Stylist",
+  "Caterer / Chef",
+  "Event Planner",
+  "Content Creator / Influencer",
+  "Model",
+  "Actress / Performing Artist",
+  "Musician",
+  "Journalist / Media Professional",
+  "Marketing / PR Professional",
+  "Real Estate Professional",
+  "Agripreneur / Farmer",
+  "Public Servant / Government Worker",
+  "Unemployed",
+  "Other",
+] as const;

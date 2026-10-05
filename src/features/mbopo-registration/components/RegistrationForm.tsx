@@ -48,22 +48,38 @@ const VIDEO_STEP = 3;
 // the initial step is derived from which fields/photos are actually
 // missing, the same rule findFirstInvalidStep applies interactively later,
 // just checked against the raw fetched row instead of live form state.
+// occupationOther/institutionOther are only actually required when their
+// dropdown is set to "Other" (see schema.ts's cross-field refines) — a
+// blanket emptiness check would wrongly treat a draft as incomplete at the
+// Education step for everyone who didn't need to fill either in.
+const CONDITIONAL_OTHER_FIELDS = new Set([
+  "occupationOther",
+  "institutionOther",
+]);
+
 function findInitialStep(draft: Application | null | undefined): number {
   if (!draft) return 0;
   for (let index = 0; index < STEP_FIELDS.length; index += 1) {
-    const missingField = (STEP_FIELDS[index] ?? []).some((name) => {
-      const value = draft[name as keyof Application];
-      return (
-        value === undefined || value === null || value === "" || value === false
-      );
-    });
+    const missingField = (STEP_FIELDS[index] ?? [])
+      .filter((name) => !CONDITIONAL_OTHER_FIELDS.has(name))
+      .some((name) => {
+        const value = draft[name as keyof Application];
+        return (
+          value === undefined ||
+          value === null ||
+          value === "" ||
+          value === false
+        );
+      });
+    const missingOther =
+      (draft.occupation === "Other" && !draft.occupationOther) ||
+      (draft.institution === "Other" && !draft.institutionOther);
     const missingPhoto =
-      (index === PERSONAL_STEP && !draft.passportPhotoUrl) ||
       (index === IDENTITY_STEP && !draft.certificateOfOriginUrl) ||
       (index === EDUCATION_STEP &&
         (!draft.fullImageUrl || !draft.fullImageUrl2)) ||
       (index === VIDEO_STEP && !draft.videoPitchUrl);
-    if (missingField || missingPhoto) return index;
+    if (missingField || missingOther || missingPhoto) return index;
   }
   return REGISTRATION_STEPS.length - 1;
 }
@@ -86,7 +102,6 @@ export function RegistrationForm({
   const [currentStepIndex, setCurrentStepIndex] = useState(() =>
     findInitialStep(initialDraft),
   );
-  const [requirePassportPhoto, setRequirePassportPhoto] = useState(false);
   const [requireCertificate, setRequireCertificate] = useState(false);
   const [requireFullImage, setRequireFullImage] = useState(false);
   const [requireFullImage2, setRequireFullImage2] = useState(false);
@@ -96,10 +111,6 @@ export function RegistrationForm({
   // Every photo/video field uploads and saves itself the moment it's
   // picked (see usePhotoUpload/useVideoRecorder) — there's no "gather
   // everything, send it all with the draft" step any more.
-  const passportPhoto = usePhotoUpload({
-    field: "passportPhoto",
-    initialUrl: initialDraft?.passportPhotoUrl ?? undefined,
-  });
   const certificate = usePhotoUpload({
     field: "certificateOfOrigin",
     allowPdf: true,
@@ -198,19 +209,13 @@ export function RegistrationForm({
   }
 
   const anyPhotoUploading =
-    passportPhoto.isUploading ||
-    certificate.isUploading ||
-    fullImage.isUploading ||
-    fullImage2.isUploading;
+    certificate.isUploading || fullImage.isUploading || fullImage2.isUploading;
 
   const goToNextStep = async () => {
     const fieldsValid = await trigger(STEP_FIELDS[currentStepIndex]);
     if (!fieldsValid) return;
 
-    if (currentStepIndex === PERSONAL_STEP) {
-      setRequirePassportPhoto(!passportPhoto.hasPhoto);
-      if (!passportPhoto.hasPhoto) return;
-    } else if (currentStepIndex === IDENTITY_STEP) {
+    if (currentStepIndex === IDENTITY_STEP) {
       setRequireCertificate(!certificate.hasPhoto);
       if (!certificate.hasPhoto) return;
     } else if (currentStepIndex === EDUCATION_STEP) {
@@ -250,7 +255,6 @@ export function RegistrationForm({
         (name) => getFieldState(name).invalid,
       );
       const missingPhoto =
-        (index === PERSONAL_STEP && !passportPhoto.hasPhoto) ||
         (index === IDENTITY_STEP && !certificate.hasPhoto) ||
         (index === EDUCATION_STEP &&
           (!fullImage.hasPhoto || !fullImage2.hasPhoto)) ||
@@ -263,14 +267,10 @@ export function RegistrationForm({
   const openReview = async () => {
     const fieldsValid = await trigger();
     const photosOk =
-      passportPhoto.hasPhoto &&
-      certificate.hasPhoto &&
-      fullImage.hasPhoto &&
-      fullImage2.hasPhoto;
+      certificate.hasPhoto && fullImage.hasPhoto && fullImage2.hasPhoto;
     const videoOk = videoRecorder.status === "locked";
 
     if (!fieldsValid || !photosOk || !videoOk) {
-      setRequirePassportPhoto(!passportPhoto.hasPhoto);
       setRequireCertificate(!certificate.hasPhoto);
       setRequireFullImage(!fullImage.hasPhoto);
       setRequireFullImage2(!fullImage2.hasPhoto);
@@ -326,18 +326,7 @@ export function RegistrationForm({
           noValidate
         >
           {currentStepIndex === PERSONAL_STEP && (
-            <PersonalStep
-              user={user}
-              register={register}
-              errors={errors}
-              passportPhotoUrl={passportPhoto.previewUrl}
-              passportPhotoError={
-                passportPhoto.error ??
-                (requirePassportPhoto ? REQUIRED_PHOTO_MESSAGE : undefined)
-              }
-              passportPhotoUploading={passportPhoto.isUploading}
-              onPassportPhotoChange={passportPhoto.onChange}
-            />
+            <PersonalStep user={user} register={register} errors={errors} />
           )}
           {currentStepIndex === IDENTITY_STEP && (
             <IdentityOriginStep
@@ -427,7 +416,6 @@ export function RegistrationForm({
         user={user}
         values={getValues()}
         photos={{
-          passportPhoto: passportPhoto.previewUrl,
           certificateOfOrigin: certificate.previewUrl,
           fullImage: fullImage.previewUrl,
           fullImage2: fullImage2.previewUrl,

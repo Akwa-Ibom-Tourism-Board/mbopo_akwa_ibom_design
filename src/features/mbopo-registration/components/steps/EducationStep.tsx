@@ -1,21 +1,16 @@
 import type { ChangeEvent } from "react";
 import {
   Controller,
+  useWatch,
   type Control,
   type FieldErrors,
   type UseFormRegister,
 } from "react-hook-form";
 import { ShieldCheck } from "lucide-react";
-import {
-  Input,
-  Select,
-  SelectTrigger,
-  SelectValue,
-  SelectContent,
-  SelectItem,
-} from "@/shared/ui";
+import { Input, Combobox } from "@/shared/ui";
 import type { RegistrationFormValues } from "../../schema";
-import { EDUCATION_LEVELS } from "../../constants";
+import { EDUCATION_LEVELS, OCCUPATIONS } from "../../constants";
+import { NIGERIAN_INSTITUTIONS } from "../../data/institutions";
 import { Field } from "../Field";
 import { FieldGrid } from "../Field.styles";
 import { PhotoUpload } from "../PhotoUpload";
@@ -25,6 +20,8 @@ import {
   StepHint,
   PrivacyNote,
 } from "../StepShell.styles";
+
+const INSTITUTION_OPTIONS = [...NIGERIAN_INSTITUTIONS, "Other"];
 
 export interface EducationStepProps {
   register: UseFormRegister<RegistrationFormValues>;
@@ -53,6 +50,9 @@ export function EducationStep({
   fullImage2Uploading,
   onFullImage2Change,
 }: EducationStepProps) {
+  const occupation = useWatch({ control, name: "occupation" });
+  const institution = useWatch({ control, name: "institution" });
+
   return (
     <StepContent>
       <StepTitle>Education &amp; background</StepTitle>
@@ -67,35 +67,76 @@ export function EducationStep({
             control={control}
             name="education"
             render={({ field }) => (
-              <Select value={field.value} onValueChange={field.onChange}>
-                <SelectTrigger invalid={Boolean(errors.education)}>
-                  <SelectValue placeholder="Select qualification" />
-                </SelectTrigger>
-                <SelectContent>
-                  {EDUCATION_LEVELS.map((level) => (
-                    <SelectItem key={level} value={level}>
-                      {level}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <Combobox
+                value={field.value}
+                onValueChange={field.onChange}
+                options={EDUCATION_LEVELS}
+                placeholder="Select qualification"
+                searchPlaceholder="Search qualifications…"
+                invalid={Boolean(errors.education)}
+              />
             )}
           />
         </Field>
         <Field label="Institution attended" error={errors.institution?.message}>
-          <Input
-            placeholder="School or institution"
-            maxLength={150}
-            {...register("institution")}
+          <Controller
+            control={control}
+            name="institution"
+            render={({ field }) => (
+              <Combobox
+                value={field.value}
+                onValueChange={field.onChange}
+                options={INSTITUTION_OPTIONS}
+                placeholder="Select your institution"
+                searchPlaceholder="Search institutions…"
+                emptyMessage="No institution found — choose Other"
+                invalid={Boolean(errors.institution)}
+              />
+            )}
           />
         </Field>
+        {institution === "Other" && (
+          <Field
+            label="Name your institution"
+            required
+            error={errors.institutionOther?.message}
+          >
+            <Input
+              placeholder="School or institution name"
+              maxLength={150}
+              {...register("institutionOther")}
+            />
+          </Field>
+        )}
         <Field label="Occupation" required error={errors.occupation?.message}>
-          <Input
-            placeholder="What do you do?"
-            maxLength={100}
-            {...register("occupation")}
+          <Controller
+            control={control}
+            name="occupation"
+            render={({ field }) => (
+              <Combobox
+                value={field.value}
+                onValueChange={field.onChange}
+                options={OCCUPATIONS}
+                placeholder="Select your occupation"
+                searchPlaceholder="Search occupations…"
+                invalid={Boolean(errors.occupation)}
+              />
+            )}
           />
         </Field>
+        {occupation === "Other" && (
+          <Field
+            label="Name your occupation"
+            required
+            error={errors.occupationOther?.message}
+          >
+            <Input
+              placeholder="What do you do?"
+              maxLength={100}
+              {...register("occupationOther")}
+            />
+          </Field>
+        )}
         <Field label="Talent(s)" required error={errors.talents?.message} wide>
           <Input
             placeholder="e.g. Public speaking, dance, entrepreneurship"
