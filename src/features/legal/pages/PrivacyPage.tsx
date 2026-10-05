@@ -7,10 +7,11 @@ const SECTIONS: LegalSection[] = [
       "When you register, verify your identity, and apply for Mbopo Akwa Ibom, we collect information including:",
     ],
     list: [
-      "Identity details confirmed through your National Identification Number and Voter Identification Number (name, gender, date of birth, NIN, VIN, Local Government Area)",
+      "Identity details confirmed through your National Identification Number, including a live photo taken to confirm it is you (name, gender, date of birth, NIN)",
+      "Your Voter Identification Number (VIN), confirmed when you submit your application",
       "Contact information, including your email address and phone number",
       "Personal and background details you provide, such as your Local Government Area of origin, education, and a personal statement",
-      "Photographs you upload, including your passport photograph, your Certificate of Origin, and two full-length images",
+      "Photographs you upload, including your Certificate of Origin and two full-length images",
       "A short video pitch you record live on the platform",
     ],
   },
@@ -34,7 +35,8 @@ const SECTIONS: LegalSection[] = [
   {
     heading: "4. NIN & VIN Verification",
     paragraphs: [
-      "After you register, verify your email, and log in, you will complete a one-time identity verification using your National Identification Number and Voter Identification Number. This confirms your identity and eligibility (gender, age, and state of origin) before you begin the application form. Neither number is used for any purpose unrelated to this program.",
+      "After you register, verify your email, and log in, the first step of the application form is a one-time identity verification: your National Identification Number, name, and a live photo taken on the platform are checked against your NIN record, confirming your identity and eligibility (gender, age, and state of origin). That photo also becomes your profile photo.",
+      "Your Voter Identification Number is confirmed separately, when you submit your completed application. Neither number is used for any purpose unrelated to this program.",
     ],
   },
   {

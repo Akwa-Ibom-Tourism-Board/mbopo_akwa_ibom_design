@@ -31,8 +31,6 @@ const ELIGIBILITY_CRITERIA = [
   "Must have a National Identification Number (NIN)",
   "Must have a Certificate of Origin",
   "Must have a Voter Identification Number (VIN)",
-  "Must have a passport photograph",
-  "Passport photograph must be recent and on white background",
 ];
 
 export function EligibilitySection() {
