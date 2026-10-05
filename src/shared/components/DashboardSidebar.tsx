@@ -2,7 +2,7 @@ import { Bell, FileEdit, LayoutDashboard } from "lucide-react";
 import { useLocation } from "react-router-dom";
 import akwaIbomLogo from "@/assets/akwa-ibom-logo-main.png";
 import ariseLogo from "@/assets/arise-logo-main.png";
-import mbopoLogo from "@/assets/mbopo-logo-reversed.webp";
+import mbopoLogo from "@/assets/mbopo-logo-dark.webp";
 import {
   SidebarFrame,
   SidebarOverlay,
