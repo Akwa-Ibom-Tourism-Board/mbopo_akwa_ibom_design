@@ -94,22 +94,32 @@ export function ProfilePage() {
               )}
               <AvatarFallback>{initials}</AvatarFallback>
             </LargeAvatar>
-            <AvatarUploadButton aria-label="Change profile photo">
-              <Camera size={14} />
-              <input
-                type="file"
-                accept="image/png,image/jpeg"
-                onChange={onFileChange}
-                disabled={uploadMutation.isPending}
-              />
-            </AvatarUploadButton>
+            {/* Once identity verification sets the applicant's own live
+                selfie as their profile photo, it becomes permanent — no
+                more self-upload, matching the backend's own lock on this
+                endpoint (see FIX_ME.md §8). Only an applicant who hasn't
+                verified yet (no verification photo to lock in) can still
+                pick their own. */}
+            {!user.identityVerified && (
+              <AvatarUploadButton aria-label="Change profile photo">
+                <Camera size={14} />
+                <input
+                  type="file"
+                  accept="image/png,image/jpeg"
+                  onChange={onFileChange}
+                  disabled={uploadMutation.isPending}
+                />
+              </AvatarUploadButton>
+            )}
           </AvatarFrame>
           <AvatarMeta>
             <AvatarName>{displayName}</AvatarName>
             <AvatarHint>
-              {uploadMutation.isPending
-                ? "Uploading…"
-                : "JPEG or PNG. Shown across the dashboard until you change it."}
+              {user.identityVerified
+                ? "Set from your identity verification photo and can't be changed."
+                : uploadMutation.isPending
+                  ? "Uploading…"
+                  : "JPEG or PNG. Shown across the dashboard until you change it."}
             </AvatarHint>
             {error && <AvatarError>{error}</AvatarError>}
           </AvatarMeta>

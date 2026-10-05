@@ -6,7 +6,7 @@ import {
   type UseFormRegister,
 } from "react-hook-form";
 import { AlertTriangle } from "lucide-react";
-import { Checkbox, Textarea } from "@/shared/ui";
+import { Checkbox, Input, Textarea } from "@/shared/ui";
 import type { RegistrationFormValues } from "../../schema";
 import { MAXIMUM_STORY_WORDS, MINIMUM_STORY_WORDS } from "../../constants";
 import { Field } from "../Field";
@@ -62,6 +62,20 @@ export function StoryStep({ register, control, errors }: StoryStepProps) {
           {wordCount} words · aim for {MINIMUM_STORY_WORDS}–
           {MAXIMUM_STORY_WORDS}
         </WordCount>
+      </Field>
+
+      <Field
+        label="Voter Identification Number (VIN)"
+        required
+        error={errors.vin?.message}
+        hint="Checked when you submit — if it isn't found, you'll be asked to check it and try again before you can finish."
+      >
+        <Input
+          maxLength={19}
+          placeholder="19-character VIN"
+          style={{ textTransform: "uppercase" }}
+          {...register("vin")}
+        />
       </Field>
 
       <ImportantNotice>

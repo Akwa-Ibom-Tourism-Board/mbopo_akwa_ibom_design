@@ -77,14 +77,28 @@ export const HeroTopRow = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 16px;
+  flex-wrap: wrap;
+  gap: 10px 12px;
   margin-bottom: 24px;
+
+  ${media.sm} {
+    gap: 16px;
+  }
 `;
 
+// The new wordmark is a wide horizontal lockup (unlike the old tall, narrow
+// mark this replaced) — at the old fixed 64px mobile height it was nearly
+// 5x wider, which on a narrow phone left the ViewRequirementsLink pill next
+// to it no room and pushed it past the row's edge. Scaling the height down
+// on small screens keeps the two side by side without crowding.
 export const HeroLogo = styled.img`
-  height: 64px;
+  height: 34px;
   width: auto;
   object-fit: contain;
+
+  ${media.sm} {
+    height: 48px;
+  }
 
   ${media.lg} {
     height: 92px;
@@ -99,19 +113,25 @@ export const ViewRequirementsLink = styled(Link)`
   flex: 0 0 auto;
   align-items: center;
   gap: 6px;
-  padding: 9px 14px;
+  padding: 7px 11px;
   border: 1px solid rgba(255, 255, 255, 0.45);
   border-radius: ${({ theme }) => theme.radii.full};
   color: ${({ theme }) => theme.colors.white};
-  font-size: 10px;
+  font-size: 9px;
   font-weight: 800;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
   white-space: nowrap;
   transition: background-color ${({ theme }) => theme.transitions.fast};
 
   &:hover {
     background: rgba(255, 255, 255, 0.12);
+  }
+
+  ${media.sm} {
+    padding: 9px 14px;
+    font-size: 10px;
+    letter-spacing: 0.08em;
   }
 
   ${media.lg} {
@@ -142,6 +162,19 @@ export const Kicker = styled.p`
   letter-spacing: 0.21em;
   line-height: 1.6;
   text-transform: uppercase;
+`;
+
+// Wraps just the first slide's kicker — its "Akwa Ibom State Hotels &
+// Tourism Development Commission" text duplicates Navbar's BrandSubtitle,
+// which only reveals itself from the same ${media.xl} up (it's display:
+// none below that). Below xl, the navbar copy is hidden, so this is the
+// only place that name appears.
+export const SmallScreenOnly = styled.span`
+  display: inline;
+
+  ${media.xl} {
+    display: none;
+  }
 `;
 
 export const HeroTitle = styled.h1`
@@ -300,6 +333,23 @@ const imageIn = keyframes`
     opacity: 1;
     transform: scale(1) translateY(0);
   }
+`;
+
+// Wraps SlideImage so an individual slide can be rendered larger than
+// object-fit: contain would otherwise draw it, without touching the
+// shared entrance animation below. The governor's shot is a much wider,
+// shorter crop than its tall-portrait siblings (see SlideImage's own
+// comment), so contain fits it by width and leaves most of the box's
+// height empty above it — technically still bottom-anchored, but small
+// enough inside all that empty space that it reads as floating rather
+// than grounded like the others. transform-origin: bottom keeps the
+// subject's base pinned exactly where object-position: bottom center put
+// it while scale grows everything else upward from there.
+export const SlideImageScale = styled.div<{ $scale: number }>`
+  position: absolute;
+  inset: 0;
+  transform: scale(${({ $scale }) => $scale});
+  transform-origin: bottom center;
 `;
 
 // object-fit: contain guarantees the full photo is always visible —

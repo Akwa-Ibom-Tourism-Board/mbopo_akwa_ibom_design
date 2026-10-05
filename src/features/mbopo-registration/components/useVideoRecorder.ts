@@ -40,12 +40,20 @@ export interface UseVideoRecorderResult {
 }
 
 // Picks the first mime type the browser's MediaRecorder actually supports —
-// Chrome/Firefox favor webm, Safari (17+) supports mp4 instead.
+// Chrome/Firefox favor webm, Safari (17+) supports mp4 instead. The mp4
+// candidates spell out an explicit audio codec (mp4a.40.2 = AAC-LC) —
+// recording against the bare "video/mp4" (no codec string) is accepted by
+// Safari's isTypeSupported but can silently mux out the audio track even
+// though the input stream has one, producing a video-only file with no
+// sound. A fully-qualified codec string is what actually gets Safari to
+// negotiate and keep an audio track.
 function pickSupportedMimeType(): string | undefined {
   const candidates = [
     "video/webm;codecs=vp9,opus",
     "video/webm;codecs=vp8,opus",
     "video/webm",
+    "video/mp4;codecs=avc1.42E01E,mp4a.40.2",
+    "video/mp4;codecs=h264,aac",
     "video/mp4",
   ];
   return candidates.find(
@@ -152,6 +160,19 @@ export function useVideoRecorder({
         video: { width: { ideal: 960 }, height: { ideal: 540 } },
         audio: true,
       });
+      // getUserMedia can resolve with a video-only stream even when audio:
+      // true was requested (e.g. no mic present, or OS-level mic access
+      // blocked independently of the camera prompt) — catching that here,
+      // before any recording starts, is the only way to avoid silently
+      // producing a soundless take that looks fine until playback.
+      if (stream.getAudioTracks().length === 0) {
+        stream.getTracks().forEach((track) => track.stop());
+        setErrorMessage(
+          "We could not access your microphone. Please check your device's microphone permissions and try again.",
+        );
+        setStatus("error");
+        return;
+      }
       streamRef.current = stream;
       if (liveVideoRef.current) {
         liveVideoRef.current.srcObject = stream;

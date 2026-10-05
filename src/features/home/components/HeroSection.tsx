@@ -13,7 +13,7 @@ import governorPortraitOne from "@/assets/governor_1.webp";
 // transparent padding to match their margin-to-subject proportions,
 // without touching the shared original.
 import womanPortrait from "@/assets/woman-2-hero.webp";
-import mbopoLogo from "@/assets/mbopo-logo-reversed.webp";
+import mbopoLogo from "@/assets/mbopo-logo-dark.webp";
 import { Reveal } from "@/shared/components";
 import {
   Hero,
@@ -25,6 +25,8 @@ import {
   ViewRequirementsLink,
   TextStage,
   Kicker,
+  SmallScreenOnly,
+  SlideImageScale,
   HeroTitle,
   HeroRule,
   HeroTagline,
@@ -46,6 +48,11 @@ interface HeroSlide {
   accent: string;
   tagline: string;
   copy: string;
+  // Scales the rendered image up from its bottom-anchored base — only
+  // needed for a slide whose source crop is a much wider/shorter aspect
+  // ratio than the others (see SlideImageScale's comment). Omit to leave
+  // a slide at its natural object-fit: contain size.
+  imageScale?: number;
 }
 
 const SLIDES: HeroSlide[] = [
@@ -53,10 +60,10 @@ const SLIDES: HeroSlide[] = [
     image: ladyPortrait,
     imageAlt: "A Mbopo Akwa Ibom contestant in traditional Akwa Ibom attire",
     kicker: (
-      <>
+      <SmallScreenOnly>
         AKWA IBOM STATE <span>·</span> HOTELS &amp; TOURISM DEVELOPMENT
         COMMISSION
-      </>
+      </SmallScreenOnly>
     ),
     title: "Mbopo",
     accent: "Akwa Ibom",
@@ -76,7 +83,8 @@ const SLIDES: HeroSlide[] = [
   {
     image: governorPortraitOne,
     imageAlt: "The Governor of Akwa Ibom State",
-    kicker: <>A GOVERNMENT BACKED INITIATIVE</>,
+    imageScale: 1.2,
+    kicker: <>A GOVERNMENT SUPPORTED INITIATIVE</>,
     title: "Championing",
     accent: "Akwa Ibom's daughters",
     tagline: "Supported by the State Government",
@@ -158,11 +166,13 @@ export function HeroSection() {
         </Reveal>
 
         <ImageStage>
-          <SlideImage
-            key={activeSlide.image}
-            src={activeSlide.image}
-            alt={activeSlide.imageAlt}
-          />
+          <SlideImageScale $scale={activeSlide.imageScale ?? 1}>
+            <SlideImage
+              key={activeSlide.image}
+              src={activeSlide.image}
+              alt={activeSlide.imageAlt}
+            />
+          </SlideImageScale>
         </ImageStage>
       </HeroInner>
     </Hero>

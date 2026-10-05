@@ -7,18 +7,10 @@ import {
 } from "react-hook-form";
 import { format } from "date-fns";
 import { ShieldCheck } from "lucide-react";
-import {
-  Input,
-  Textarea,
-  Select,
-  SelectTrigger,
-  SelectValue,
-  SelectContent,
-  SelectItem,
-} from "@/shared/ui";
+import { Input, Textarea, Combobox } from "@/shared/ui";
 import type { VerifiedUser } from "@/features/auth";
 import type { RegistrationFormValues } from "../../schema";
-import { NIGERIAN_STATES } from "../../constants";
+import { NIGERIAN_STATES, AKWA_IBOM_LGAS } from "../../constants";
 import { Field } from "../Field";
 import { FieldGrid, LockedValue } from "../Field.styles";
 import { PhotoUpload } from "../PhotoUpload";
@@ -59,8 +51,7 @@ export function IdentityOriginStep({
       <StepHint>Help us understand where you represent.</StepHint>
 
       <LockedFieldsNote>
-        Your identity was verified from your NIN and VIN and cannot be edited
-        here.
+        Your identity was verified from your NIN and cannot be edited here.
       </LockedFieldsNote>
 
       <FieldGrid>
@@ -83,14 +74,25 @@ export function IdentityOriginStep({
         <Field label="National Identification Number (NIN)" wide>
           <LockedValue>{user.nin}</LockedValue>
         </Field>
-        <Field label="Voter Identification Number (VIN)" wide>
-          <LockedValue>{user.vin}</LockedValue>
-        </Field>
-        <Field label="Local Government Area of origin">
-          <LockedValue>{user.localGovernment}</LockedValue>
-        </Field>
-        <Field label="Ward">
-          <LockedValue>{user.ward}</LockedValue>
+        <Field
+          label="Local Government Area of origin"
+          required
+          error={errors.localGovernment?.message}
+        >
+          <Controller
+            control={control}
+            name="localGovernment"
+            render={({ field }) => (
+              <Combobox
+                value={field.value}
+                onValueChange={field.onChange}
+                options={AKWA_IBOM_LGAS}
+                placeholder="Select your LGA of origin"
+                searchPlaceholder="Search LGAs…"
+                invalid={Boolean(errors.localGovernment)}
+              />
+            )}
+          />
         </Field>
 
         <Field label="Village" required error={errors.village?.message}>
@@ -109,18 +111,14 @@ export function IdentityOriginStep({
             control={control}
             name="residenceState"
             render={({ field }) => (
-              <Select value={field.value} onValueChange={field.onChange}>
-                <SelectTrigger invalid={Boolean(errors.residenceState)}>
-                  <SelectValue placeholder="Select state of residence" />
-                </SelectTrigger>
-                <SelectContent>
-                  {NIGERIAN_STATES.map((state) => (
-                    <SelectItem key={state} value={state}>
-                      {state}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <Combobox
+                value={field.value}
+                onValueChange={field.onChange}
+                options={NIGERIAN_STATES}
+                placeholder="Select state of residence"
+                searchPlaceholder="Search states…"
+                invalid={Boolean(errors.residenceState)}
+              />
             )}
           />
         </Field>

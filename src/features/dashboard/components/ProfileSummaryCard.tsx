@@ -32,7 +32,7 @@ export function ProfileSummaryCard({
         <CardDescription>
           {verified
             ? "Verified from your National Identification Number."
-            : "Verify your NIN and VIN from the Mbopo Registration page to see your identity details here."}
+            : "Verify your NIN from the Mbopo Registration page to see your identity details here."}
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -50,18 +50,6 @@ export function ProfileSummaryCard({
               <DetailItem $wide>
                 <DetailLabel>NIN</DetailLabel>
                 <DetailValue>{user.nin}</DetailValue>
-              </DetailItem>
-              <DetailItem $wide>
-                <DetailLabel>VIN</DetailLabel>
-                <DetailValue>{user.vin}</DetailValue>
-              </DetailItem>
-              <DetailItem>
-                <DetailLabel>LGA</DetailLabel>
-                <DetailValue>{user.localGovernment}</DetailValue>
-              </DetailItem>
-              <DetailItem>
-                <DetailLabel>Ward</DetailLabel>
-                <DetailValue>{user.ward}</DetailValue>
               </DetailItem>
               <DetailItem>
                 <DetailLabel>Gender</DetailLabel>

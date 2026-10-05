@@ -15,11 +15,22 @@ export interface User {
   identityVerified: boolean;
   firstName?: string | null;
   lastName?: string | null;
+  middleName?: string | null;
   phoneNumber?: string | null;
   nin?: string | null;
+  // Unset until the applicant reaches and verifies the VIN field on the
+  // last step of registration — no longer set alongside NIN at the
+  // identity-verification gate. Legacy accounts verified under the old
+  // combined NIN+VIN flow already have this populated.
   vin?: string | null;
   gender?: Gender | null;
   dateOfBirth?: string | null;
+  // Legacy-only: the old flow derived these from the VIN lookup. Nothing
+  // writes them any more — Local Government of Origin is now picked by the
+  // applicant from a fixed dropdown inside the registration form itself
+  // (see @/features/mbopo-registration), and ward was removed from the
+  // product outright. Kept here only so an already-verified legacy
+  // account's existing values don't disappear from the type.
   localGovernment?: string | null;
   ward?: string | null;
   createdAt: string;
@@ -28,14 +39,15 @@ export interface User {
 // `User` narrowed to the shape every step past the identity-verification
 // gate can rely on — those steps read `user.nin`, `user.firstName`, etc.
 // as locked, already-verified fields, so they take this type instead of
-// plain `User` and the gate is the only place responsible for the narrowing.
+// plain `User` and the gate is the only place responsible for the
+// narrowing. Deliberately does NOT require `vin` (verified later, at the
+// end of registration, not here) or `localGovernment`/`ward` (no longer
+// sourced from identity verification at all — see the fields' own
+// comments on `User`).
 export interface VerifiedUser extends User {
   firstName: string;
   lastName: string;
   nin: string;
-  vin: string;
-  localGovernment: string;
-  ward: string;
   gender: Gender;
   dateOfBirth: string;
   identityVerified: true;
@@ -47,9 +59,6 @@ export function isVerifiedUser(user: User): user is VerifiedUser {
     Boolean(user.firstName) &&
     Boolean(user.lastName) &&
     Boolean(user.nin) &&
-    Boolean(user.vin) &&
-    Boolean(user.localGovernment) &&
-    Boolean(user.ward) &&
     Boolean(user.gender) &&
     Boolean(user.dateOfBirth)
   );

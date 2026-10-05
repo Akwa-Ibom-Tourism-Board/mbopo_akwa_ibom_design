@@ -2,7 +2,7 @@ import { Bell, FileEdit, LayoutDashboard } from "lucide-react";
 import { useLocation } from "react-router-dom";
 import akwaIbomLogo from "@/assets/akwa-ibom-logo-main.png";
 import ariseLogo from "@/assets/arise-logo-main.png";
-import mbopoLogo from "@/assets/mbopo-logo-reversed.webp";
+import mbopoLogo from "@/assets/mbopo-logo-dark.webp";
 import {
   SidebarFrame,
   SidebarOverlay,
@@ -14,6 +14,8 @@ import {
   NavList,
   NavItem,
   SidebarFooter,
+  FooterLinkRow,
+  FooterLink,
   SidebarFooterText,
 } from "./DashboardSidebar.styles";
 
@@ -63,6 +65,14 @@ export function DashboardSidebar({ open, onClose }: DashboardSidebarProps) {
         </NavList>
 
         <SidebarFooter>
+          <FooterLinkRow>
+            <FooterLink to="/terms" onClick={onClose}>
+              Terms &amp; Conditions
+            </FooterLink>
+            <FooterLink to="/privacy" onClick={onClose}>
+              Privacy Policy
+            </FooterLink>
+          </FooterLinkRow>
           <SidebarFooterText>
             Akwa Ibom State Hotels &amp; Tourism Development Commission
           </SidebarFooterText>

@@ -1,38 +1,18 @@
-import type { ChangeEvent } from "react";
 import type { FieldErrors, UseFormRegister } from "react-hook-form";
-import { ShieldCheck } from "lucide-react";
 import { Input } from "@/shared/ui";
 import type { VerifiedUser } from "@/features/auth";
 import type { RegistrationFormValues } from "../../schema";
 import { Field } from "../Field";
 import { FieldGrid, LockedValue } from "../Field.styles";
-import { PhotoUpload } from "../PhotoUpload";
-import {
-  StepContent,
-  StepTitle,
-  StepHint,
-  PrivacyNote,
-} from "../StepShell.styles";
+import { StepContent, StepTitle, StepHint } from "../StepShell.styles";
 
 export interface PersonalStepProps {
   user: VerifiedUser;
   register: UseFormRegister<RegistrationFormValues>;
   errors: FieldErrors<RegistrationFormValues>;
-  passportPhotoUrl: string;
-  passportPhotoError?: string;
-  passportPhotoUploading?: boolean;
-  onPassportPhotoChange: (event: ChangeEvent<HTMLInputElement>) => void;
 }
 
-export function PersonalStep({
-  user,
-  register,
-  errors,
-  passportPhotoUrl,
-  passportPhotoError,
-  passportPhotoUploading,
-  onPassportPhotoChange,
-}: PersonalStepProps) {
+export function PersonalStep({ user, register, errors }: PersonalStepProps) {
   return (
     <StepContent>
       <StepTitle>Personal information</StepTitle>
@@ -100,25 +80,6 @@ export function PersonalStep({
           />
         </Field>
       </FieldGrid>
-      <PhotoUpload
-        label="Passport photograph"
-        hint="JPG or PNG · Max 5MB · Recent photo, white background"
-        previewUrl={passportPhotoUrl}
-        error={passportPhotoError}
-        onChange={onPassportPhotoChange}
-        isUploading={passportPhotoUploading}
-      />
-      <PrivacyNote>
-        <ShieldCheck size={14} aria-hidden />
-        <span>
-          Used only to verify your identity and present your application — never
-          sold, rented, or shared beyond the Mbopo Akwa Ibom programme. See our{" "}
-          <a href="/privacy" target="_blank" rel="noopener noreferrer">
-            Privacy Policy
-          </a>
-          .
-        </span>
-      </PrivacyNote>
     </StepContent>
   );
 }
