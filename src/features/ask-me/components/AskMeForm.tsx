@@ -67,7 +67,7 @@ export function AskMeForm({
       onError(
         friendlyMessage(
           error,
-          "We couldn't send your message. Please try again.",
+          "We could not send your message. Please try again.",
         ),
       ),
   });
@@ -86,8 +86,8 @@ export function AskMeForm({
     <WidgetContainer onClose={onClose} onMinimize={onMinimize}>
       <Body>
         <IntroText>
-          Have a question or something to tell us? Fill this in and we&apos;ll
-          get back to you.
+          Have a question or something to tell us? Fill this in and we will get
+          back to you.
         </IntroText>
 
         <form onSubmit={handleSubmit(onSubmit)} noValidate>
@@ -144,7 +144,7 @@ export function AskMeForm({
             </LabelRow>
             <Input
               id="ask-me-title"
-              placeholder="What's this about?"
+              placeholder="What is this about?"
               {...register("title")}
             />
           </Field>
@@ -156,7 +156,7 @@ export function AskMeForm({
             <Textarea
               id="ask-me-message"
               rows={4}
-              placeholder="Tell us what's on your mind…"
+              placeholder="Tell us what is on your mind…"
               invalid={Boolean(errors.message)}
               {...register("message")}
             />

@@ -154,7 +154,7 @@ export function LoginPage() {
       </FormBlock>
 
       <FormFooter>
-        Don&apos;t have an account?{" "}
+        Do not have an account?{" "}
         <InlineLink to="/register">Create one here</InlineLink>
       </FormFooter>
     </AuthLayout>
