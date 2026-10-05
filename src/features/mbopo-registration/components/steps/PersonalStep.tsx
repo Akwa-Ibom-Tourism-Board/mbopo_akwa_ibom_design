@@ -45,13 +45,19 @@ export function PersonalStep({
           <LockedValue>{user.firstName}</LockedValue>
         </Field>
         <Field label="Middle name" error={errors.middleName?.message}>
-          <Input placeholder="Optional" {...register("middleName")} />
+          <Input
+            placeholder="Optional"
+            maxLength={100}
+            {...register("middleName")}
+          />
         </Field>
         <Field label="Phone number" required error={errors.phone?.message}>
           <Input
             type="tel"
+            inputMode="numeric"
             placeholder="080 0000 0000"
             autoComplete="tel"
+            maxLength={13}
             {...register("phone")}
           />
         </Field>
@@ -65,6 +71,7 @@ export function PersonalStep({
         >
           <Input
             placeholder="e.g. Instagram: @handle, Twitter: @handle, Facebook: handle"
+            maxLength={300}
             {...register("socialMedia")}
           />
         </Field>
@@ -73,7 +80,11 @@ export function PersonalStep({
           required
           error={errors.nextOfKin?.message}
         >
-          <Input placeholder="Full name" {...register("nextOfKin")} />
+          <Input
+            placeholder="Full name"
+            maxLength={100}
+            {...register("nextOfKin")}
+          />
         </Field>
         <Field
           label="Next of kin phone"
@@ -82,7 +93,9 @@ export function PersonalStep({
         >
           <Input
             type="tel"
+            inputMode="numeric"
             placeholder="080 0000 0000"
+            maxLength={13}
             {...register("nextOfKinPhone")}
           />
         </Field>

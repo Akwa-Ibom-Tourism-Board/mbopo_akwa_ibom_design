@@ -94,6 +94,7 @@ export function IdentityOriginStep({
         <Field label="Village" required error={errors.village?.message}>
           <Input
             placeholder="Your village of origin"
+            maxLength={100}
             {...register("village")}
           />
         </Field>
@@ -126,7 +127,11 @@ export function IdentityOriginStep({
           required
           error={errors.city?.message}
         >
-          <Input placeholder="Town or city" {...register("city")} />
+          <Input
+            placeholder="Town or city"
+            maxLength={100}
+            {...register("city")}
+          />
         </Field>
         <Field
           label="Home address"
@@ -137,6 +142,7 @@ export function IdentityOriginStep({
           <Textarea
             rows={4}
             placeholder="Your residential address"
+            maxLength={300}
             {...register("address")}
           />
         </Field>
