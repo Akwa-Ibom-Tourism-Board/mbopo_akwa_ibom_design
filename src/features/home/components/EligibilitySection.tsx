@@ -21,6 +21,8 @@ import {
   CtaCell,
   CtaCellText,
   RegisterLink,
+  ComplianceNote,
+  ComplianceLink,
 } from "./EligibilitySection.styles";
 
 const ELIGIBILITY_CRITERIA = [
@@ -86,6 +88,13 @@ export function EligibilitySection() {
               </CtaCell> */}
             </CriteriaGrid>
           </Panel>
+
+          <ComplianceNote>
+            Ensure you read the{" "}
+            <ComplianceLink to="/terms">terms and conditions</ComplianceLink>{" "}
+            and <ComplianceLink to="/privacy">privacy policy</ComplianceLink>{" "}
+            before you register.
+          </ComplianceNote>
         </Reveal>
       </SectionShell>
     </Section>
