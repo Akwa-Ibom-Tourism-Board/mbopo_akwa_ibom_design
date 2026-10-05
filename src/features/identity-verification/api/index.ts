@@ -2,36 +2,24 @@ import { ApiError, request } from "@/lib/http";
 import type { User } from "@/features/auth";
 import {
   IneligibleAfterVerificationError,
-  type IdentityCheckResult,
   type VerifyIdentityInput,
 } from "../types";
 
-// Preview-only — safe to call repeatedly, persists nothing. The backend
-// re-verifies NIN/VIN itself at verifyIdentity time regardless of what this
-// returned, so this is purely for showing the applicant their own record
-// before they commit to it.
-export async function lookupNin(
-  nin: string,
-  vin: string,
-  captchaToken: string,
-): Promise<IdentityCheckResult> {
-  return request<IdentityCheckResult>("/auth/identity-check", {
-    method: "POST",
-    body: JSON.stringify({ nin, vin, captchaToken }),
-  });
-}
-
-// The one-time commit — attaches verified NIN/VIN identity to the current
-// account. Returns the full updated User (see the backend's serializeUser),
-// not just the fields this step filled in.
-export async function verifyIdentity({
-  nin,
-  vin,
-}: VerifyIdentityInput): Promise<User> {
+// The one-time NIN + selfie verification-and-commit — attaches the
+// verified identity to the current account and returns the full updated
+// User (see the backend's serializeUser), including the NIN-sourced
+// profile photo. No separate preview call any more: a single request
+// either succeeds (identity locked in) or fails with a specific reason
+// (name mismatch, selfie mismatch, ineligible, etc.) — see FIX_ME.md on
+// the backend for the full list of distinct error messages this can
+// return, which are already clear enough to show directly.
+export async function verifyIdentity(
+  input: VerifyIdentityInput,
+): Promise<User> {
   try {
     return await request<User>("/applicants/verify-identity", {
       method: "POST",
-      body: JSON.stringify({ nin, vin }),
+      body: JSON.stringify(input),
     });
   } catch (error) {
     if (error instanceof ApiError && error.status === 422) {
