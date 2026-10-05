@@ -51,10 +51,6 @@ export function ProfileSummaryCard({
                 <DetailLabel>NIN</DetailLabel>
                 <DetailValue>{user.nin}</DetailValue>
               </DetailItem>
-              <DetailItem $wide>
-                <DetailLabel>VIN</DetailLabel>
-                <DetailValue>{user.vin}</DetailValue>
-              </DetailItem>
               <DetailItem>
                 <DetailLabel>Gender</DetailLabel>
                 <DetailValue style={{ textTransform: "capitalize" }}>

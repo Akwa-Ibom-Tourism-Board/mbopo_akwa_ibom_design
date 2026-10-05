@@ -94,11 +94,12 @@ export function ProfilePage() {
               )}
               <AvatarFallback>{initials}</AvatarFallback>
             </LargeAvatar>
-            {/* Once identity verification sets a NIN-sourced photo, it
-                becomes the permanent profile image — no more self-upload,
-                matching the backend's own lock on this endpoint (see
-                FIX_ME.md §8). Only an applicant who hasn't verified yet
-                (no NIN photo to lock in) can still pick their own. */}
+            {/* Once identity verification sets the applicant's own live
+                selfie as their profile photo, it becomes permanent — no
+                more self-upload, matching the backend's own lock on this
+                endpoint (see FIX_ME.md §8). Only an applicant who hasn't
+                verified yet (no verification photo to lock in) can still
+                pick their own. */}
             {!user.identityVerified && (
               <AvatarUploadButton aria-label="Change profile photo">
                 <Camera size={14} />
@@ -115,7 +116,7 @@ export function ProfilePage() {
             <AvatarName>{displayName}</AvatarName>
             <AvatarHint>
               {user.identityVerified
-                ? "Set from your verified NIN and can't be changed."
+                ? "Set from your identity verification photo and can't be changed."
                 : uploadMutation.isPending
                   ? "Uploading…"
                   : "JPEG or PNG. Shown across the dashboard until you change it."}

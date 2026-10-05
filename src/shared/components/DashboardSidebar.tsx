@@ -14,6 +14,8 @@ import {
   NavList,
   NavItem,
   SidebarFooter,
+  FooterLinkRow,
+  FooterLink,
   SidebarFooterText,
 } from "./DashboardSidebar.styles";
 
@@ -63,6 +65,14 @@ export function DashboardSidebar({ open, onClose }: DashboardSidebarProps) {
         </NavList>
 
         <SidebarFooter>
+          <FooterLinkRow>
+            <FooterLink to="/terms" onClick={onClose}>
+              Terms &amp; Conditions
+            </FooterLink>
+            <FooterLink to="/privacy" onClick={onClose}>
+              Privacy Policy
+            </FooterLink>
+          </FooterLinkRow>
           <SidebarFooterText>
             Akwa Ibom State Hotels &amp; Tourism Development Commission
           </SidebarFooterText>

@@ -76,9 +76,10 @@ const STEPS: ProcessStep[] = [
     text: "Verified applicants advance to LGA pageants and Senatorial finals, then a residential camp leading into the statewide Grand Finale, where one woman is crowned Mbopo Akwa Ibom.",
     checklistLabel: "The journey ahead",
     checklist: [
-      "LGA pageant, one of 93 held statewide",
-      "Senatorial finals, 31 contestants",
-      "Camp and the statewide Grand Finale",
+      "LGA auditions, held in all 31 Local Government Areas",
+      "Senatorial auditions",
+      "10-day residential Bootcamp camp",
+      "Grand Finale",
     ],
     final: true,
   },

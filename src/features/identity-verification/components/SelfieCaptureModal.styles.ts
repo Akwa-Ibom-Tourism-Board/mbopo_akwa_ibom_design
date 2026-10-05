@@ -87,38 +87,6 @@ export const PlaceholderIcon = styled.span`
   color: ${({ theme }) => theme.colors.secondary.DEFAULT};
 `;
 
-export const PromptBadge = styled.div`
-  position: absolute;
-  top: 14px;
-  left: 50%;
-  transform: translateX(-50%);
-  padding: 8px 18px;
-  border-radius: 999px;
-  background: rgba(0, 0, 0, 0.55);
-  backdrop-filter: blur(4px);
-  color: #fff;
-  font-size: 13px;
-  font-weight: 600;
-  text-align: center;
-  white-space: nowrap;
-`;
-
-export const ReadyBadge = styled.div`
-  position: absolute;
-  bottom: 14px;
-  left: 50%;
-  transform: translateX(-50%);
-  padding: 7px 16px;
-  border-radius: 999px;
-  background: ${({ theme }) => theme.alpha(theme.colors.secondary.DEFAULT, 0.9)};
-  color: #fff;
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  white-space: nowrap;
-`;
-
 export const StageActions = styled.div`
   display: flex;
   flex-shrink: 0;

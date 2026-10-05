@@ -74,9 +74,6 @@ export function IdentityOriginStep({
         <Field label="National Identification Number (NIN)" wide>
           <LockedValue>{user.nin}</LockedValue>
         </Field>
-        <Field label="Voter Identification Number (VIN)" wide>
-          <LockedValue>{user.vin}</LockedValue>
-        </Field>
         <Field
           label="Local Government Area of origin"
           required

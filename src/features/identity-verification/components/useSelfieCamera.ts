@@ -1,26 +1,11 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 
 export type SelfieCameraStatus =
-  "idle" | "requesting" | "guide" | "ready" | "captured" | "error";
-
-// Purely instructional — nothing here programmatically confirms a blink or
-// head-turn actually happened. The point is to walk the applicant through a
-// deliberate, paced sequence (hard to satisfy by just holding up a printed
-// photo) before they land on a final frontal shot; the real identity check
-// is the backend's DVP face-match against the NIN record's own photo.
-const GUIDE_PROMPTS = [
-  "Look straight ahead",
-  "Blink naturally",
-  "Turn your head slightly left",
-  "Turn your head slightly right",
-  "Look straight ahead again",
-];
-const PROMPT_DURATION_MS = 1800;
+  "idle" | "requesting" | "live" | "captured" | "error";
 
 export interface UseSelfieCameraResult {
   status: SelfieCameraStatus;
   errorMessage?: string;
-  currentPrompt?: string;
   capturedImage: string | null;
   videoRef: React.RefObject<HTMLVideoElement | null>;
   start: () => Promise<void>;
@@ -32,18 +17,11 @@ export interface UseSelfieCameraResult {
 export function useSelfieCamera(): UseSelfieCameraResult {
   const [status, setStatus] = useState<SelfieCameraStatus>("idle");
   const [errorMessage, setErrorMessage] = useState<string>();
-  const [promptIndex, setPromptIndex] = useState(0);
   const [capturedImage, setCapturedImage] = useState<string | null>(null);
 
   const videoRef = useRef<HTMLVideoElement>(null);
   const streamRef = useRef<MediaStream | null>(null);
-  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const requestingRef = useRef(false);
-
-  const stopTimer = useCallback(() => {
-    if (timerRef.current) clearInterval(timerRef.current);
-    timerRef.current = null;
-  }, []);
 
   const releaseCamera = useCallback(() => {
     streamRef.current?.getTracks().forEach((track) => track.stop());
@@ -51,13 +29,11 @@ export function useSelfieCamera(): UseSelfieCameraResult {
   }, []);
 
   const stop = useCallback(() => {
-    stopTimer();
     releaseCamera();
     setStatus("idle");
-    setPromptIndex(0);
     setCapturedImage(null);
     setErrorMessage(undefined);
-  }, [releaseCamera, stopTimer]);
+  }, [releaseCamera]);
 
   useEffect(() => stop, [stop]);
 
@@ -80,19 +56,7 @@ export function useSelfieCamera(): UseSelfieCameraResult {
         videoRef.current.srcObject = stream;
         await videoRef.current.play().catch(() => {});
       }
-      setPromptIndex(0);
-      setStatus("guide");
-      timerRef.current = setInterval(() => {
-        setPromptIndex((index) => {
-          const next = index + 1;
-          if (next >= GUIDE_PROMPTS.length) {
-            stopTimer();
-            setStatus("ready");
-            return index;
-          }
-          return next;
-        });
-      }, PROMPT_DURATION_MS);
+      setStatus("live");
     } catch (error) {
       const message =
         error instanceof DOMException && error.name === "NotAllowedError"
@@ -103,7 +67,7 @@ export function useSelfieCamera(): UseSelfieCameraResult {
     } finally {
       requestingRef.current = false;
     }
-  }, [stopTimer]);
+  }, []);
 
   const capture = useCallback(() => {
     const video = videoRef.current;
@@ -127,13 +91,12 @@ export function useSelfieCamera(): UseSelfieCameraResult {
 
   const retake = useCallback(() => {
     setCapturedImage(null);
-    setStatus("ready");
+    setStatus("live");
   }, []);
 
   return {
     status,
     errorMessage,
-    currentPrompt: GUIDE_PROMPTS[promptIndex],
     capturedImage,
     videoRef,
     start,

@@ -16,8 +16,6 @@ import {
   CapturedImage,
   StagePlaceholder,
   PlaceholderIcon,
-  PromptBadge,
-  ReadyBadge,
   StageActions,
   ErrorBanner,
 } from "./SelfieCaptureModal.styles";
@@ -40,7 +38,6 @@ export function SelfieCaptureModal({
   const {
     status,
     errorMessage,
-    currentPrompt,
     capturedImage,
     videoRef,
     start,
@@ -92,8 +89,7 @@ export function SelfieCaptureModal({
             muted
             playsInline
             style={{
-              display:
-                status === "guide" || status === "ready" ? "block" : "none",
+              display: status === "live" ? "block" : "none",
             }}
           />
           {capturedImage && status === "captured" && (
@@ -118,13 +114,6 @@ export function SelfieCaptureModal({
                   : "Your camera preview will appear here."}
             </StagePlaceholder>
           )}
-
-          {status === "guide" && currentPrompt && (
-            <PromptBadge>{currentPrompt}</PromptBadge>
-          )}
-          {status === "ready" && (
-            <ReadyBadge>Ready — smile and capture</ReadyBadge>
-          )}
         </Stage>
 
         <StageActions>
@@ -137,7 +126,7 @@ export function SelfieCaptureModal({
               <Camera size={16} /> Try Again
             </Button>
           )}
-          {status === "ready" && (
+          {status === "live" && (
             <Button type="button" variant="secondary" onClick={capture}>
               <Camera size={16} /> Capture
             </Button>

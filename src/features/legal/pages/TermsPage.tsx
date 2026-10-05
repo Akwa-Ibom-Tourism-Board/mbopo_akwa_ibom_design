@@ -13,10 +13,12 @@ const SECTIONS: LegalSection[] = [
       "To be eligible to apply, you must meet all of the following criteria:",
     ],
     list: [
+      "Be female",
       "Be an indigene of Akwa Ibom State",
-      "Be a graduate",
+      "Be a graduate (minimum of B.Sc., HND or equivalent)",
       "Be between 22 and 27 years of age",
       "Hold a valid National Identification Number (NIN)",
+      "Hold a valid Certificate of Origin",
       "Hold a valid Voter Identification Number (VIN)",
     ],
   },
@@ -81,7 +83,7 @@ export function TermsPage() {
       documentTitle="Terms & Conditions"
       eyebrow="Legal"
       title="Terms & Conditions"
-      updatedAt="4 October 2026"
+      updatedAt="5 October 2026"
       sections={SECTIONS}
     />
   );
