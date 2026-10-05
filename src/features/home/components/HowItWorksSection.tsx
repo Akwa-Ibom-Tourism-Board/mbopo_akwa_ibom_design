@@ -45,14 +45,14 @@ const STEPS: ProcessStep[] = [
     icon: UserPlus,
     title: "Create Your Account",
     text: "Sign up with your email and password, verify your email with the code we send you, then log in.",
-    checklistLabel: "What you'll need",
+    checklistLabel: "What you will need",
     checklist: ["A valid email address", "Password", "Access to your inbox"],
   },
   {
     icon: ScanSearch,
     title: "Verify Your Identity",
-    text: "From your dashboard, verify your NIN and VIN to confirm your eligibility. This is a one-time step, done once you're logged in and before you start the application form.",
-    checklistLabel: "What you'll need",
+    text: "From your dashboard, verify your NIN and VIN to confirm your eligibility. This is a one-time step, done once you are logged in and before you start the application form.",
+    checklistLabel: "What you will need",
     checklist: [
       "National Identification Number (NIN)",
       "Voter Identification Number (VIN)",

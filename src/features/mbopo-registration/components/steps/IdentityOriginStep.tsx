@@ -57,8 +57,8 @@ export function IdentityOriginStep({
       <StepHint>Help us understand where you represent.</StepHint>
 
       <LockedFieldsNote>
-        Your identity was verified from your NIN and VIN and can&apos;t be
-        edited here.
+        Your identity was verified from your NIN and VIN and cannot be edited
+        here.
       </LockedFieldsNote>
 
       <FieldGrid>

@@ -94,7 +94,7 @@ export class ErrorBoundary extends Component<
       return (
         <Frame>
           <div>
-            <Title>This page didn&apos;t load</Title>
+            <Title>This page did not load</Title>
             <Copy>
               Something went wrong. You can try refreshing or head back home.
             </Copy>

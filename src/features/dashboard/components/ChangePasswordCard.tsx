@@ -35,7 +35,7 @@ const changePasswordSchema = z
     confirmPassword: z.string(),
   })
   .refine((values) => values.newPassword === values.confirmPassword, {
-    message: "Passwords don't match",
+    message: "Passwords do not match",
     path: ["confirmPassword"],
   });
 
@@ -72,7 +72,7 @@ export function ChangePasswordCard() {
       sonnerToast.error(
         friendlyMessage(
           error,
-          "We couldn't change your password. Please try again.",
+          "We could not change your password. Please try again.",
         ),
       );
     },
@@ -85,7 +85,7 @@ export function ChangePasswordCard() {
       <CardHeader>
         <CardTitle>Change password</CardTitle>
         <CardDescription>
-          Use a strong password you don&apos;t reuse anywhere else.
+          Use a strong password you do not reuse anywhere else.
         </CardDescription>
       </CardHeader>
       <CardContent>

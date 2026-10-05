@@ -36,7 +36,7 @@ export function PersonalStep({
   return (
     <StepContent>
       <StepTitle>Personal information</StepTitle>
-      <StepHint>Let&apos;s begin with the essentials.</StepHint>
+      <StepHint>Let us begin with the essentials.</StepHint>
       <FieldGrid>
         <Field label="Surname">
           <LockedValue>{user.lastName}</LockedValue>

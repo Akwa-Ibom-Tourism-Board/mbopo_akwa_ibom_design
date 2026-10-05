@@ -46,7 +46,7 @@ export function WidgetContainer({
           </IconCircle>
           <HeaderText>
             <Title>Ask Me</Title>
-            <Subtitle>Send us a message, we&apos;ll get back to you</Subtitle>
+            <Subtitle>Send us a message, we will get back to you</Subtitle>
           </HeaderText>
           <GripHorizontal size={14} opacity={0.6} />
         </HeaderInfo>

@@ -34,7 +34,7 @@ const SECTIONS: LegalSection[] = [
   {
     heading: "4. NIN & VIN Verification",
     paragraphs: [
-      "After you register, verify your email, and log in, you'll complete a one-time identity verification using your National Identification Number and Voter Identification Number. This confirms your identity and eligibility (gender, age, and state of origin) before you begin the application form. Neither number is used for any purpose unrelated to this program.",
+      "After you register, verify your email, and log in, you will complete a one-time identity verification using your National Identification Number and Voter Identification Number. This confirms your identity and eligibility (gender, age, and state of origin) before you begin the application form. Neither number is used for any purpose unrelated to this program.",
     ],
   },
   {

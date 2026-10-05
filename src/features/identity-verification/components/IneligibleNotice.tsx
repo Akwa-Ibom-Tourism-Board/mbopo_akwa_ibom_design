@@ -22,7 +22,7 @@ export function IneligibleNotice({
       <IconRing>
         <ShieldX size={26} />
       </IconRing>
-      <NoticeTitle>You don&apos;t meet the eligibility criteria</NoticeTitle>
+      <NoticeTitle>You do not meet the eligibility criteria</NoticeTitle>
       <ReasonList>
         {reasons.map((reason) => (
           <ReasonItem key={reason}>{reason}</ReasonItem>
