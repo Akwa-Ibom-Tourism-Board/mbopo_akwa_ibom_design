@@ -83,8 +83,8 @@ export function StoryStep({ register, control, errors }: StoryStepProps) {
                 onCheckedChange={field.onChange}
               />
               <span>
-                I confirm I am a female Nigerian citizen indigenous to or
-                resident in Akwa Ibom State.
+                I confirm I am a female Nigerian citizen indigenous to Akwa Ibom
+                State.
               </span>
             </DeclarationRow>
           )}

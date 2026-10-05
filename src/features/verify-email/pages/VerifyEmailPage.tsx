@@ -62,7 +62,7 @@ export function VerifyEmailPage() {
       sonnerToast.error(
         friendlyMessage(
           error,
-          "We couldn't resend your code. Please try again.",
+          "We could not resend your code. Please try again.",
         ),
       );
     },

@@ -130,7 +130,7 @@ export function DashboardTopbar({
           <DialogHeader>
             <DialogTitle>Log out?</DialogTitle>
             <DialogDescription>
-              You&apos;ll need to sign in again to access your dashboard and
+              You will need to sign in again to access your dashboard and
               application.
             </DialogDescription>
           </DialogHeader>

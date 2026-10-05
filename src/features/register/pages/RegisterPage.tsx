@@ -38,7 +38,7 @@ const registerSchema = z
     confirmPassword: z.string(),
   })
   .refine((values) => values.password === values.confirmPassword, {
-    message: "Passwords don't match",
+    message: "Passwords do not match",
     path: ["confirmPassword"],
   });
 
@@ -68,7 +68,7 @@ export function RegisterPage() {
       sonnerToast.error(
         friendlyMessage(
           error,
-          "We couldn't create your account. Please try again.",
+          "We could not create your account. Please try again.",
         ),
       );
       // A reCAPTCHA token is single-use, so a failed submit needs a fresh

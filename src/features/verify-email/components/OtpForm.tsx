@@ -23,7 +23,7 @@ export function OtpForm({
         <OtpInputSlots length={OTP_LENGTH} />
       </OtpInput>
       <ResendRow>
-        Didn&apos;t get a code?
+        Did not get a code?
         <ResendButton
           type="button"
           onClick={onResend}

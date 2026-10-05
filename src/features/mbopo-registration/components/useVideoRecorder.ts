@@ -162,7 +162,7 @@ export function useVideoRecorder({
       const message =
         error instanceof DOMException && error.name === "NotAllowedError"
           ? "Camera and microphone access was denied. Please allow access and try again."
-          : "We couldn't access your camera and microphone. Please check your device and try again.";
+          : "We could not access your camera and microphone. Please check your device and try again.";
       setErrorMessage(message);
       setStatus("error");
     } finally {
@@ -295,7 +295,7 @@ export function useVideoRecorder({
       setErrorMessage(
         error instanceof Error
           ? error.message
-          : "We couldn't submit your video. Please try again.",
+          : "We could not submit your video. Please try again.",
       );
       setStatus("preview");
     }
