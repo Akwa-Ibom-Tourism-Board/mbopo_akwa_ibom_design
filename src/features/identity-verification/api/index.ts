@@ -13,10 +13,11 @@ import {
 export async function lookupNin(
   nin: string,
   vin: string,
+  captchaToken: string,
 ): Promise<IdentityCheckResult> {
   return request<IdentityCheckResult>("/auth/identity-check", {
     method: "POST",
-    body: JSON.stringify({ nin, vin }),
+    body: JSON.stringify({ nin, vin, captchaToken }),
   });
 }
 

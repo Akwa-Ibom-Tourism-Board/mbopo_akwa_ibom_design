@@ -17,6 +17,10 @@ function formatMB(bytes: number): string {
   return (bytes / (1024 * 1024)).toFixed(1);
 }
 
+function isPdfUrl(url: string): boolean {
+  return url.toLowerCase().endsWith(".pdf");
+}
+
 export interface UsePhotoUploadOptions {
   field: UploadField;
   accept?: string;
