@@ -23,7 +23,13 @@ export function VerifyEmailPage() {
   const navigate = useNavigate();
 
   const [otp, setOtp] = useState("");
-  const [cooldown, setCooldown] = useState(0);
+  // Starts counting down from the moment this page is reached, not just
+  // after an explicit resend — both ways of landing here (a fresh
+  // registration, or login's auto-resend redirect) already have a code
+  // queued server-side, which isn't processed until ~5s later. Without
+  // this, Resend is clickable instantly and an impatient tap fires a
+  // second send before the first one has even left the queue.
+  const [cooldown, setCooldown] = useState(RESEND_COOLDOWN_SECONDS);
 
   useEffect(() => {
     document.title = "Verify Email | Mbopo Akwa Ibom";
