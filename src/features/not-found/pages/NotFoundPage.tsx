@@ -9,7 +9,7 @@ export function NotFoundPage() {
         <Code>404</Code>
         <Title>Page not found</Title>
         <Copy>
-          The page you&apos;re looking for doesn&apos;t exist or has been moved.
+          The page you are looking for does not exist or has been moved.
         </Copy>
         <Button asChild size="lg">
           <Link to="/">Go home</Link>

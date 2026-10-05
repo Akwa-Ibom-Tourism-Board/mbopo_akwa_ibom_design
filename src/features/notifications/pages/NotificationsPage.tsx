@@ -63,7 +63,7 @@ export function NotificationsPage() {
           <HeaderCopy>
             {unreadCount > 0
               ? `You have ${unreadCount} unread notification${unreadCount === 1 ? "" : "s"}.`
-              : "You're all caught up."}
+              : "You are all caught up."}
           </HeaderCopy>
           <MarkAllButton
             type="button"
@@ -78,7 +78,7 @@ export function NotificationsPage() {
           <EmptyState>
             {notificationsQuery.isLoading
               ? "Loading your notifications…"
-              : "Nothing here yet. We'll let you know when there's an update on your application."}
+              : "Nothing here yet. We will let you know when there is an update on your application."}
           </EmptyState>
         ) : (
           <List>

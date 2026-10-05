@@ -5,8 +5,17 @@ import {
   useState,
   type ChangeEvent,
 } from "react";
-import { uploadToCloudinary, type UploadField } from "@/lib/cloudinary";
+import {
+  uploadToCloudinary,
+  MAX_IMAGE_BYTES,
+  type UploadField,
+} from "@/lib/cloudinary";
+import { sonnerToast } from "@/shared/ui";
 import { savePhoto } from "../api";
+
+function formatMB(bytes: number): string {
+  return (bytes / (1024 * 1024)).toFixed(1);
+}
 
 export interface UsePhotoUploadOptions {
   field: UploadField;
@@ -73,6 +82,13 @@ export function usePhotoUpload({
         return;
       }
 
+      if (selected.size > MAX_IMAGE_BYTES) {
+        const message = `That file is ${formatMB(selected.size)}MB, please choose one under 5MB.`;
+        setError(message);
+        sonnerToast.error(message);
+        return;
+      }
+
       setError(undefined);
       setObjectUrl((currentUrl) => {
         if (currentUrl) URL.revokeObjectURL(currentUrl);
@@ -98,7 +114,7 @@ export function usePhotoUpload({
           setError(
             uploadError instanceof Error
               ? uploadError.message
-              : "We couldn't upload that file. Please try again.",
+              : "We could not upload that file. Please try again.",
           );
         } finally {
           setIsUploading(false);

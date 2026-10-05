@@ -65,7 +65,7 @@ export function ForgotPasswordPage() {
         </ConfirmationIcon>
         <Heading>Check your email</Heading>
         <ConfirmationCopy>
-          If an account exists for <strong>{submittedEmail}</strong>, we&apos;ve
+          If an account exists for <strong>{submittedEmail}</strong>, we have
           sent a link to reset your password. It expires in 1 hour.
         </ConfirmationCopy>
         <FormFooter>
@@ -79,8 +79,7 @@ export function ForgotPasswordPage() {
     <AuthLayout carouselVariant="login">
       <Heading>Forgot your password?</Heading>
       <Subtitle>
-        Enter the email on your account and we&apos;ll send you a link to reset
-        it.
+        Enter the email on your account and we will send you a link to reset it.
       </Subtitle>
 
       <FormBlock

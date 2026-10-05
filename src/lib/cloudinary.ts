@@ -15,6 +15,13 @@ export type UploadField =
   | "videoPitch"
   | "avatar";
 
+// Every image/document field (passport photo, certificate of origin, the
+// two full-length images, the profile avatar) — videoPitch has its own,
+// much larger cap, enforced separately in useVideoRecorder. Checked
+// client-side by every caller before the file ever reaches this module,
+// not left to whatever Cloudinary itself would otherwise allow.
+export const MAX_IMAGE_BYTES = 5 * 1024 * 1024;
+
 interface SignedUpload {
   cloudName: string;
   apiKey: string;
@@ -38,7 +45,7 @@ export interface UploadToCloudinaryOptions {
 }
 
 export class CloudinaryUploadError extends Error {
-  constructor(message = "We couldn't upload that file. Please try again.") {
+  constructor(message = "We could not upload that file. Please try again.") {
     super(message);
     this.name = "CloudinaryUploadError";
   }

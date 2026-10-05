@@ -33,7 +33,7 @@ export function AskMeWidget() {
       open: true,
       title: "Message sent",
       message:
-        "Thanks for reaching out. We've received your message and will get back to you soon.",
+        "Thanks for reaching out. We have received your message and will get back to you soon.",
       type: "success",
     });
 

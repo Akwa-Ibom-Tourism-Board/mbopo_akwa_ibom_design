@@ -35,7 +35,7 @@ export function ApplicationStatusCard({
     ? "Your Mbopo Akwa Ibom application has been received."
     : inProgress
       ? "Your application is saved as a draft. Pick up where you left off anytime."
-      : "You haven't started your Mbopo Akwa Ibom application yet.";
+      : "You have not started your Mbopo Akwa Ibom application yet.";
 
   return (
     <Card>

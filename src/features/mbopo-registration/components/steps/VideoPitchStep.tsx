@@ -106,7 +106,7 @@ export function VideoPitchStep({
     <StepContent>
       <StepTitle>Your video pitch</StepTitle>
       <StepHint>
-        Tell us, in your own words, what you&apos;d do to grow tourism in Akwa
+        Tell us, in your own words, what you would do to grow tourism in Akwa
         Ibom if you became Mbopo Akwa Ibom.
       </StepHint>
 
@@ -117,13 +117,12 @@ export function VideoPitchStep({
           no background noise. Speak clearly and look at the camera.
           <ul>
             <li>Maximum length: {VIDEO_PITCH_MAX_SECONDS} seconds.</li>
-            <li>Recording happens live, right here — no file uploads.</li>
+            <li>Recording happens live, right here, no file uploads.</li>
             <li>
               You can watch it back, re-record or cancel as many times as you
-              like — but once you tap <strong>Submit Video</strong>, it&apos;s
-              final. It can&apos;t be re-recorded or replaced after that, even
-              if you save the rest of your application as a draft and finish it
-              later.
+              like; but once you tap <strong>Submit Video</strong>, it is final.
+              It cannot be re-recorded or replaced after that, even if you save
+              the rest of your application as a draft and finish it later.
             </li>
             <li>
               Used only for judging and presenting your application — never
@@ -148,7 +147,7 @@ export function VideoPitchStep({
               <CheckCircle2 size={15} aria-hidden /> Video pitch submitted
             </LockedTitle>
             <LockedHint>
-              This can&apos;t be changed, but you can still watch it back.
+              This cannot be changed, but you can still watch it back.
             </LockedHint>
             <Button
               type="button"
