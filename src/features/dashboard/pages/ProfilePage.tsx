@@ -4,7 +4,8 @@ import { useMutation } from "@tanstack/react-query";
 import { DashboardShell } from "@/shared/components";
 import { AvatarImage, AvatarFallback, sonnerToast } from "@/shared/ui";
 import { useAuth, updateAvatar } from "@/features/auth";
-import { uploadToCloudinary } from "@/lib/cloudinary";
+import { uploadToCloudinary, MAX_IMAGE_BYTES } from "@/lib/cloudinary";
+import { friendlyMessage } from "@/lib/http";
 import { ProfileSummaryCard } from "../components/ProfileSummaryCard";
 import { ChangePasswordCard } from "../components/ChangePasswordCard";
 import {
@@ -40,8 +41,13 @@ export function ProfilePage() {
       updateUser({ avatarUrl: updated.avatarUrl });
       sonnerToast.success("Profile photo updated.");
     },
-    onError: () => {
-      sonnerToast.error("We couldn't update your photo. Please try again.");
+    onError: (error) => {
+      sonnerToast.error(
+        friendlyMessage(
+          error,
+          "We could not update your photo. Please try again.",
+        ),
+      );
     },
   });
 
@@ -63,6 +69,13 @@ export function ProfilePage() {
 
     if (!file.type.startsWith("image/")) {
       setError("Please choose an image file.");
+      return;
+    }
+
+    if (file.size > MAX_IMAGE_BYTES) {
+      const message = `That file is ${(file.size / (1024 * 1024)).toFixed(1)}MB, please choose one under 5MB.`;
+      setError(message);
+      sonnerToast.error(message);
       return;
     }
 

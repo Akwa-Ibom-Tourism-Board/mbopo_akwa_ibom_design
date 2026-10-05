@@ -45,12 +45,12 @@ const FAQS = [
   {
     question: "What documents do I need to have ready?",
     answer:
-      "You'll need your NIN, VIN, Certificate of Origin, a recent passport photograph on a white background, two full-length images and proof of your academic qualification. You'll also record a short video pitch live on the platform as part of your application.",
+      "You will need your NIN, VIN, Certificate of Origin, a recent passport photograph on a white background, two full-length images and proof of your academic qualification. You will also record a short video pitch live on the platform as part of your application.",
   },
   {
     question: "Will my photos, video and personal data be sold or shared?",
     answer:
-      "No. Your photographs, video pitch and personal data are never sold, rented or transferred to any third party. They're used only to verify your identity and eligibility, for judging your application, and — if you're selected — for promotional and archival use by the Commission. See our Privacy Policy for full details.",
+      "No. Your photographs, video pitch and personal data are never sold, rented or transferred to any third party. They are used only to verify your identity and eligibility, for judging your application, and — if you are selected — for promotional and archival use by the Commission. See our Privacy Policy for full details.",
   },
   {
     question: "What is Mbopo judged on?",
@@ -60,10 +60,10 @@ const FAQS = [
   {
     question: "How will I know if my application was successful?",
     answer:
-      "You'll receive SMS and email updates as your application moves through verification, and shortlisted applicants are contacted directly ahead of their LGA pageant.",
+      "You will receive SMS and email updates as your application moves through verification, and shortlisted applicants are contacted directly ahead of their LGA pageant.",
   },
   {
-    question: "What happens after I'm shortlisted?",
+    question: "What happens after I am shortlisted?",
     answer:
       "Shortlisted applicants compete through LGA pageants and Senatorial finals, then a residential camp leading into the statewide Grand Finale, where one woman is crowned Mbopo Akwa Ibom for a year of purposeful representation.",
   },
