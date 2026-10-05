@@ -126,15 +126,6 @@ export function ApplicationSummary({
             <DetailValue>{values.nextOfKinPhone}</DetailValue>
           </DetailItem>
         </DetailGrid>
-        <PhotoRow>
-          <PhotoThumb>
-            <PhotoOrPlaceholder
-              src={photos.passportPhoto}
-              alt="Passport photograph preview"
-            />
-            <figcaption>Passport photograph</figcaption>
-          </PhotoThumb>
-        </PhotoRow>
       </Section>
 
       <Section>
@@ -158,15 +149,11 @@ export function ApplicationSummary({
           </DetailItem>
           <DetailItem $wide>
             <DetailLabel>Voter Identification Number (VIN)</DetailLabel>
-            <DetailValue>{user.vin}</DetailValue>
+            <DetailValue>{values.vin}</DetailValue>
           </DetailItem>
           <DetailItem>
             <DetailLabel>Local Government Area</DetailLabel>
-            <DetailValue>{user.localGovernment}</DetailValue>
-          </DetailItem>
-          <DetailItem>
-            <DetailLabel>Ward</DetailLabel>
-            <DetailValue>{user.ward}</DetailValue>
+            <DetailValue>{values.localGovernment}</DetailValue>
           </DetailItem>
           <DetailItem>
             <DetailLabel>Village</DetailLabel>
@@ -206,12 +193,20 @@ export function ApplicationSummary({
           {values.institution && (
             <DetailItem>
               <DetailLabel>Institution attended</DetailLabel>
-              <DetailValue>{values.institution}</DetailValue>
+              <DetailValue>
+                {values.institution === "Other"
+                  ? values.institutionOther
+                  : values.institution}
+              </DetailValue>
             </DetailItem>
           )}
           <DetailItem>
             <DetailLabel>Occupation</DetailLabel>
-            <DetailValue>{values.occupation}</DetailValue>
+            <DetailValue>
+              {values.occupation === "Other"
+                ? values.occupationOther
+                : values.occupation}
+            </DetailValue>
           </DetailItem>
           <DetailItem $wide>
             <DetailLabel>Talent(s)</DetailLabel>
@@ -222,6 +217,11 @@ export function ApplicationSummary({
             <DetailValue>{values.languages}</DetailValue>
           </DetailItem>
         </DetailGrid>
+      </Section>
+
+      <Section>
+        <SectionTitle>Pitch</SectionTitle>
+        <VideoOrPlaceholder src={videoPreviewUrl} />
         <PhotoRow>
           <PhotoThumb>
             <PhotoOrPlaceholder
@@ -238,11 +238,6 @@ export function ApplicationSummary({
             <figcaption>Full image 2</figcaption>
           </PhotoThumb>
         </PhotoRow>
-      </Section>
-
-      <Section>
-        <SectionTitle>Video pitch</SectionTitle>
-        <VideoOrPlaceholder src={videoPreviewUrl} />
       </Section>
 
       <Section>

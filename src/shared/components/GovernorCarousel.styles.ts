@@ -31,7 +31,7 @@ export const PortraitImage = styled.img<{ $active: boolean }>`
   position: absolute;
   bottom: 0;
   left: 50%;
-  height: 94%;
+  height: 90%;
   width: auto;
   max-width: none;
   object-fit: contain;

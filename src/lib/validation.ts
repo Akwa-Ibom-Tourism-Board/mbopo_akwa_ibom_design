@@ -30,3 +30,14 @@ export const CONTAINS_LETTER_MESSAGE = "This does not look like a valid entry";
 export const MAX_EMAIL_LENGTH = 254;
 // Matches the backend's passwordSchema.max(128) exactly.
 export const MAX_PASSWORD_LENGTH = 128;
+
+// Sentence case, not Title Case — only the very first character is
+// upper-cased, everything after it is forced lower. Matches the backend's
+// own toSentenceCase backstop exactly (see FIX_ME.md), applied to free-text
+// fields (village, address, talents, "Other" entries, etc.) before they're
+// sent — never to codes/emails/phone numbers, which this would corrupt.
+export function toSentenceCase(value: string): string {
+  const trimmed = value.trim();
+  if (!trimmed) return trimmed;
+  return trimmed.charAt(0).toUpperCase() + trimmed.slice(1).toLowerCase();
+}

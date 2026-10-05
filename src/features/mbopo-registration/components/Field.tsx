@@ -4,6 +4,7 @@ import {
   FieldLabel,
   Required,
   FieldErrorText,
+  FieldHintText,
 } from "./Field.styles";
 
 export interface FieldProps {
@@ -11,6 +12,9 @@ export interface FieldProps {
   children: ReactNode;
   required?: boolean;
   error?: string;
+  // Short neutral helper text shown below the field, only when there's no
+  // error to show instead — e.g. explaining when/how a field gets checked.
+  hint?: string;
   wide?: boolean;
   htmlFor?: string;
 }
@@ -20,6 +24,7 @@ export function Field({
   children,
   required,
   error,
+  hint,
   wide,
   htmlFor,
 }: FieldProps) {
@@ -30,7 +35,11 @@ export function Field({
         {required && <Required> *</Required>}
       </FieldLabel>
       {children}
-      {error && <FieldErrorText>{error}</FieldErrorText>}
+      {error ? (
+        <FieldErrorText>{error}</FieldErrorText>
+      ) : (
+        hint && <FieldHintText>{hint}</FieldHintText>
+      )}
     </FieldWrap>
   );
 }

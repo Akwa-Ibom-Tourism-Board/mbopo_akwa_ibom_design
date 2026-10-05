@@ -116,6 +116,24 @@ export const SidebarFooter = styled.div`
   border-top: 1px solid rgba(255, 255, 255, 0.1);
 `;
 
+export const FooterLinkRow = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 10px;
+  padding: 0 8px 10px;
+`;
+
+export const FooterLink = styled(Link)`
+  font-size: 0.6875rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.55);
+  transition: color ${({ theme }) => theme.transitions.fast};
+
+  &:hover {
+    color: ${({ theme }) => theme.colors.white};
+  }
+`;
+
 export const SidebarFooterText = styled.p`
   margin: 0;
   padding: 0 8px;

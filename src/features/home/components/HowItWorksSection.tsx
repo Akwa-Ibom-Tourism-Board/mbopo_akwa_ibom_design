@@ -50,24 +50,24 @@ const STEPS: ProcessStep[] = [
   },
   {
     icon: ScanSearch,
-    title: "Verify Your Identity",
-    text: "From your dashboard, verify your NIN and VIN to confirm your eligibility. This is a one-time step, done once you are logged in and before you start the application form.",
+    title: "Verify Your NIN",
+    text: "The very first step of your application: enter your National Identification Number and confirm it is really you with a quick photo, taken right there on the platform. This is a one-time step and happens before anything else in the form.",
     checklistLabel: "What you will need",
     checklist: [
       "National Identification Number (NIN)",
-      "Voter Identification Number (VIN)",
+      "A device with a working camera",
     ],
   },
   {
     icon: ClipboardList,
     title: "Complete Your Application",
-    text: "Fill out the application form: your personal details, LGA of origin, education history and your story. Upload your documents and record your video pitch.",
+    text: "Fill out the rest of the form: your personal details, LGA of origin, education history and your story. Upload your documents, record your video pitch and share two full-length photos, then confirm your Voter Identification Number to finish.",
     checklistLabel: "Required documents",
     checklist: [
       "Certificate of Origin",
-      "Passport photograph (recent, white background)",
       "Two full-length images",
       "Academic qualification (B.Sc. or HND)",
+      "Voter Identification Number (VIN)",
     ],
   },
   {
@@ -76,9 +76,10 @@ const STEPS: ProcessStep[] = [
     text: "Verified applicants advance to LGA pageants and Senatorial finals, then a residential camp leading into the statewide Grand Finale, where one woman is crowned Mbopo Akwa Ibom.",
     checklistLabel: "The journey ahead",
     checklist: [
-      "LGA pageant, one of 93 held statewide",
-      "Senatorial finals, 31 contestants",
-      "Camp and the statewide Grand Finale",
+      "LGA auditions, held in all 31 Local Government Areas",
+      "Senatorial auditions",
+      "10-day residential Bootcamp camp",
+      "Grand Finale",
     ],
     final: true,
   },

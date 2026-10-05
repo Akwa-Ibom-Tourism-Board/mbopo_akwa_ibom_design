@@ -187,6 +187,25 @@ export const CtaCellText = styled.p`
   font-weight: 700;
 `;
 
+export const ComplianceNote = styled.p`
+  margin: 20px 0 0;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 13px;
+  line-height: 1.6;
+  text-align: center;
+`;
+
+export const ComplianceLink = styled(Link)`
+  color: ${({ theme }) => theme.colors.secondary.DEFAULT};
+  font-weight: 700;
+  text-decoration: underline;
+  text-decoration-color: ${({ theme }) => theme.alpha(theme.colors.secondary.DEFAULT, 0.4)};
+
+  &:hover {
+    text-decoration-color: ${({ theme }) => theme.colors.secondary.DEFAULT};
+  }
+`;
+
 export const RegisterLink = styled(Link)`
   display: inline-flex;
   width: fit-content;

@@ -1,9 +1,11 @@
+import type { ChangeEvent } from "react";
 import { useEffect, useState } from "react";
 import {
   CheckCircle2,
   Info,
   PlayCircle,
   RotateCcw,
+  ShieldCheck,
   Video,
   VideoOff,
   X,
@@ -17,7 +19,13 @@ import {
 } from "@/shared/ui";
 import { VIDEO_PITCH_MAX_SECONDS } from "../../constants";
 import type { UseVideoRecorderResult } from "../useVideoRecorder";
-import { StepContent, StepTitle, StepHint } from "../StepShell.styles";
+import { PhotoUpload } from "../PhotoUpload";
+import {
+  StepContent,
+  StepTitle,
+  StepHint,
+  PrivacyNote,
+} from "../StepShell.styles";
 import {
   InstructionsCard,
   LaunchCard,
@@ -49,11 +57,27 @@ function formatSeconds(totalSeconds: number): string {
 export interface VideoPitchStepProps {
   recorder: UseVideoRecorderResult;
   showRequiredNotice: boolean;
+  fullImageUrl: string;
+  fullImageError?: string;
+  fullImageUploading?: boolean;
+  onFullImageChange: (event: ChangeEvent<HTMLInputElement>) => void;
+  fullImage2Url: string;
+  fullImage2Error?: string;
+  fullImage2Uploading?: boolean;
+  onFullImage2Change: (event: ChangeEvent<HTMLInputElement>) => void;
 }
 
 export function VideoPitchStep({
   recorder,
   showRequiredNotice,
+  fullImageUrl,
+  fullImageError,
+  fullImageUploading,
+  onFullImageChange,
+  fullImage2Url,
+  fullImage2Error,
+  fullImage2Uploading,
+  onFullImage2Change,
 }: VideoPitchStepProps) {
   const {
     status,
@@ -104,10 +128,11 @@ export function VideoPitchStep({
 
   return (
     <StepContent>
-      <StepTitle>Your video pitch</StepTitle>
+      <StepTitle>Your pitch</StepTitle>
       <StepHint>
         Tell us, in your own words, what you would do to grow tourism in Akwa
-        Ibom if you became Mbopo Akwa Ibom.
+        Ibom if you became Mbopo Akwa Ibom — and share two full-length photos
+        alongside it.
       </StepHint>
 
       <InstructionsCard>
@@ -123,15 +148,6 @@ export function VideoPitchStep({
               like; but once you tap <strong>Submit Video</strong>, it is final.
               It cannot be re-recorded or replaced after that, even if you save
               the rest of your application as a draft and finish it later.
-            </li>
-            <li>
-              Used only for judging and presenting your application — never
-              sold, rented, or shared beyond the Mbopo Akwa Ibom programme. See
-              our{" "}
-              <a href="/privacy" target="_blank" rel="noopener noreferrer">
-                Privacy Policy
-              </a>
-              .
             </li>
           </ul>
         </span>
@@ -333,6 +349,34 @@ export function VideoPitchStep({
           )}
         </RecordingDialogContent>
       </Dialog>
+
+      <PhotoUpload
+        label="Full Image 1"
+        hint="A clear, full-length photo facing the camera"
+        previewUrl={fullImageUrl}
+        error={fullImageError}
+        onChange={onFullImageChange}
+        isUploading={fullImageUploading}
+      />
+      <PhotoUpload
+        label="Full Image 2"
+        hint="A second full-length photo from a different angle or pose"
+        previewUrl={fullImage2Url}
+        error={fullImage2Error}
+        onChange={onFullImage2Change}
+        isUploading={fullImage2Uploading}
+      />
+      <PrivacyNote>
+        <ShieldCheck size={14} aria-hidden />
+        <span>
+          Used only for judging and presenting your application — never sold,
+          rented, or shared beyond the Mbopo Akwa Ibom programme. See our{" "}
+          <a href="/privacy" target="_blank" rel="noopener noreferrer">
+            Privacy Policy
+          </a>
+          .
+        </span>
+      </PrivacyNote>
     </StepContent>
   );
 }

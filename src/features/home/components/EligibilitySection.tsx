@@ -21,18 +21,18 @@ import {
   CtaCell,
   CtaCellText,
   RegisterLink,
+  ComplianceNote,
+  ComplianceLink,
 } from "./EligibilitySection.styles";
 
 const ELIGIBILITY_CRITERIA = [
-  "Must be female",
+  "Must be female (gender verified via NIN)",
   "Must be an indigene of Akwa Ibom State",
   "Must be a graduate (minimum of B.Sc., HND or equivalent)",
-  "Must be between 22 and 27 years old",
+  "Must be between 22 and 27 years old (age verified via NIN)",
   "Must have a National Identification Number (NIN)",
   "Must have a Certificate of Origin",
   "Must have a Voter Identification Number (VIN)",
-  "Must have a passport photograph",
-  "Passport photograph must be recent and on white background",
 ];
 
 export function EligibilitySection() {
@@ -88,6 +88,13 @@ export function EligibilitySection() {
               </CtaCell> */}
             </CriteriaGrid>
           </Panel>
+
+          <ComplianceNote>
+            Ensure you read the{" "}
+            <ComplianceLink to="/terms">terms and conditions</ComplianceLink>{" "}
+            and <ComplianceLink to="/privacy">privacy policy</ComplianceLink>{" "}
+            before you register.
+          </ComplianceNote>
         </Reveal>
       </SectionShell>
     </Section>

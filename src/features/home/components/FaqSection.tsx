@@ -45,7 +45,7 @@ const FAQS = [
   {
     question: "What documents do I need to have ready?",
     answer:
-      "You will need your NIN, VIN, Certificate of Origin, a recent passport photograph on a white background, two full-length images and proof of your academic qualification. You will also record a short video pitch live on the platform as part of your application.",
+      "You will need your NIN (confirmed with a quick live photo as the very first step of your application), your Certificate of Origin, two full-length images and proof of your academic qualification. You will also record a short video pitch live on the platform, and confirm your VIN when you submit.",
   },
   {
     question: "Will my photos, video and personal data be sold or shared?",

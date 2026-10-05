@@ -1,25 +1,25 @@
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useMutation } from "@tanstack/react-query";
 import { ArrowRight } from "lucide-react";
-import ReCAPTCHA from "react-google-recaptcha";
-import { RECAPTCHA_SITE_KEY } from "@/lib/config";
 import { sonnerToast } from "@/shared/ui";
+import { friendlyMessage } from "@/lib/http";
+import { NAME_REGEX, NAME_MESSAGE } from "@/lib/validation";
 import type { User } from "@/features/auth";
 import {
   Field,
   FieldLabel,
+  RequiredMark,
   StyledField,
   ErrorText,
-  CaptchaField,
   SubmitButton,
 } from "@/shared/components/AuthForm.styles";
-import { lookupNin, verifyIdentity } from "../api";
-import { IneligibleAfterVerificationError, type NinRecord } from "../types";
+import { verifyIdentity } from "../api";
+import { IneligibleAfterVerificationError } from "../types";
 import { IneligibleNotice } from "./IneligibleNotice";
-import { IdentityConfirmPanel } from "./IdentityConfirmPanel";
+import { SelfieCaptureModal } from "./SelfieCaptureModal";
 import {
   Wrap,
   Intro,
@@ -30,23 +30,35 @@ import {
   FieldRow,
 } from "./IdentityVerificationGate.styles";
 
-const ninVinSchema = z.object({
+const identitySchema = z.object({
   nin: z
     .string()
     .trim()
     .length(11, "Your NIN must be exactly 11 digits")
     .regex(/^\d+$/, "Your NIN can only contain digits"),
-  vin: z
+  firstName: z
     .string()
     .trim()
-    .toUpperCase()
-    .length(19, "Your VIN must be exactly 19 characters")
-    .regex(/^[A-Z0-9]+$/, "Your VIN can only contain letters and digits"),
+    .min(1, "First name is required")
+    .max(100, "Keep this under 100 characters")
+    .regex(NAME_REGEX, NAME_MESSAGE),
+  lastName: z
+    .string()
+    .trim()
+    .min(1, "Last name is required")
+    .max(100, "Keep this under 100 characters")
+    .regex(NAME_REGEX, NAME_MESSAGE),
+  middleName: z
+    .string()
+    .trim()
+    .max(100, "Keep this under 100 characters")
+    .regex(NAME_REGEX, NAME_MESSAGE)
+    .or(z.literal("")),
 });
 
-type NinVinFormValues = z.infer<typeof ninVinSchema>;
+type IdentityFormValues = z.infer<typeof identitySchema>;
 
-type GateStage = "lookup" | "confirm" | "ineligible";
+type GateStage = "form" | "ineligible";
 
 export interface IdentityVerificationGateProps {
   onVerified: (user: User) => void;
@@ -55,83 +67,71 @@ export interface IdentityVerificationGateProps {
 export function IdentityVerificationGate({
   onVerified,
 }: IdentityVerificationGateProps) {
-  const [stage, setStage] = useState<GateStage>("lookup");
-  const [ninRecord, setNinRecord] = useState<NinRecord | undefined>();
+  const [stage, setStage] = useState<GateStage>("form");
   const [ineligibleReasons, setIneligibleReasons] = useState<string[]>([]);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [pendingValues, setPendingValues] = useState<IdentityFormValues>();
 
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<NinVinFormValues>({ resolver: zodResolver(ninVinSchema) });
-
-  const [captchaToken, setCaptchaToken] = useState<string | null>(null);
-  const recaptchaRef = useRef<ReCAPTCHA>(null);
-
-  // The token is verified server-side by /auth/identity-check. The later
-  // /applicants/verify-identity commit is authenticated and re-checks the
-  // identity itself, so it needs no token (reCAPTCHA tokens are single-use).
-  const lookupMutation = useMutation({
-    mutationFn: ({
-      values,
-      token,
-    }: {
-      values: NinVinFormValues;
-      token: string;
-    }) => lookupNin(values.nin, values.vin, token),
-    onSuccess: (result) => {
-      if (result.eligible) {
-        setNinRecord(result.identity);
-        setStage("confirm");
-      } else {
-        setIneligibleReasons(result.reasons);
-        setStage("ineligible");
-      }
-    },
-  });
-
-  // A reCAPTCHA token is single-use, so a failed lookup needs a fresh one
-  // before trying again.
-  useEffect(() => {
-    if (!lookupMutation.isError) return;
-    recaptchaRef.current?.reset();
-    setCaptchaToken(null);
-  }, [lookupMutation.isError]);
+  } = useForm<IdentityFormValues>({ resolver: zodResolver(identitySchema) });
 
   const verifyMutation = useMutation({
     mutationFn: verifyIdentity,
     onSuccess: (user) => {
+      setModalOpen(false);
       sonnerToast.success("Your identity has been verified.");
       onVerified(user);
     },
     onError: (error) => {
-      // The backend re-checks eligibility at commit time too (never trusts
-      // the earlier identity-check result) — rare, but if it no longer
-      // holds, show the real reasons instead of a generic failure.
       if (error instanceof IneligibleAfterVerificationError) {
+        setModalOpen(false);
         setIneligibleReasons(error.reasons);
         setStage("ineligible");
-        return;
       }
-      sonnerToast.error("We could not verify your identity. Please try again.");
+      // Any other error is shown inline inside the still-open modal (see
+      // submitError below) — the applicant's captured photo and entered
+      // details stay put so they can just retry, rather than losing
+      // everything and starting over.
     },
   });
 
-  const resetToLookup = () => {
-    setNinRecord(undefined);
+  const resetToForm = () => {
     setIneligibleReasons([]);
-    setStage("lookup");
+    setStage("form");
   };
+
+  const handleCaptured = (image: string) => {
+    if (!pendingValues) return;
+    verifyMutation.mutate({
+      nin: pendingValues.nin,
+      firstName: pendingValues.firstName,
+      lastName: pendingValues.lastName,
+      middleName: pendingValues.middleName || undefined,
+      image,
+    });
+  };
+
+  const submitError =
+    verifyMutation.isError &&
+    !(verifyMutation.error instanceof IneligibleAfterVerificationError)
+      ? friendlyMessage(
+          verifyMutation.error,
+          "We could not verify your identity. Please try again.",
+        )
+      : undefined;
 
   return (
     <Wrap>
       <Intro>
-        <Eyebrow>Step 1 of 2</Eyebrow>
+        <Eyebrow>Step 1 of registration</Eyebrow>
         <Title>Verify your identity</Title>
         <IntroCopy>
           Before you begin your Mbopo Akwa Ibom application, we need to verify
-          your National Identification Number (NIN) and Voter Identification
-          Number (VIN). This only needs to happen once.
+          your National Identification Number (NIN) and confirm it's really you
+          with a quick photo. This only needs to happen once.
         </IntroCopy>
       </Intro>
 
@@ -139,84 +139,99 @@ export function IdentityVerificationGate({
         {stage === "ineligible" && (
           <IneligibleNotice
             reasons={ineligibleReasons}
-            onTryAgain={resetToLookup}
+            onTryAgain={resetToForm}
           />
         )}
 
-        {stage === "confirm" && ninRecord && (
-          <IdentityConfirmPanel
-            record={ninRecord}
-            isSubmitting={verifyMutation.isPending}
-            onChangeNin={resetToLookup}
-            onConfirm={() =>
-              verifyMutation.mutate({ nin: ninRecord.nin, vin: ninRecord.vin })
-            }
-          />
-        )}
-
-        {stage === "lookup" && (
+        {stage === "form" && (
           <form
             onSubmit={handleSubmit((values) => {
-              if (!captchaToken) return;
-              lookupMutation.mutate({ values, token: captchaToken });
+              setPendingValues(values);
+              setModalOpen(true);
             })}
             noValidate
           >
+            <Field>
+              <FieldLabel htmlFor="gate-nin">
+                National Identification Number
+                <RequiredMark>*</RequiredMark>
+              </FieldLabel>
+              <StyledField
+                id="gate-nin"
+                inputMode="numeric"
+                maxLength={11}
+                placeholder="11-digit NIN"
+                invalid={Boolean(errors.nin)}
+                {...register("nin")}
+              />
+              {errors.nin && <ErrorText>{errors.nin.message}</ErrorText>}
+            </Field>
+
             <FieldRow>
               <Field>
-                <FieldLabel htmlFor="gate-nin">
-                  National Identification Number
+                <FieldLabel htmlFor="gate-first-name">
+                  First name
+                  <RequiredMark>*</RequiredMark>
                 </FieldLabel>
                 <StyledField
-                  id="gate-nin"
-                  inputMode="numeric"
-                  maxLength={11}
-                  placeholder="11-digit NIN"
-                  invalid={Boolean(errors.nin ?? lookupMutation.error)}
-                  {...register("nin")}
+                  id="gate-first-name"
+                  maxLength={100}
+                  placeholder="As it appears on your NIN"
+                  invalid={Boolean(errors.firstName)}
+                  {...register("firstName")}
                 />
-                {errors.nin && <ErrorText>{errors.nin.message}</ErrorText>}
+                {errors.firstName && (
+                  <ErrorText>{errors.firstName.message}</ErrorText>
+                )}
               </Field>
               <Field>
-                <FieldLabel htmlFor="gate-vin">
-                  Voter Identification Number
+                <FieldLabel htmlFor="gate-last-name">
+                  Last name
+                  <RequiredMark>*</RequiredMark>
                 </FieldLabel>
                 <StyledField
-                  id="gate-vin"
-                  maxLength={19}
-                  placeholder="19-character VIN"
-                  style={{ textTransform: "uppercase" }}
-                  invalid={Boolean(errors.vin ?? lookupMutation.error)}
-                  {...register("vin")}
+                  id="gate-last-name"
+                  maxLength={100}
+                  placeholder="As it appears on your NIN"
+                  invalid={Boolean(errors.lastName)}
+                  {...register("lastName")}
                 />
-                {errors.vin && <ErrorText>{errors.vin.message}</ErrorText>}
+                {errors.lastName && (
+                  <ErrorText>{errors.lastName.message}</ErrorText>
+                )}
               </Field>
             </FieldRow>
-            {!errors.nin && !errors.vin && lookupMutation.isError && (
-              <ErrorText>{lookupMutation.error.message}</ErrorText>
-            )}
 
-            <CaptchaField>
-              <ReCAPTCHA
-                ref={recaptchaRef}
-                sitekey={RECAPTCHA_SITE_KEY}
-                onChange={setCaptchaToken}
-                onExpired={() => setCaptchaToken(null)}
+            <Field>
+              <FieldLabel htmlFor="gate-middle-name">
+                Middle name (Optional)
+              </FieldLabel>
+              <StyledField
+                id="gate-middle-name"
+                maxLength={100}
+                placeholder="As it appears on your NIN"
+                invalid={Boolean(errors.middleName)}
+                {...register("middleName")}
               />
-            </CaptchaField>
+              {errors.middleName && (
+                <ErrorText>{errors.middleName.message}</ErrorText>
+              )}
+            </Field>
 
-            <SubmitButton
-              type="submit"
-              size="lg"
-              variant="secondary"
-              disabled={lookupMutation.isPending || !captchaToken}
-            >
-              {lookupMutation.isPending ? "Verifying…" : "Continue"}
-              <ArrowRight size={18} />
+            <SubmitButton type="submit" size="lg" variant="secondary">
+              Continue <ArrowRight size={18} />
             </SubmitButton>
           </form>
         )}
       </Card>
+
+      <SelfieCaptureModal
+        open={modalOpen}
+        onOpenChange={setModalOpen}
+        onCaptured={handleCaptured}
+        isSubmitting={verifyMutation.isPending}
+        submitError={submitError}
+      />
     </Wrap>
   );
 }
