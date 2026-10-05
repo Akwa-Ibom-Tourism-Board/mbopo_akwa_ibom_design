@@ -10,6 +10,7 @@ import { AuthLayout } from "@/shared/components";
 import { sonnerToast } from "@/shared/ui";
 import { RECAPTCHA_SITE_KEY } from "@/lib/config";
 import { friendlyMessage } from "@/lib/http";
+import { MAX_EMAIL_LENGTH, MAX_PASSWORD_LENGTH } from "@/lib/validation";
 import {
   Heading,
   Subtitle,
@@ -33,8 +34,15 @@ const registerSchema = z
       .string()
       .trim()
       .min(1, "Email is required")
+      .max(MAX_EMAIL_LENGTH, "That email address is too long")
       .email("Enter a valid email address"),
-    password: z.string().min(8, "Password must be at least 8 characters"),
+    password: z
+      .string()
+      .min(8, "Password must be at least 8 characters")
+      .max(
+        MAX_PASSWORD_LENGTH,
+        `Keep this under ${MAX_PASSWORD_LENGTH} characters`,
+      ),
     confirmPassword: z.string(),
   })
   .refine((values) => values.password === values.confirmPassword, {
@@ -101,6 +109,7 @@ export function RegisterPage() {
             type="email"
             placeholder="Enter your email"
             autoComplete="email"
+            maxLength={MAX_EMAIL_LENGTH}
             invalid={Boolean(errors.email)}
             {...register("email")}
           />
