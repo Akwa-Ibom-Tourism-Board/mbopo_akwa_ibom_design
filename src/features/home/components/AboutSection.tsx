@@ -29,16 +29,14 @@ export function AboutSection() {
           <AboutGrid>
             <AboutLead>
               Mbopo Akwa Ibom is a cultural pageant celebrating beauty, culture,
-              character and purpose. It is a platform for women to proudly
-              represent their communities with grace, inspire others through
-              their character and purpose, and carry the rich story and heritage
-              of Akwa Ibom forward.
+              character, enterprise and purpose. It is a platform for women to
+              proudly represent their communities with grace, inspire others
+              through their character and purpose, and carry the rich story and
+              heritage of Akwa Ibom forward.
             </AboutLead>
             <AboutNote>
               <Quote size={22} />
-              <span>
-                One woman. One state. A year of meaningful representation.
-              </span>
+              <span>One queen. One State. Every community represented.</span>
             </AboutNote>
           </AboutGrid>
           <Stats>
