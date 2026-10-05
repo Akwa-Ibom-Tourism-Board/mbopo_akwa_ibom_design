@@ -107,7 +107,7 @@ export function IdentityVerificationGate({
         setStage("ineligible");
         return;
       }
-      sonnerToast.error("We couldn't verify your identity. Please try again.");
+      sonnerToast.error("We could not verify your identity. Please try again.");
     },
   });
 

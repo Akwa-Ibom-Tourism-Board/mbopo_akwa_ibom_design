@@ -66,7 +66,7 @@ export function IdentityConfirmPanel({
       </DetailGrid>
 
       <ChangeNinButton type="button" onClick={onChangeNin}>
-        This isn&apos;t me, change NIN/VIN
+        This is not me, change NIN/VIN
       </ChangeNinButton>
 
       <ConfirmActions>

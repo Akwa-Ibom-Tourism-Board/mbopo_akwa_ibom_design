@@ -46,8 +46,8 @@ export function ReviewSubmitModal({
         <DialogHeader>
           <DialogTitle>Review your application</DialogTitle>
           <DialogDescription>
-            Please check everything below carefully. Once submitted, you
-            won&apos;t be able to edit your application.
+            Please check everything below carefully. Once submitted, you will
+            not be able to edit your application.
           </DialogDescription>
         </DialogHeader>
 

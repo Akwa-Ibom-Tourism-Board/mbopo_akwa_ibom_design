@@ -5,6 +5,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { ArrowLeft, ArrowRight, Save } from "lucide-react";
 import { Button, sonnerToast } from "@/shared/ui";
+import { friendlyMessage } from "@/lib/http";
 import type { VerifiedUser } from "@/features/auth";
 import {
   registrationSchema,
@@ -143,9 +144,12 @@ export function RegistrationForm({
       // instead, once they've actually moved on.
       queryClient.invalidateQueries({ queryKey: ["dashboard", "summary"] });
     },
-    onError: () =>
+    onError: (error) =>
       sonnerToast.error(
-        "We couldn't submit your application. Please try again.",
+        friendlyMessage(
+          error,
+          "We could not submit your application. Please try again.",
+        ),
       ),
   });
 
@@ -180,8 +184,13 @@ export function RegistrationForm({
       sonnerToast.success("Draft saved. Pick up anytime from your dashboard.");
       navigate("/dashboard");
     },
-    onError: () =>
-      sonnerToast.error("We couldn't save your draft. Please try again."),
+    onError: (error) =>
+      sonnerToast.error(
+        friendlyMessage(
+          error,
+          "We could not save your draft. Please try again.",
+        ),
+      ),
   });
 
   if (submitMutation.isSuccess) {
@@ -224,7 +233,7 @@ export function RegistrationForm({
   const handleSaveAndExit = async () => {
     if (videoRecorder.status === "preview") {
       sonnerToast.error(
-        "Tap Submit Video to keep your recording, or Record Again — an unsubmitted take isn't saved with your draft.",
+        "Tap Submit Video to keep your recording, or Record Again — an unsubmitted take is not saved with your draft.",
       );
       return;
     }
