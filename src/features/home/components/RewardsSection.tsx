@@ -28,18 +28,23 @@ const REWARDS: Reward[] = [
   {
     icon: Car,
     title: "Brand New Car",
-    text: "Mbopo Akwa Ibom drives into her reign of purposeful representation with a brand new car.",
-  },
-  {
-    icon: Landmark,
-    title: "Cash Prize & an Office with the State Government",
-    text: "A cash prize, plus an official office with the Akwa Ibom State Government for a year.",
+    // text: "Mbopo Akwa Ibom drives into her reign of purposeful representation with a brand new car.",
   },
   {
     icon: Gift,
-    title: "Consolation Prizes",
-    text: "Runners-up and outstanding finalists are recognised with consolation prizes for their journey and impact.",
+    title: "A Mouth Watering Cash Prize",
+    // text: "A cash prize",
   },
+  {
+    icon: Landmark,
+    title: "The Prestigious Office of",
+    text: "Mbopo Akwa Ibom in the Governor’s Office",
+  },
+  // {
+  //   icon: Gift,
+  //   title: "Consolation Prizes",
+  //   // text: "Runners-up and outstanding finalists are recognised with consolation prizes for their journey and impact.",
+  // },
 ];
 
 export function RewardsSection() {
@@ -53,7 +58,7 @@ export function RewardsSection() {
               <Eyebrow>Rewards</Eyebrow>
               <EyebrowRule />
             </EyebrowRow>
-            <Title>What you stand to win</Title>
+            <Title>THE CROWN COMES WITH MORE</Title>
             <Subtitle>
               Beyond the crown, Mbopo Akwa Ibom comes with recognition and
               reward for the woman who carries it.

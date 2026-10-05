@@ -35,7 +35,7 @@ const FAQS = [
   {
     question: "When does registration close?",
     answer:
-      "Registration closes on 20th October, 2026. Applications are not accepted after this date, so make sure yours is complete and submitted before then.",
+      "Registration closes on 26th October, 2026. Applications are not accepted after this date, so make sure yours is complete and submitted before then.",
   },
   {
     question: "Can I apply from outside Akwa Ibom State?",
@@ -65,7 +65,7 @@ const FAQS = [
   {
     question: "What happens after I am shortlisted?",
     answer:
-      "Shortlisted applicants compete through LGA pageants and Senatorial finals, then a residential camp leading into the statewide Grand Finale, where one woman is crowned Mbopo Akwa Ibom for a year of purposeful representation.",
+      "Shortlisted applicants compete through LGA auditions, selected candidates advance to Senatorial auditions, then the finalists proceed to residential Bootcamp leading into the statewide Grand Finale.",
   },
   {
     question: "How do I track my application status?",

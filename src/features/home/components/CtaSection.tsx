@@ -29,7 +29,7 @@ export function CtaSection() {
           </Title>
           <Copy>
             Applications are open; represent your Local Government Area.
-            Registration closes 20th October, 2026, do not wait.
+            Registration closes 26th October, 2026, do not wait.
           </Copy>
           <Actions>
             <RegisterLink to="/register">

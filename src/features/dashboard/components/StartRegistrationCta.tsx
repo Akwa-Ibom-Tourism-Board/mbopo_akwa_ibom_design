@@ -26,8 +26,8 @@ export function StartRegistrationCta({
   const text = submitted
     ? "You can review the details you submitted for your Mbopo Akwa Ibom application."
     : inProgress
-      ? "Pick up right where you left off; your progress has been saved. Note: a submitted video pitch cannot be re-recorded. Registration closes 20th October, 2026."
-      : "Complete your Mbopo Akwa Ibom registration. We will verify your NIN with a quick photo as the first step. Registration closes 20th October, 2026.";
+      ? "Pick up right where you left off; your progress has been saved. Note: a submitted video pitch cannot be re-recorded. Registration closes 26th October, 2026."
+      : "Complete your Mbopo Akwa Ibom registration. We will verify your NIN with a quick photo as the first step. Registration closes 26th October, 2026.";
 
   const cta = submitted
     ? "View application"

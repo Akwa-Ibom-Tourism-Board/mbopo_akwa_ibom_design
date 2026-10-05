@@ -90,7 +90,7 @@ export const RewardsGrid = styled.div`
 export const RewardCard = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  // gap: 14px;
   padding: 32px 28px;
   background: ${({ theme }) => theme.colors.sectionDarkCard};
   text-align: center;
@@ -118,8 +118,8 @@ export const RewardTitle = styled.h3`
 
 export const RewardText = styled.p`
   margin: 0;
-  max-width: 320px;
-  color: rgba(255, 255, 255, 0.65);
-  font-size: 13.5px;
-  line-height: 1.65;
+  color: ${({ theme }) => theme.colors.white};
+  font-family: ${({ theme }) => theme.fonts.display};
+  font-size: 18px;
+  font-weight: 700;
 `;
