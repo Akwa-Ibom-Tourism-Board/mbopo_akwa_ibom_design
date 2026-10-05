@@ -34,6 +34,11 @@ export interface UsePhotoUploadOptions {
 
 export interface UsePhotoUploadResult {
   previewUrl: string;
+  // Whether previewUrl currently points at a PDF rather than an image —
+  // only ever true for fields that opted into allowPdf. A browser can't
+  // render a PDF through an <img> tag, so callers use this to show a
+  // simple file-type placeholder instead of trying to.
+  isPdf: boolean;
   error: string | undefined;
   hasPhoto: boolean;
   isUploading: boolean;
@@ -55,6 +60,7 @@ export function usePhotoUpload({
 }: UsePhotoUploadOptions): UsePhotoUploadResult {
   const [persistedUrl, setPersistedUrl] = useState(initialUrl ?? "");
   const [objectUrl, setObjectUrl] = useState("");
+  const [objectIsPdf, setObjectIsPdf] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const [error, setError] = useState<string>();
 
@@ -94,6 +100,7 @@ export function usePhotoUpload({
       }
 
       setError(undefined);
+      setObjectIsPdf(isAllowedPdf);
       setObjectUrl((currentUrl) => {
         if (currentUrl) URL.revokeObjectURL(currentUrl);
         return URL.createObjectURL(selected);
@@ -130,6 +137,7 @@ export function usePhotoUpload({
 
   return {
     previewUrl: objectUrl || persistedUrl,
+    isPdf: objectUrl ? objectIsPdf : isPdfUrl(persistedUrl),
     error,
     hasPhoto: Boolean(persistedUrl),
     isUploading,

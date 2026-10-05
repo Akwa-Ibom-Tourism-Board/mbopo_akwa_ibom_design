@@ -62,6 +62,26 @@ export const PhotoPreview = styled.img`
   object-position: center;
 `;
 
+// Stands in for PhotoPreview when the uploaded file is a PDF — a browser
+// can't render a PDF through an <img> tag, so this is a simple file-type
+// badge instead of a thumbnail.
+export const PdfPreview = styled.div`
+  display: flex;
+  width: 100%;
+  height: 100%;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  color: ${({ theme }) => theme.colors.secondary.DEFAULT};
+
+  span {
+    font-size: 11px;
+    font-weight: 600;
+    color: ${({ theme }) => theme.colors.foreground};
+  }
+`;
+
 // Shown over the (already-visible, locally-previewed) photo while the real
 // Cloudinary upload runs in the background — without this, picking a file
 // swaps straight to PhotoPreview and the upload becomes invisible, with

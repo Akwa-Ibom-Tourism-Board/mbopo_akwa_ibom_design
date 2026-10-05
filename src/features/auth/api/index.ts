@@ -7,10 +7,14 @@ import {
   type User,
 } from "../types";
 
-export async function login({ email, password }: LoginInput): Promise<Session> {
+export async function login({
+  email,
+  password,
+  captchaToken,
+}: LoginInput): Promise<Session> {
   return request<Session>("/auth/login", {
     method: "POST",
-    body: JSON.stringify({ email, password }),
+    body: JSON.stringify({ email, password, captchaToken }),
   });
 }
 

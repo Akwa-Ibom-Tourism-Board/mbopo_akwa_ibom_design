@@ -36,6 +36,7 @@ export interface IdentityOriginStepProps {
   control: Control<RegistrationFormValues>;
   errors: FieldErrors<RegistrationFormValues>;
   certificateUrl: string;
+  certificateIsPdf?: boolean;
   certificateError?: string;
   certificateUploading?: boolean;
   onCertificateChange: (event: ChangeEvent<HTMLInputElement>) => void;
@@ -47,6 +48,7 @@ export function IdentityOriginStep({
   control,
   errors,
   certificateUrl,
+  certificateIsPdf,
   certificateError,
   certificateUploading,
   onCertificateChange,
@@ -151,6 +153,7 @@ export function IdentityOriginStep({
       <PhotoUpload
         label="Certificate of Origin"
         previewUrl={certificateUrl}
+        isPdf={certificateIsPdf}
         error={certificateError}
         onChange={onCertificateChange}
         accept="image/png,image/jpeg,application/pdf"

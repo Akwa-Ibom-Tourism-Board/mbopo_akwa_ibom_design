@@ -9,7 +9,10 @@ import ReCAPTCHA from "react-google-recaptcha";
 import { AuthLayout } from "@/shared/components";
 import { Checkbox, sonnerToast } from "@/shared/ui";
 import { RECAPTCHA_SITE_KEY } from "@/lib/config";
-import { friendlyMessage } from "@/lib/http";
+import { ApiError, friendlyMessage } from "@/lib/http";
+import { rememberPendingEmailVerification } from "@/lib/emailVerificationStore";
+import { MAX_EMAIL_LENGTH, MAX_PASSWORD_LENGTH } from "@/lib/validation";
+import { resendOtp } from "@/features/verify-email";
 import { useAuth } from "../context/AuthContext";
 import { login } from "../api";
 import {
@@ -33,9 +36,14 @@ import {
 const loginSchema = z.object({
   email: z
     .string()
+    .trim()
     .min(1, "Email is required")
+    .max(MAX_EMAIL_LENGTH, "That email address is too long")
     .email("Enter a valid email address"),
-  password: z.string().min(1, "Password is required"),
+  password: z
+    .string()
+    .min(1, "Password is required")
+    .max(MAX_PASSWORD_LENGTH, "That password is too long"),
 });
 
 type LoginFormValues = z.infer<typeof loginSchema>;
@@ -63,14 +71,31 @@ export function LoginPage() {
         (location.state as { from?: string } | null)?.from ?? "/dashboard";
       navigate(redirectTo, { replace: true });
     },
-    onError: (error) => {
+    onError: (error, variables) => {
+      // A reCAPTCHA token is single-use, so any failed submit needs a
+      // fresh one before trying again.
+      recaptchaRef.current?.reset();
+      setCaptchaToken(null);
+
+      // Login's own 403 means the account exists and the password is
+      // correct — it's only blocked on email verification. Rather than
+      // just saying so and leaving the applicant stuck, send them
+      // straight to the OTP screen with a fresh code already on the way,
+      // the same place a fresh registration lands them.
+      if (error instanceof ApiError && error.status === 403) {
+        const { email } = variables;
+        rememberPendingEmailVerification(email);
+        void resendOtp({ email }).catch(() => {});
+        sonnerToast.info(
+          "Please verify your email first. We have sent a new code to your inbox.",
+        );
+        navigate("/verify-email", { state: { email } });
+        return;
+      }
+
       const message = friendlyMessage(error);
       setError("password", { message });
       sonnerToast.error(message);
-      // A reCAPTCHA token is single-use, so a failed submit needs a fresh
-      // one before trying again.
-      recaptchaRef.current?.reset();
-      setCaptchaToken(null);
     },
   });
 
@@ -103,6 +128,7 @@ export function LoginPage() {
             type="email"
             placeholder="Enter your email"
             autoComplete="email"
+            maxLength={MAX_EMAIL_LENGTH}
             invalid={Boolean(errors.email)}
             {...register("email")}
           />
@@ -116,6 +142,7 @@ export function LoginPage() {
             id="password"
             placeholder="Enter your password"
             autoComplete="current-password"
+            maxLength={MAX_PASSWORD_LENGTH}
             invalid={Boolean(errors.password)}
             {...register("password")}
           />
