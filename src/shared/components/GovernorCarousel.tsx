@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-// import governor1 from "@/assets/governor_1.webp";
 import governor2 from "@/assets/governor_2.webp";
 import woman1 from "@/assets/woman_1.webp";
 import woman2 from "@/assets/woman_2.webp";
@@ -52,7 +51,7 @@ const SIGNUP_SLIDES: CarouselSlide[] = [
     eyebrow: "A State That Sees Her Daughters",
     heading: "Every Daughter, A Crown",
     quote:
-      "“Akwa Ibom rises when her women rise. Mbopo is our promise that every daughter of this state will be seen, heard and celebrated.”",
+      "“Mbopo akwa Ibom is part of a wider commitment to empowering akwa Ibom daughters across all 31 local Government areas”",
   },
   {
     image: woman1,

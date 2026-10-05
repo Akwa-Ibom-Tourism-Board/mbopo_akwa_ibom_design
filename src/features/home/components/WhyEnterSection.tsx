@@ -15,7 +15,7 @@ const BENEFITS = [
   {
     number: "01",
     title: "Represent your LGA",
-    text: "Compete from Ward and LGA pageants through to the Senatorial finals, carrying your community's pride all the way to the state stage.",
+    text: "Compete from the LGA auditions through to the Senatorial auditions, carrying your community's pride all the way to the state stage.",
   },
   {
     number: "02",
@@ -43,7 +43,7 @@ export function WhyEnterSection() {
           <Heading>
             More than a title.
             <br />
-            <em>A lasting platform.</em>
+            <em>365-Days of Ambassador Led Visibility.</em>
           </Heading>
           <Benefits>
             {BENEFITS.map(({ number, title, text }) => (
