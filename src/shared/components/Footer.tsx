@@ -43,7 +43,7 @@ export function Footer() {
             Under the A.R.I.S.E. Agenda
           </FooterSubline>
           <FooterContact href="tel:+2348149110942">
-            <Phone size={13} aria-hidden /> For Enquiries: +234 814 911 0942
+            <Phone size={13} aria-hidden /> For Enquiries: +234 802 331 1264
           </FooterContact>
           <Socials>
             <Social href="#" aria-label="Instagram">

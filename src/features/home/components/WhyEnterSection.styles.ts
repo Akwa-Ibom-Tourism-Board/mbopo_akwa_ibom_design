@@ -40,6 +40,7 @@ export const Heading = styled.h2`
   em {
     color: ${({ theme }) => theme.colors.secondary.DEFAULT};
     font-style: italic;
+    font-size: clamp(20px, 5.5vw, 40px);
   }
 `;
 

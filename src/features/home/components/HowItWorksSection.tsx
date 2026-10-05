@@ -73,12 +73,12 @@ const STEPS: ProcessStep[] = [
   {
     icon: Crown,
     title: "Compete For The Crown",
-    text: "Verified applicants advance to LGA pageants and Senatorial finals, then a residential camp leading into the statewide Grand Finale, where one woman is crowned Mbopo Akwa Ibom.",
+    text: "Verified applicants advance to LGA auditions, selected candidates advance to Senatorial auditions, then the finalists proceed to residential Bootcamp leading into the statewide Grand Finale",
     checklistLabel: "The journey ahead",
     checklist: [
       "LGA auditions, held in all 31 Local Government Areas",
-      "Senatorial auditions",
-      "10-day residential Bootcamp camp",
+      "Senatorial auditions in the 3 Senatorial Districts",
+      "10-day residential Bootcamp",
       "Grand Finale",
     ],
     final: true,
