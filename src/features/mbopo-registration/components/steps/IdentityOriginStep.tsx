@@ -36,6 +36,7 @@ export interface IdentityOriginStepProps {
   control: Control<RegistrationFormValues>;
   errors: FieldErrors<RegistrationFormValues>;
   certificateUrl: string;
+  certificateIsPdf?: boolean;
   certificateError?: string;
   certificateUploading?: boolean;
   onCertificateChange: (event: ChangeEvent<HTMLInputElement>) => void;
@@ -47,6 +48,7 @@ export function IdentityOriginStep({
   control,
   errors,
   certificateUrl,
+  certificateIsPdf,
   certificateError,
   certificateUploading,
   onCertificateChange,
@@ -94,6 +96,7 @@ export function IdentityOriginStep({
         <Field label="Village" required error={errors.village?.message}>
           <Input
             placeholder="Your village of origin"
+            maxLength={100}
             {...register("village")}
           />
         </Field>
@@ -126,7 +129,11 @@ export function IdentityOriginStep({
           required
           error={errors.city?.message}
         >
-          <Input placeholder="Town or city" {...register("city")} />
+          <Input
+            placeholder="Town or city"
+            maxLength={100}
+            {...register("city")}
+          />
         </Field>
         <Field
           label="Home address"
@@ -137,6 +144,7 @@ export function IdentityOriginStep({
           <Textarea
             rows={4}
             placeholder="Your residential address"
+            maxLength={300}
             {...register("address")}
           />
         </Field>
@@ -145,6 +153,7 @@ export function IdentityOriginStep({
       <PhotoUpload
         label="Certificate of Origin"
         previewUrl={certificateUrl}
+        isPdf={certificateIsPdf}
         error={certificateError}
         onChange={onCertificateChange}
         accept="image/png,image/jpeg,application/pdf"

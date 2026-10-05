@@ -19,6 +19,7 @@ import {
   IncorrectPasswordError,
 } from "@/features/auth";
 import { friendlyMessage } from "@/lib/http";
+import { MAX_PASSWORD_LENGTH } from "@/lib/validation";
 import { CreatePasswordForm } from "@/features/register";
 import {
   PasswordForm,
@@ -30,8 +31,17 @@ import {
 
 const changePasswordSchema = z
   .object({
-    currentPassword: z.string().min(1, "Current password is required"),
-    newPassword: z.string().min(8, "Password must be at least 8 characters"),
+    currentPassword: z
+      .string()
+      .min(1, "Current password is required")
+      .max(MAX_PASSWORD_LENGTH, "That password is too long"),
+    newPassword: z
+      .string()
+      .min(8, "Password must be at least 8 characters")
+      .max(
+        MAX_PASSWORD_LENGTH,
+        `Keep this under ${MAX_PASSWORD_LENGTH} characters`,
+      ),
     confirmPassword: z.string(),
   })
   .refine((values) => values.newPassword === values.confirmPassword, {
@@ -100,6 +110,7 @@ export function ChangePasswordCard() {
             <PasswordInput
               id="currentPassword"
               autoComplete="current-password"
+              maxLength={MAX_PASSWORD_LENGTH}
               invalid={Boolean(errors.currentPassword)}
               {...register("currentPassword")}
             />

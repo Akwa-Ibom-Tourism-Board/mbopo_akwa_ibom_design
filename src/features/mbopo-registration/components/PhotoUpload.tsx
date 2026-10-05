@@ -1,4 +1,4 @@
-import { Loader2, Upload } from "lucide-react";
+import { FileText, Loader2, Upload } from "lucide-react";
 import type { ChangeEvent } from "react";
 import { Field } from "./Field";
 import {
@@ -6,12 +6,16 @@ import {
   PhotoDrop,
   PhotoIcon,
   PhotoPreview,
+  PdfPreview,
   UploadingOverlay,
 } from "./PhotoUpload.styles";
 
 export interface PhotoUploadProps {
   label: string;
   previewUrl: string;
+  // A PDF can't be rendered through an <img> tag — when true, a simple
+  // file-type badge is shown instead of attempting an image preview.
+  isPdf?: boolean;
   error?: string;
   onChange: (event: ChangeEvent<HTMLInputElement>) => void;
   accept?: string;
@@ -22,6 +26,7 @@ export interface PhotoUploadProps {
 export function PhotoUpload({
   label,
   previewUrl,
+  isPdf = false,
   error,
   onChange,
   accept = "image/png,image/jpeg",
@@ -35,7 +40,14 @@ export function PhotoUpload({
       <Field label={label} required error={error} htmlFor={inputId}>
         <PhotoDrop htmlFor={inputId} $hasPhoto={Boolean(previewUrl)}>
           {previewUrl ? (
-            <PhotoPreview src={previewUrl} alt={`${label} preview`} />
+            isPdf ? (
+              <PdfPreview>
+                <FileText size={28} aria-hidden />
+                <span>PDF uploaded</span>
+              </PdfPreview>
+            ) : (
+              <PhotoPreview src={previewUrl} alt={`${label} preview`} />
+            )
           ) : (
             <>
               <PhotoIcon>

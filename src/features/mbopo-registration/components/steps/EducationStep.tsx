@@ -85,15 +85,21 @@ export function EducationStep({
         <Field label="Institution attended" error={errors.institution?.message}>
           <Input
             placeholder="School or institution"
+            maxLength={150}
             {...register("institution")}
           />
         </Field>
         <Field label="Occupation" required error={errors.occupation?.message}>
-          <Input placeholder="What do you do?" {...register("occupation")} />
+          <Input
+            placeholder="What do you do?"
+            maxLength={100}
+            {...register("occupation")}
+          />
         </Field>
         <Field label="Talent(s)" required error={errors.talents?.message} wide>
           <Input
             placeholder="e.g. Public speaking, dance, entrepreneurship"
+            maxLength={300}
             {...register("talents")}
           />
         </Field>
@@ -105,6 +111,7 @@ export function EducationStep({
         >
           <Input
             placeholder="e.g. Ibibio, English"
+            maxLength={300}
             {...register("languages")}
           />
         </Field>

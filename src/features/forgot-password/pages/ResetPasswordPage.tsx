@@ -8,6 +8,7 @@ import { ArrowRight } from "lucide-react";
 import { AuthLayout } from "@/shared/components";
 import { sonnerToast } from "@/shared/ui";
 import { friendlyMessage } from "@/lib/http";
+import { MAX_PASSWORD_LENGTH } from "@/lib/validation";
 import {
   Heading,
   Subtitle,
@@ -22,7 +23,13 @@ import { resetPassword } from "../api";
 
 const resetPasswordSchema = z
   .object({
-    password: z.string().min(8, "Password must be at least 8 characters"),
+    password: z
+      .string()
+      .min(8, "Password must be at least 8 characters")
+      .max(
+        MAX_PASSWORD_LENGTH,
+        `Keep this under ${MAX_PASSWORD_LENGTH} characters`,
+      ),
     confirmPassword: z.string(),
   })
   .refine((values) => values.password === values.confirmPassword, {

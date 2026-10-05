@@ -7,6 +7,7 @@ import { ArrowRight, MailCheck } from "lucide-react";
 import { AuthLayout } from "@/shared/components";
 import { sonnerToast } from "@/shared/ui";
 import { friendlyMessage } from "@/lib/http";
+import { MAX_EMAIL_LENGTH } from "@/lib/validation";
 import {
   Heading,
   Subtitle,
@@ -31,6 +32,7 @@ const forgotPasswordSchema = z.object({
     .string()
     .trim()
     .min(1, "Email is required")
+    .max(MAX_EMAIL_LENGTH, "That email address is too long")
     .email("Enter a valid email address"),
 });
 
@@ -95,6 +97,7 @@ export function ForgotPasswordPage() {
             type="email"
             placeholder="Enter your email"
             autoComplete="email"
+            maxLength={MAX_EMAIL_LENGTH}
             invalid={Boolean(errors.email)}
             {...register("email")}
           />
