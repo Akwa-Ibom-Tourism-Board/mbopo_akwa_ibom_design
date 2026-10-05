@@ -32,8 +32,8 @@ const REWARDS: Reward[] = [
   },
   {
     icon: Landmark,
-    title: "Cash Prize & Government Office",
-    text: "A cash prize, plus an official office appointment with the Akwa Ibom State Government for her year as ambassador.",
+    title: "Cash Prize & an Office with the State Government",
+    text: "A cash prize, plus an official office with the Akwa Ibom State Government for a year.",
   },
   {
     icon: Gift,
