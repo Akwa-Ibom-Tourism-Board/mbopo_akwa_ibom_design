@@ -11,6 +11,7 @@ import {
   NAME_MESSAGE,
   NIGERIAN_PHONE_REGEX,
   PHONE_MESSAGE,
+  digitsOnlyOnChange,
 } from "@/lib/validation";
 import { WidgetContainer } from "./WidgetContainer";
 import { submitMessage } from "../api";
@@ -72,6 +73,8 @@ export function AskMeForm({
     reset,
     formState: { errors },
   } = useForm<AskMeFormValues>({ resolver: zodResolver(askMeSchema) });
+
+  const phoneNumberField = register("phoneNumber");
 
   const mutation = useMutation({
     mutationFn: submitMessage,
@@ -147,11 +150,12 @@ export function AskMeForm({
               id="ask-me-phone"
               type="tel"
               inputMode="numeric"
-              placeholder="080 0000 0000"
+              placeholder="08012345678"
               autoComplete="tel"
               maxLength={13}
               invalid={Boolean(errors.phoneNumber)}
-              {...register("phoneNumber")}
+              {...phoneNumberField}
+              onChange={digitsOnlyOnChange(phoneNumberField.onChange)}
             />
             {errors.phoneNumber && (
               <ErrorText>{errors.phoneNumber.message}</ErrorText>
