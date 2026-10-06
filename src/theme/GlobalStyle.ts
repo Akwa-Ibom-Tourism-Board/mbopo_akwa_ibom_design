@@ -10,13 +10,18 @@ export const GlobalStyle = createGlobalStyle`
 
   :root {
     color-scheme: light;
+    /* Navbar measures its own real rendered height (disclaimer strip +
+       nav row, which both vary by breakpoint and text wrapping) and
+       overwrites this via ResizeObserver — this is only the pre-JS/
+       fallback value, close to the common single-line desktop height. */
+    --site-header-height: 104px;
   }
 
   html {
     scroll-behavior: smooth;
     /* Keeps hash-linked sections from landing underneath the fixed Navbar,
        which now also carries the DisclaimerStrip above the nav row. */
-    scroll-padding-top: 7rem;
+    scroll-padding-top: calc(var(--site-header-height) + 12px);
   }
 
   body {

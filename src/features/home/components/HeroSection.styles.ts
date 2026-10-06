@@ -60,16 +60,19 @@ export const HeroInner = styled.div`
   gap: 32px;
   width: min(1120px, calc(100% - 48px));
   margin: 0 auto;
-  padding: 146px 0 64px;
+  /* Clears the fixed Navbar's real measured height (see Navbar.tsx) plus
+     breathing room, instead of a guessed pixel value that drifts out of
+     sync on small screens where the disclaimer strip wraps to 2 lines. */
+  padding: calc(var(--site-header-height) + 42px) 0 64px;
 
   ${media.lg} {
     grid-template-columns: 1.05fr 0.95fr;
     gap: 40px;
-    padding: 146px 0 95px;
+    padding: calc(var(--site-header-height) + 42px) 0 95px;
   }
 
   @media (max-width: 780px) {
-    padding: 130px 0 48px;
+    padding: calc(var(--site-header-height) + 26px) 0 48px;
   }
 `;
 
