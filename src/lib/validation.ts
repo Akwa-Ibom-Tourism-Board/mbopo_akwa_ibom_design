@@ -13,6 +13,26 @@ export const NIGERIAN_PHONE_REGEX = /^(0[789][01]\d{8}|234[789][01]\d{8})$/;
 export const PHONE_MESSAGE =
   "Enter a valid Nigerian phone number, e.g. 08012345678";
 
+// Strips every non-digit character, including spaces — used to sanitize
+// phone inputs as the user types, so a space/letter/symbol never makes it
+// into the field at all rather than only being caught at validation time.
+export function stripNonDigits(value: string): string {
+  return value.replace(/\D/g, "");
+}
+
+// Wraps a react-hook-form field's onChange so the input only ever accepts
+// digits. Mutates event.target.value in place before handing the event to
+// RHF, which reads the value off that same event — works for typing,
+// paste, and autofill alike.
+export function digitsOnlyOnChange<E extends { target: { value: string } }>(
+  onChange: (event: E) => unknown,
+) {
+  return (event: E) => {
+    event.target.value = stripNonDigits(event.target.value);
+    return onChange(event);
+  };
+}
+
 // Letters (including accented ones), spaces, hyphens, apostrophes and
 // periods — real names (O'Brien, Jean-Paul, Mary-Ann, J. Edet) while
 // rejecting pure numbers/symbols and the invisible or control characters
