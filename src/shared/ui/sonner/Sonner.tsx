@@ -7,6 +7,9 @@ export const Toaster = (props: ToasterProps) => {
   return (
     <SonnerToaster
       theme="light"
+      position="top-right"
+      duration={6000}
+      closeButton
       toastOptions={{
         style: {
           background: theme.colors.card,

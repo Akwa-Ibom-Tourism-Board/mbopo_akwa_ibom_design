@@ -1,6 +1,7 @@
 import type { FieldErrors, UseFormRegister } from "react-hook-form";
 import { Input } from "@/shared/ui";
 import type { VerifiedUser } from "@/features/auth";
+import { digitsOnlyOnChange } from "@/lib/validation";
 import type { RegistrationFormValues } from "../../schema";
 import { Field } from "../Field";
 import { FieldGrid, LockedValue } from "../Field.styles";
@@ -13,6 +14,9 @@ export interface PersonalStepProps {
 }
 
 export function PersonalStep({ user, register, errors }: PersonalStepProps) {
+  const phoneField = register("phone");
+  const nextOfKinPhoneField = register("nextOfKinPhone");
+
   return (
     <StepContent>
       <StepTitle>Personal information</StepTitle>
@@ -35,10 +39,11 @@ export function PersonalStep({ user, register, errors }: PersonalStepProps) {
           <Input
             type="tel"
             inputMode="numeric"
-            placeholder="080 0000 0000"
+            placeholder="08012345678"
             autoComplete="tel"
             maxLength={13}
-            {...register("phone")}
+            {...phoneField}
+            onChange={digitsOnlyOnChange(phoneField.onChange)}
           />
         </Field>
         <Field label="Email address">
@@ -74,9 +79,10 @@ export function PersonalStep({ user, register, errors }: PersonalStepProps) {
           <Input
             type="tel"
             inputMode="numeric"
-            placeholder="080 0000 0000"
+            placeholder="08012345678"
             maxLength={13}
-            {...register("nextOfKinPhone")}
+            {...nextOfKinPhoneField}
+            onChange={digitsOnlyOnChange(nextOfKinPhoneField.onChange)}
           />
         </Field>
       </FieldGrid>
