@@ -7,7 +7,7 @@ import {
   DialogTitle,
   DialogDescription,
 } from "@/shared/ui";
-import { useSelfieCamera } from "./useSelfieCamera";
+import { useSelfieCamera, type LivenessPrompt } from "./useSelfieCamera";
 import {
   ModalContent,
   InstructionsCard,
@@ -16,6 +16,8 @@ import {
   CapturedImage,
   StagePlaceholder,
   PlaceholderIcon,
+  PromptBadge,
+  FaceHintBadge,
   StageActions,
   ErrorBanner,
 } from "./SelfieCaptureModal.styles";
@@ -28,6 +30,14 @@ export interface SelfieCaptureModalProps {
   submitError?: string;
 }
 
+const PROMPT_COPY: Record<LivenessPrompt, string> = {
+  center: "Look straight at the camera",
+  turn_first: "Slowly turn your head to one side",
+  turn_second: "Now turn your head to the other side",
+  mouth_open: "Now open your mouth wide",
+  confirm: "Great — close your mouth and hold still, looking straight ahead",
+};
+
 export function SelfieCaptureModal({
   open,
   onOpenChange,
@@ -37,11 +47,12 @@ export function SelfieCaptureModal({
 }: SelfieCaptureModalProps) {
   const {
     status,
+    prompt,
+    faceVisible,
     errorMessage,
     capturedImage,
     videoRef,
     start,
-    capture,
     retake,
     stop,
   } = useSelfieCamera();
@@ -69,16 +80,16 @@ export function SelfieCaptureModal({
         <DialogHeader>
           <DialogTitle>Confirm it's you</DialogTitle>
           <DialogDescription>
-            We'll compare a quick photo against your NIN record to confirm your
-            identity.
+            We'll guide you through a few quick movements to confirm you're
+            really here, then compare your photo against your NIN record.
           </DialogDescription>
         </DialogHeader>
 
         <InstructionsCard>
           <Info size={15} aria-hidden />
           <span>
-            Find a well-lit space, face the camera directly, and remove
-            sunglasses or anything covering your face.
+            Find a well-lit space, face the camera directly, remove sunglasses
+            or anything covering your face, and follow the on-screen prompts.
           </span>
         </InstructionsCard>
 
@@ -92,6 +103,12 @@ export function SelfieCaptureModal({
               display: status === "live" ? "block" : "none",
             }}
           />
+          {status === "live" && prompt && (
+            <PromptBadge>{PROMPT_COPY[prompt]}</PromptBadge>
+          )}
+          {status === "live" && !faceVisible && (
+            <FaceHintBadge>Center your face in the frame</FaceHintBadge>
+          )}
           {capturedImage && status === "captured" && (
             <CapturedImage src={capturedImage} alt="Your captured photo" />
           )}
@@ -108,7 +125,7 @@ export function SelfieCaptureModal({
                 )}
               </PlaceholderIcon>
               {status === "requesting"
-                ? "Requesting camera access…"
+                ? "Preparing camera and liveness check…"
                 : status === "error"
                   ? (errorMessage ?? "Camera unavailable.")
                   : "Your camera preview will appear here."}
@@ -124,11 +141,6 @@ export function SelfieCaptureModal({
               onClick={() => void start()}
             >
               <Camera size={16} /> Try Again
-            </Button>
-          )}
-          {status === "live" && (
-            <Button type="button" variant="secondary" onClick={capture}>
-              <Camera size={16} /> Capture
             </Button>
           )}
           {status === "captured" && !isSubmitting && (

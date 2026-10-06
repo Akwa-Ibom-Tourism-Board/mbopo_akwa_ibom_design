@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import {
   ArrowRight,
   ChevronRight,
@@ -72,6 +72,7 @@ export function Navbar({ variant = "solid" }: NavbarProps) {
   const [menuOpen, setMenuOpen] = useState(false);
   const { isAuthenticated } = useAuth();
   const location = useLocation();
+  const headerRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
     if (variant === "solid") return;
@@ -80,6 +81,25 @@ export function Navbar({ variant = "solid" }: NavbarProps) {
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, [variant]);
+
+  // The header's real height varies — disclaimer text wraps to a second
+  // line on narrow phones, the logo shrinks/grows across breakpoints —
+  // so anything that needs to clear it (hero/banner top padding, anchor
+  // scroll offsets) reads this instead of a guessed pixel value that
+  // drifts out of sync and leaves content tucked under the fixed header.
+  useLayoutEffect(() => {
+    const node = headerRef.current;
+    if (!node) return;
+    const setHeight = () =>
+      document.documentElement.style.setProperty(
+        "--site-header-height",
+        `${node.offsetHeight}px`,
+      );
+    setHeight();
+    const observer = new ResizeObserver(setHeight);
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, []);
 
   const light = variant === "overlay" && !scrolled;
   const closeMenu = () => setMenuOpen(false);
@@ -95,7 +115,7 @@ export function Navbar({ variant = "solid" }: NavbarProps) {
         aria-label="Close menu"
         onClick={closeMenu}
       />
-      <HeaderFrame>
+      <HeaderFrame ref={headerRef}>
         <DisclaimerStrip />
         <HeaderBar $scrolled={scrolled}>
           <Bar>
