@@ -87,6 +87,38 @@ export const PlaceholderIcon = styled.span`
   color: ${({ theme }) => theme.colors.secondary.DEFAULT};
 `;
 
+export const PromptBadge = styled.div`
+  position: absolute;
+  left: 50%;
+  bottom: 14px;
+  transform: translateX(-50%);
+  max-width: calc(100% - 32px);
+  padding: 10px 18px;
+  border-radius: ${({ theme }) => theme.radii.full};
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 700;
+  text-align: center;
+`;
+
+export const FaceHintBadge = styled.div`
+  position: absolute;
+  top: 14px;
+  left: 50%;
+  transform: translateX(-50%);
+  max-width: calc(100% - 32px);
+  padding: 8px 14px;
+  border-radius: ${({ theme }) => theme.radii.full};
+  background: ${({ theme }) => theme.alpha(theme.colors.destructive.DEFAULT, 0.88)};
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 700;
+  text-align: center;
+`;
+
 export const StageActions = styled.div`
   display: flex;
   flex-shrink: 0;

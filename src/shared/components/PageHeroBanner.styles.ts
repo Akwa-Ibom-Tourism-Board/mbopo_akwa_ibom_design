@@ -1,7 +1,10 @@
 import styled from "styled-components";
 
 export const BannerFrame = styled.div`
-  padding: 128px 0 48px;
+  /* Clears the fixed Navbar's real measured height (see Navbar.tsx) plus
+     breathing room, instead of a guessed pixel value that drifts out of
+     sync on small screens where the disclaimer strip wraps to 2 lines. */
+  padding: calc(var(--site-header-height) + 24px) 0 48px;
   background: ${({ theme }) => theme.gradients.panel};
   color: ${({ theme }) => theme.colors.white};
   text-align: center;
