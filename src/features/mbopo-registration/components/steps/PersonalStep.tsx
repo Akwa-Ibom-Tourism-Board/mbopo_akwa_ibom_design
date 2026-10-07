@@ -85,6 +85,17 @@ export function PersonalStep({ user, register, errors }: PersonalStepProps) {
             onChange={digitsOnlyOnChange(nextOfKinPhoneField.onChange)}
           />
         </Field>
+        <Field
+          label="Relationship with next of kin"
+          required
+          error={errors.nextOfKinRelationship?.message}
+        >
+          <Input
+            placeholder="e.g. Mother, Father, Sibling, Guardian"
+            maxLength={50}
+            {...register("nextOfKinRelationship")}
+          />
+        </Field>
       </FieldGrid>
     </StepContent>
   );
