@@ -33,30 +33,6 @@ export const AvatarFrame = styled.div`
   flex: 0 0 auto;
 `;
 
-export const AvatarUploadButton = styled.label`
-  position: absolute;
-  right: -2px;
-  bottom: -2px;
-  display: grid;
-  place-items: center;
-  width: 30px;
-  height: 30px;
-  border-radius: ${({ theme }) => theme.radii.full};
-  background: ${({ theme }) => theme.colors.secondary.DEFAULT};
-  color: ${({ theme }) => theme.colors.secondary.foreground};
-  border: 2px solid ${({ theme }) => theme.colors.card};
-  cursor: pointer;
-
-  input {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    opacity: 0;
-    overflow: hidden;
-    pointer-events: none;
-  }
-`;
-
 export const AvatarMeta = styled.div`
   min-width: 0;
 `;
@@ -72,10 +48,4 @@ export const AvatarHint = styled.p`
   margin: 0;
   font-size: 0.8125rem;
   color: ${({ theme }) => theme.colors.muted.foreground};
-`;
-
-export const AvatarError = styled.p`
-  margin: 6px 0 0;
-  font-size: 0.8125rem;
-  color: ${({ theme }) => theme.colors.destructive.DEFAULT};
 `;
