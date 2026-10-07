@@ -125,6 +125,10 @@ export function ApplicationSummary({
             <DetailLabel>Next of kin phone</DetailLabel>
             <DetailValue>{values.nextOfKinPhone}</DetailValue>
           </DetailItem>
+          <DetailItem>
+            <DetailLabel>Relationship with next of kin</DetailLabel>
+            <DetailValue>{values.nextOfKinRelationship}</DetailValue>
+          </DetailItem>
         </DetailGrid>
       </Section>
 

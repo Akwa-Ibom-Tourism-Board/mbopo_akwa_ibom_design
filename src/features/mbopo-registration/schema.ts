@@ -90,6 +90,7 @@ export const registrationSchema = z
     nextOfKinPhone: phone(
       "Enter a valid Nigerian phone number for your next of kin",
     ),
+    nextOfKinRelationship: name(50),
 
     // Step 2 — Identity & Origin. Local Government of Origin is now picked
     // by the applicant from the fixed 31-LGA list (no longer derived from
@@ -195,6 +196,7 @@ export const DEFAULT_REGISTRATION_FORM_VALUES: RegistrationFormValues = {
   socialMedia: "",
   nextOfKin: "",
   nextOfKinPhone: "",
+  nextOfKinRelationship: "",
   village: "",
   localGovernment: "",
   residenceState: "",
@@ -216,7 +218,7 @@ export const DEFAULT_REGISTRATION_FORM_VALUES: RegistrationFormValues = {
 };
 
 export const STEP_FIELDS: (keyof RegistrationFormValues)[][] = [
-  ["phone", "nextOfKin", "nextOfKinPhone"],
+  ["phone", "nextOfKin", "nextOfKinPhone", "nextOfKinRelationship"],
   ["village", "localGovernment", "residenceState", "city", "address"],
   [
     "education",
