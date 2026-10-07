@@ -21,7 +21,7 @@ import {
 interface Reward {
   icon: LucideIcon;
   title: string;
-  text: string;
+  text?: string;
 }
 
 const REWARDS: Reward[] = [
