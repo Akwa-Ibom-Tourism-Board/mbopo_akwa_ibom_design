@@ -35,7 +35,7 @@ const FAQS = [
   {
     question: "When does registration close?",
     answer:
-      "Registration closes on 26th October, 2026. Applications are not accepted after this date, so make sure yours is complete and submitted before then.",
+      "Registration closes on 13th November, 2026. Applications are not accepted after this date, so make sure yours is complete and submitted before then.",
   },
   {
     question: "Can I apply from outside Akwa Ibom State?",
