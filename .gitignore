@@ -31,3 +31,10 @@ dist-ssr
 *.sln
 *.sw?
 .env.example
+
+# Reference/source documents dropped into src/assets for content extraction
+# only — not imported or served by any app code. If either is ever actually
+# wired into the app (e.g. embedded like the /presentation PDF is), remove
+# its line here first.
+/src/assets/T&C MBOPO AKWA IBOM-2.docx
+/src/assets/presentation/1ST SELECTION PROCESS1.pdf
