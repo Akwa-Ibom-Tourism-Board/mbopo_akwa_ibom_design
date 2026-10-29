@@ -41,3 +41,15 @@ export const List = styled.ul`
   font-size: 0.9375rem;
   line-height: 1.75;
 `;
+
+// Lettered sub-clauses (a., b., c. …) nested under a numbered clause —
+// browser-generated lettering, not text typed into the content itself, so
+// it can never drift out of sync with the list's actual item order.
+export const SubList = styled.ol`
+  margin: 0 0 12px;
+  padding-left: 20px;
+  list-style-type: lower-alpha;
+  color: ${({ theme }) => theme.colors.foreground};
+  font-size: 0.9375rem;
+  line-height: 1.75;
+`;

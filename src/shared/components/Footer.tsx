@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Phone } from "lucide-react";
+import { Mail, Phone } from "lucide-react";
 import akwaIbomLogo from "@/assets/akwa-ibom-logo-main.png";
 import ariseLogo from "@/assets/arise-logo-main.png";
 import mbopoLogo from "@/assets/mbopo-logo-dark.webp";
@@ -44,6 +44,9 @@ export function Footer() {
           </FooterSubline>
           <FooterContact href="tel:+2348149110942">
             <Phone size={13} aria-hidden /> For Enquiries: +234 802 331 1264
+          </FooterContact>
+          <FooterContact href="mailto:mbopo.akwaibomstate@gmail.com">
+            <Mail size={13} aria-hidden /> mbopo.akwaibomstate@gmail.com
           </FooterContact>
           <Socials>
             <Social href="#" aria-label="Instagram">
