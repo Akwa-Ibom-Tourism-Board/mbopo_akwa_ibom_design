@@ -112,7 +112,7 @@ const SECTIONS: LegalSection[] = [
     blocks: [
       {
         type: "paragraph",
-        text: "For questions about this Privacy Policy or your personal data, please contact the Akwa Ibom State Hotels & Tourism Development Commission.",
+        text: "For questions about this Privacy Policy or your personal data, please contact the Akwa Ibom State Hotels & Tourism Development Commission at mbopo.akwaibomstate@gmail.com.",
       },
     ],
   },
@@ -124,7 +124,7 @@ export function PrivacyPage() {
       documentTitle="Privacy Policy"
       eyebrow="Legal"
       title="Privacy Policy"
-      updatedAt="4 October 2026"
+      updatedAt="29 October 2026"
       sections={SECTIONS}
     />
   );

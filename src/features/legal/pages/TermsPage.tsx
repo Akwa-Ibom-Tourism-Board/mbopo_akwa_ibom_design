@@ -604,7 +604,18 @@ const SECTIONS: LegalSection[] = [
       },
       {
         type: "paragraph",
-        text: "Akwa Ibom State Hotels & Tourism Development Commission — For Enquiries: +234 802 331 1264",
+        text: "Akwa Ibom State Hotels & Tourism Development Commission",
+      },
+      {
+        type: "list",
+        style: "bullet",
+        items: [
+          "Telephone: +234 802 331 1264",
+          "Email: mbopo.akwaibomstate@gmail.com",
+          "Application Support: mbopo.akwaibomstate@gmail.com",
+          "Privacy Enquiries: mbopo.akwaibomstate@gmail.com",
+          "Fraud Reporting: mbopo.akwaibomstate@gmail.com",
+        ],
       },
       {
         type: "paragraph",
