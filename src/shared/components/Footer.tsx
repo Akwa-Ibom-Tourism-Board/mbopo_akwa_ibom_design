@@ -42,7 +42,7 @@ export function Footer() {
             <br />
             Under the A.R.I.S.E. Agenda
           </FooterSubline>
-          <FooterContact href="tel:+2348149110942">
+          <FooterContact href="tel:+2348023311264">
             <Phone size={13} aria-hidden /> For Enquiries: +234 802 331 1264
           </FooterContact>
           <FooterContact href="mailto:mbopo.akwaibomstate@gmail.com">
