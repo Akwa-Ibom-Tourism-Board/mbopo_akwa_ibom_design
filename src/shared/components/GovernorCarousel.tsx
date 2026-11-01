@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import governor2 from "@/assets/governor_2.webp";
+import newWoman1 from "@/assets/new-woman1.webp";
+import newWoman2 from "@/assets/new-woman2.webp";
 import woman1 from "@/assets/woman_1.webp";
 import woman2 from "@/assets/woman_2.webp";
 import woman3 from "@/assets/woman_3.webp";
@@ -39,19 +40,19 @@ interface CarouselSlide {
 }
 
 // Two independent slide sets so the sign-up and sign-in screens don't feel
-// like the same page — each pairs one governor photo (a real, quoted
-// figure) with three of the new applicant portraits. The portraits are
-// stock/representative photography, not named individuals, so their copy
-// is written as the programme's own voice (no quotation marks implying
-// they said it) rather than invented first-person testimonials.
+// like the same page — each pairs four applicant portraits. The portraits
+// are stock/representative photography, not named individuals, so their
+// copy is written as the programme's own voice (no quotation marks
+// implying they said it) rather than invented first-person testimonials.
 const SIGNUP_SLIDES: CarouselSlide[] = [
   {
-    image: governor2,
-    imageAlt: "His Excellency, Governor Umo Eno, smiling in ceremonial dress",
+    image: newWoman1,
+    imageAlt:
+      "An Mbopo applicant in a coral beaded crown and traditional attire",
     eyebrow: "A State That Sees Her Daughters",
     heading: "Every Daughter, A Crown",
     quote:
-      "“Mbopo akwa Ibom is part of a wider commitment to empowering akwa Ibom daughters across all 31 local Government areas”",
+      "Mbopo Akwa Ibom is part of a wider commitment to empowering Akwa Ibom’s daughters across all 31 Local Government Areas.",
   },
   {
     image: woman1,
@@ -82,12 +83,12 @@ const SIGNUP_SLIDES: CarouselSlide[] = [
 
 const LOGIN_SLIDES: CarouselSlide[] = [
   {
-    image: governor2,
-    imageAlt: "His Excellency, Governor Umo Eno, in conversation",
+    image: newWoman2,
+    imageAlt: "An Mbopo applicant in cowrie shell and coral beads, smiling",
     eyebrow: "The A.R.I.S.E. Agenda",
     heading: "Listening To Her Story",
     quote:
-      "“We built this platform to listen, to carry the voice, ambition and courage of women from all 31 Local Government Areas onto the state stage.”",
+      "Built to listen, to carry the voice, ambition and courage of women from all 31 Local Government Areas onto the state stage.",
   },
   {
     image: woman4,
