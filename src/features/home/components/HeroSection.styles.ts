@@ -340,14 +340,15 @@ const imageIn = keyframes`
 
 // Wraps SlideImage so an individual slide can be rendered larger than
 // object-fit: contain would otherwise draw it, without touching the
-// shared entrance animation below. The governor's shot is a much wider,
-// shorter crop than its tall-portrait siblings (see SlideImage's own
-// comment), so contain fits it by width and leaves most of the box's
-// height empty above it — technically still bottom-anchored, but small
-// enough inside all that empty space that it reads as floating rather
-// than grounded like the others. transform-origin: bottom keeps the
-// subject's base pinned exactly where object-position: bottom center put
-// it while scale grows everything else upward from there.
+// shared entrance animation below. Needed for any slide whose source crop
+// is much wider/shorter than its tall-portrait siblings (see SlideImage's
+// own comment) — contain fits such a shot by width and leaves most of the
+// box's height empty above it — technically still bottom-anchored, but
+// small enough inside all that empty space that it reads as floating
+// rather than grounded like the others. transform-origin: bottom keeps
+// the subject's base pinned exactly where object-position: bottom center
+// put it while scale grows everything else upward from there. No current
+// slide needs it, but the mechanism stays for the next wide-crop source.
 export const SlideImageScale = styled.div<{ $scale: number }>`
   position: absolute;
   inset: 0;
@@ -357,9 +358,9 @@ export const SlideImageScale = styled.div<{ $scale: number }>`
 
 // object-fit: contain guarantees the full photo is always visible —
 // nothing cropped off the sides — regardless of whether a slide's
-// source image is a tall portrait or the governor's wider landscape
-// shots; object-position anchors whatever whitespace that leaves to
-// the top, so every slide's subject still sits on the same baseline.
+// source image is a tall portrait or a wider landscape shot; object-
+// position anchors whatever whitespace that leaves to the top, so every
+// slide's subject still sits on the same baseline.
 export const SlideImage = styled.img`
   position: absolute;
   inset: 0;

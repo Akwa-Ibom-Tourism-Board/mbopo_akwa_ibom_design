@@ -3,7 +3,7 @@ import { ArrowRight } from "lucide-react";
 import heroBackdrop from "@/assets/hero-bg.webp";
 import ladyPortrait from "@/assets/mbopo-hero-1.webp";
 import localHairPortrait from "@/assets/mbopo-hero-local-hair.webp";
-import governorPortraitOne from "@/assets/governor_1.png";
+import newWomanFour from "@/assets/new-woman4.webp";
 // A duplicate of woman_2.webp (also used by GovernorCarousel on the
 // login/register pages), not the original — woman_2 is a tight face/
 // shoulders crop with almost no transparent margin (unlike this stage's
@@ -81,9 +81,9 @@ const SLIDES: HeroSlide[] = [
     copy: "From coral beads to hand styled crowns, mbopo akwa ibom celebrates the artistry of our local skills and the heritage woven into every look",
   },
   {
-    image: governorPortraitOne,
-    imageAlt: "The Governor of Akwa Ibom State",
-    imageScale: 1.2,
+    image: newWomanFour,
+    imageAlt:
+      "An Mbopo Akwa Ibom cultural ambassador in a gold sash and coral beads",
     kicker: <>Celebrating Beauty . Culture . Enterprise</>,
     title: "Championing",
     accent: "Akwa Ibom's daughters",
