@@ -1,8 +1,9 @@
+import { useRef } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useMutation } from "@tanstack/react-query";
-import { Loader2, Send } from "lucide-react";
+import { Loader2, Paperclip, Send, X } from "lucide-react";
 import { Input, Textarea, Label, Button } from "@/shared/ui";
 import { friendlyMessage } from "@/lib/http";
 import {
@@ -14,7 +15,9 @@ import {
   digitsOnlyOnChange,
 } from "@/lib/validation";
 import { WidgetContainer } from "./WidgetContainer";
-import { submitMessage } from "../api";
+import { submitMessage, MAX_ATTACHMENTS } from "../api";
+import { useAskMeAttachments } from "../useAskMeAttachments";
+import type { WidgetPosition } from "../useDraggable";
 import {
   Body,
   IntroText,
@@ -24,7 +27,16 @@ import {
   RequiredMark,
   ErrorText,
   Spinner,
+  AttachmentsList,
+  AttachmentRow,
+  AttachmentInfo,
+  AttachmentName,
+  AttachmentMeta,
+  RemoveAttachmentButton,
+  AddAttachmentButton,
 } from "./AskMeForm.styles";
+
+const formatMB = (bytes: number): string => (bytes / (1024 * 1024)).toFixed(1);
 
 const askMeSchema = z.object({
   name: z
@@ -59,6 +71,8 @@ export interface AskMeFormProps {
   onMinimize: () => void;
   onSuccess: () => void;
   onError: (message: string) => void;
+  position: WidgetPosition;
+  onPositionChange: (next: WidgetPosition) => void;
 }
 
 export function AskMeForm({
@@ -66,6 +80,8 @@ export function AskMeForm({
   onMinimize,
   onSuccess,
   onError,
+  position,
+  onPositionChange,
 }: AskMeFormProps) {
   const {
     register,
@@ -75,12 +91,22 @@ export function AskMeForm({
   } = useForm<AskMeFormValues>({ resolver: zodResolver(askMeSchema) });
 
   const phoneNumberField = register("phoneNumber");
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const {
+    attachments,
+    addFiles,
+    removeAttachment,
+    reset: resetAttachments,
+    isUploading,
+    canAddMore,
+  } = useAskMeAttachments();
 
   const mutation = useMutation({
     mutationFn: submitMessage,
     onSuccess: () => {
       onSuccess();
       reset();
+      resetAttachments();
       onClose();
     },
     onError: (error) =>
@@ -99,11 +125,19 @@ export function AskMeForm({
       phoneNumber: values.phoneNumber,
       title: values.title || undefined,
       message: values.message,
+      attachments: attachments
+        .filter((a) => a.status === "done" && a.result)
+        .map((a) => a.result!),
     });
   };
 
   return (
-    <WidgetContainer onClose={onClose} onMinimize={onMinimize}>
+    <WidgetContainer
+      onClose={onClose}
+      onMinimize={onMinimize}
+      position={position}
+      onPositionChange={onPositionChange}
+    >
       <Body>
         <IntroText>
           Have a question or something to tell us? Fill this in and we will get
@@ -190,11 +224,67 @@ export function AskMeForm({
             {errors.message && <ErrorText>{errors.message.message}</ErrorText>}
           </Field>
 
+          <Field>
+            <LabelRow>
+              <Label htmlFor="ask-me-attachments">Attachments</Label>
+              <OptionalTag>
+                Optional · up to {MAX_ATTACHMENTS}, 5MB each
+              </OptionalTag>
+            </LabelRow>
+
+            {attachments.length > 0 && (
+              <AttachmentsList>
+                {attachments.map((a) => (
+                  <AttachmentRow key={a.id} $error={a.status === "error"}>
+                    <Paperclip size={14} />
+                    <AttachmentInfo>
+                      <AttachmentName>{a.file.name}</AttachmentName>
+                      <AttachmentMeta $error={a.status === "error"}>
+                        {a.status === "uploading" &&
+                          `Uploading… ${a.progress}%`}
+                        {a.status === "done" && formatMB(a.file.size) + "MB"}
+                        {a.status === "error" && a.error}
+                      </AttachmentMeta>
+                    </AttachmentInfo>
+                    <RemoveAttachmentButton
+                      type="button"
+                      aria-label={`Remove ${a.file.name}`}
+                      onClick={() => removeAttachment(a.id)}
+                    >
+                      <X size={14} />
+                    </RemoveAttachmentButton>
+                  </AttachmentRow>
+                ))}
+              </AttachmentsList>
+            )}
+
+            {canAddMore && (
+              <AddAttachmentButton
+                type="button"
+                onClick={() => fileInputRef.current?.click()}
+              >
+                <Paperclip size={14} /> Attach a file
+              </AddAttachmentButton>
+            )}
+            <input
+              id="ask-me-attachments"
+              ref={fileInputRef}
+              type="file"
+              accept="image/jpeg,image/png,application/pdf"
+              multiple
+              hidden
+              onChange={(e) => {
+                if (e.target.files?.length) addFiles(e.target.files);
+                e.target.value = "";
+              }}
+            />
+          </Field>
+
           <Button
             type="submit"
             variant="secondary"
             style={{ width: "100%" }}
-            disabled={mutation.isPending}
+            disabled={mutation.isPending || isUploading}
           >
             {mutation.isPending ? (
               <>

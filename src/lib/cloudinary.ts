@@ -17,7 +17,7 @@ export type UploadField =
 // not left to whatever Cloudinary itself would otherwise allow.
 export const MAX_IMAGE_BYTES = 5 * 1024 * 1024;
 
-interface SignedUpload {
+export interface SignedUpload {
   cloudName: string;
   apiKey: string;
   timestamp: number;
@@ -46,7 +46,11 @@ export class CloudinaryUploadError extends Error {
   }
 }
 
-function postToCloudinary(
+// Exported so callers with their own signature endpoint (e.g. the public
+// Ask Me widget, which can't use this module's applicant-only
+// /uploads/cloudinary-signature) can still reuse the actual upload
+// mechanics once they have a SignedUpload of their own.
+export function postToCloudinary(
   signed: SignedUpload,
   file: File | Blob,
   options: UploadToCloudinaryOptions,

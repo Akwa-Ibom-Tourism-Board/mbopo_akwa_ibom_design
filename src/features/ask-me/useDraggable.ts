@@ -6,94 +6,96 @@ import {
   type RefObject,
 } from "react";
 
-// Drags the element `panelRef` points at by translating it from its normal
-// `position: fixed` spot — the handle (wherever handleProps ends up, e.g.
-// just the header's icon/title area) only supplies the pointer events, the
-// actual element being moved is whatever panelRef is attached to.
-export interface DragOffset {
-  x: number;
-  y: number;
+// Drags the element `panelRef` points at along one screen edge only: the
+// widget always hugs the left or right side (never floats in the middle),
+// and dragging just slides it up/down that side — the side itself flips
+// live, the instant the pointer crosses the screen's horizontal midpoint,
+// so it's never resting (or even passing through, mid-drag) at center.
+export interface WidgetPosition {
+  side: "left" | "right";
+  // Distance from the viewport's bottom edge, in px.
+  bottom: number;
 }
 
-const EDGE_MARGIN = 8;
+export const WIDGET_SIDE_MARGIN = 20;
+const MIN_BOTTOM = 16;
 
 interface DragState {
   pointerId: number;
-  pointerStartX: number;
   pointerStartY: number;
-  offsetStartX: number;
-  offsetStartY: number;
-  // The panel's rect at drag start — captured once, not on every move, so
-  // dragging doesn't force a layout read on each pointermove.
-  rect: DOMRect;
+  startBottom: number;
+  rectHeight: number;
 }
+
+// How far the pointer has to move before a press counts as a drag rather
+// than a click/tap — matters for a handle that's also itself a button
+// (the floating trigger bubble), so pressing it to open the widget isn't
+// mistaken for the start of a drag that then suppresses that same click.
+const DRAG_THRESHOLD = 4;
 
 export function useDraggable<T extends HTMLElement>(
   panelRef: RefObject<T | null>,
+  position: WidgetPosition,
+  onPositionChange: (next: WidgetPosition) => void,
 ) {
-  const [offset, setOffset] = useState<DragOffset>({ x: 0, y: 0 });
   const [isDragging, setIsDragging] = useState(false);
   const dragState = useRef<DragState | null>(null);
+  // Read synchronously by a handle that's also clickable (e.g. onClick)
+  // to suppress the click that otherwise follows a drag's pointerup.
+  const draggedRef = useRef(false);
 
   const onPointerDown = useCallback(
     (event: PointerEvent<HTMLElement>) => {
-      // Let real controls inside the handle (close/minimize buttons) keep
-      // working normally instead of starting a drag.
-      if (
-        (event.target as HTMLElement).closest(
-          "button, a, input, textarea, select",
-        )
-      ) {
+      // Let a control *nested inside* the handle (e.g. the header's
+      // close/minimize buttons) keep working normally instead of starting
+      // a drag. When the handle itself is the control (e.g. the floating
+      // trigger button), this is a no-op — the drag and the click coexist,
+      // disambiguated below by movement distance.
+      const interactiveAncestor = (event.target as HTMLElement).closest(
+        "button, a, input, textarea, select",
+      );
+      if (interactiveAncestor && interactiveAncestor !== event.currentTarget) {
         return;
       }
       const panel = panelRef.current;
       if (!panel) return;
 
+      draggedRef.current = false;
       dragState.current = {
         pointerId: event.pointerId,
-        pointerStartX: event.clientX,
         pointerStartY: event.clientY,
-        offsetStartX: offset.x,
-        offsetStartY: offset.y,
-        rect: panel.getBoundingClientRect(),
+        startBottom: position.bottom,
+        rectHeight: panel.getBoundingClientRect().height,
       };
       event.currentTarget.setPointerCapture(event.pointerId);
       setIsDragging(true);
     },
-    [offset, panelRef],
+    [panelRef, position.bottom],
   );
 
-  const onPointerMove = useCallback((event: PointerEvent<HTMLElement>) => {
-    const state = dragState.current;
-    if (!state || event.pointerId !== state.pointerId) return;
+  const onPointerMove = useCallback(
+    (event: PointerEvent<HTMLElement>) => {
+      const state = dragState.current;
+      if (!state || event.pointerId !== state.pointerId) return;
 
-    const dx = event.clientX - state.pointerStartX;
-    const dy = event.clientY - state.pointerStartY;
+      const dy = event.clientY - state.pointerStartY;
+      if (Math.abs(dy) > DRAG_THRESHOLD) draggedRef.current = true;
 
-    // Clamp so the panel always keeps at least EDGE_MARGIN on-screen on
-    // every side — it can be dragged anywhere, just never lost off-screen.
-    const maxLeft = Math.max(
-      EDGE_MARGIN,
-      window.innerWidth - EDGE_MARGIN - state.rect.width,
-    );
-    const maxTop = Math.max(
-      EDGE_MARGIN,
-      window.innerHeight - EDGE_MARGIN - state.rect.height,
-    );
-    const clampedLeft = Math.min(
-      Math.max(state.rect.left + dx, EDGE_MARGIN),
-      maxLeft,
-    );
-    const clampedTop = Math.min(
-      Math.max(state.rect.top + dy, EDGE_MARGIN),
-      maxTop,
-    );
+      const maxBottom = Math.max(
+        MIN_BOTTOM,
+        window.innerHeight - MIN_BOTTOM - state.rectHeight,
+      );
+      const nextBottom = Math.min(
+        Math.max(state.startBottom - dy, MIN_BOTTOM),
+        maxBottom,
+      );
+      const nextSide: "left" | "right" =
+        event.clientX < window.innerWidth / 2 ? "left" : "right";
 
-    setOffset({
-      x: state.offsetStartX + (clampedLeft - state.rect.left),
-      y: state.offsetStartY + (clampedTop - state.rect.top),
-    });
-  }, []);
+      onPositionChange({ side: nextSide, bottom: nextBottom });
+    },
+    [onPositionChange],
+  );
 
   const endDrag = useCallback((event: PointerEvent<HTMLElement>) => {
     if (dragState.current?.pointerId === event.pointerId) {
@@ -103,8 +105,8 @@ export function useDraggable<T extends HTMLElement>(
   }, []);
 
   return {
-    offset,
     isDragging,
+    draggedRef,
     handleProps: {
       onPointerDown,
       onPointerMove,
