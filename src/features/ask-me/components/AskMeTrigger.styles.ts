@@ -2,8 +2,6 @@ import styled from "styled-components";
 
 export const Wrap = styled.div`
   position: fixed;
-  bottom: 3.5rem;
-  right: 1.25rem;
   z-index: ${({ theme }) => theme.zIndex.floatingAction};
   display: flex;
   flex-direction: column;
@@ -15,7 +13,8 @@ export const Trigger = styled.button`
   height: 3.5rem;
   border-radius: 999px;
   border: none;
-  cursor: pointer;
+  cursor: grab;
+  touch-action: none;
   background: ${({ theme }) => theme.colors.secondary.DEFAULT};
   color: ${({ theme }) => theme.colors.secondary.foreground};
   display: flex;
@@ -26,6 +25,10 @@ export const Trigger = styled.button`
 
   &:hover {
     transform: scale(1.06);
+  }
+
+  &:active {
+    cursor: grabbing;
   }
 `;
 
