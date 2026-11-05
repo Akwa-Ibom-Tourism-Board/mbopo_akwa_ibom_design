@@ -175,6 +175,14 @@ export function RegistrationForm({
     formState: { errors },
   } = useForm<RegistrationFormValues>({
     resolver: zodResolver(registrationSchema),
+    // This form never calls RHF's own handleSubmit (each step advances via
+    // manual trigger() calls instead), so isSubmitted never becomes true.
+    // With the default mode ("onSubmit"), RHF skips all onChange
+    // re-validation until isSubmitted is true, so a field flagged invalid
+    // by trigger() would never clear on its own as the user fixed it.
+    // "onChange" re-validates fields that already have an error on every
+    // change, which clears them once the field becomes valid.
+    mode: "onChange",
     defaultValues: {
       ...DEFAULT_REGISTRATION_FORM_VALUES,
       ...initialDraft,
