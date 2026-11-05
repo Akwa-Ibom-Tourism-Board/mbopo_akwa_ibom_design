@@ -62,7 +62,7 @@ const SECTIONS: LegalSection[] = [
           "Identity data confirmed through your National Identification Number (NIN) — including your name, gender, date of birth and NIN — and a live photograph taken to confirm that it is you.",
           "Voter identity data — your Voter Identification Number (VIN), confirmed when you submit your application.",
           "Contact data — including your email address and telephone number.",
-          "Background data you provide — such as your Local Government Area of origin, educational qualifications and a personal statement.",
+          "Background data you provide — such as your Local Government Area of origin, marital status, educational qualifications and a personal statement.",
           "Documentary data — photographs and documents you upload, including your Certificate of Origin and two full-length images.",
           "Audiovisual data — a short video pitch you record live on the platform.",
           "Participation and voting data — information generated through your participation, assessment and, where applicable, Online Voting.",
