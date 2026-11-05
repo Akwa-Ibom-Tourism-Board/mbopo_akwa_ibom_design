@@ -27,6 +27,10 @@ import { StoryStep } from "./steps/StoryStep";
 import { SuccessState } from "./SuccessState";
 import { ReviewSubmitModal } from "./ReviewSubmitModal";
 import {
+  MissingFieldsModal,
+  type MissingFieldItem,
+} from "./MissingFieldsModal";
+import {
   Main,
   Intro,
   Eyebrow,
@@ -42,6 +46,36 @@ const PERSONAL_STEP = 0;
 const IDENTITY_STEP = 1;
 const EDUCATION_STEP = 2;
 const VIDEO_STEP = 3;
+
+// Human-readable names for the MissingFieldsModal — matches each field's
+// on-screen label exactly (see the step components' own `label=` props),
+// so "go to field" takes the applicant to something they recognize.
+const FIELD_LABELS: Record<keyof RegistrationFormValues, string> = {
+  middleName: "Middle name",
+  phone: "Phone number",
+  socialMedia: "Social media handles",
+  nextOfKin: "Next of kin full name",
+  nextOfKinPhone: "Next of kin phone",
+  nextOfKinRelationship: "Relationship with next of kin",
+  village: "Village",
+  localGovernment: "Local Government Area of origin",
+  residenceState: "State of residence",
+  city: "Town / city of residence",
+  address: "Home address",
+  education: "Highest educational qualification",
+  institution: "Institution attended",
+  institutionOther: "Name your institution",
+  occupation: "Occupation",
+  occupationOther: "Name your occupation",
+  talents: "Talent(s)",
+  languages: "Languages spoken",
+  vin: "Voter Identification Number (VIN)",
+  initiative: "Community initiative, business or skill",
+  why: "Why you want to be Mbopo Akwa Ibom",
+  declarationIdentity: "Identity declaration",
+  declarationAccuracy: "Accuracy declaration",
+  declarationTerms: "Terms & conditions",
+};
 
 // A resumed draft has no notion of "which step was I on" on the backend —
 // the Application row is just the fields themselves, not a UI cursor — so
@@ -106,6 +140,10 @@ export function RegistrationForm({
   const [requireFullImage2, setRequireFullImage2] = useState(false);
   const [requireVideo, setRequireVideo] = useState(false);
   const [reviewOpen, setReviewOpen] = useState(false);
+  const [missingFieldsOpen, setMissingFieldsOpen] = useState(false);
+  const [missingFieldItems, setMissingFieldItems] = useState<
+    MissingFieldItem[]
+  >([]);
 
   // Every photo/video field uploads and saves itself the moment it's
   // picked (see usePhotoUpload/useVideoRecorder) — there's no "gather
@@ -203,6 +241,27 @@ export function RegistrationForm({
       ),
   });
 
+  // Fires on every "Continue" — separate from saveDraftMutation because
+  // that one navigates to the dashboard and toasts success on completion,
+  // neither of which belongs here. This one is silent on success (nothing
+  // to tell the user — they're already moving on) and only ever speaks up
+  // if it fails, since a step transition that waited for this network
+  // round trip is exactly the "network makes a mess, start again" problem
+  // being fixed: the step change below never waits on this.
+  const autosaveMutation = useMutation({
+    mutationFn: saveRegistrationDraft,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["dashboard", "summary"] });
+    },
+    onError: (error) =>
+      sonnerToast.error(
+        friendlyMessage(
+          error,
+          "We couldn't save your progress just now — check your connection. Your answers are still on this page, so don't close it; try Save & Exit once you're back online.",
+        ),
+      ),
+  });
+
   if (submitMutation.isSuccess) {
     return <SuccessState referenceCode={submitMutation.data.referenceCode} />;
   }
@@ -228,6 +287,14 @@ export function RegistrationForm({
       )
         return;
     }
+
+    // Persist this step's answers the moment the applicant moves on —
+    // fire-and-forget (not awaited), so the step change below happens
+    // immediately rather than waiting on the network. Without this, their
+    // only save point was the explicit "Save & Exit" button, so a dropped
+    // connection partway through the form meant everything typed since the
+    // last manual save was gone.
+    autosaveMutation.mutate(getValues());
 
     setCurrentStepIndex((index) =>
       Math.min(index + 1, REGISTRATION_STEPS.length - 1),
@@ -267,6 +334,57 @@ export function RegistrationForm({
     return null;
   };
 
+  // Named individually (rather than looping every field in STEP_FIELDS)
+  // because the certificate/full images/video aren't form fields at all —
+  // they're tracked by usePhotoUpload/useVideoRecorder — so they need their
+  // own entries alongside whatever trigger() finds invalid.
+  const buildMissingFieldItems = (): MissingFieldItem[] => {
+    const items: MissingFieldItem[] = [];
+
+    STEP_FIELDS.forEach((fields, stepIndex) => {
+      fields.forEach((name) => {
+        if (getFieldState(name).invalid) {
+          items.push({
+            step: stepIndex,
+            stepLabel: REGISTRATION_STEPS[stepIndex] ?? "",
+            fieldLabel: FIELD_LABELS[name] ?? name,
+          });
+        }
+      });
+    });
+
+    if (!certificate.hasPhoto) {
+      items.push({
+        step: IDENTITY_STEP,
+        stepLabel: REGISTRATION_STEPS[IDENTITY_STEP],
+        fieldLabel: "Certificate of Origin",
+      });
+    }
+    if (!fullImage.hasPhoto) {
+      items.push({
+        step: VIDEO_STEP,
+        stepLabel: REGISTRATION_STEPS[VIDEO_STEP],
+        fieldLabel: "Full Image 1",
+      });
+    }
+    if (!fullImage2.hasPhoto) {
+      items.push({
+        step: VIDEO_STEP,
+        stepLabel: REGISTRATION_STEPS[VIDEO_STEP],
+        fieldLabel: "Full Image 2",
+      });
+    }
+    if (videoRecorder.status !== "locked") {
+      items.push({
+        step: VIDEO_STEP,
+        stepLabel: REGISTRATION_STEPS[VIDEO_STEP],
+        fieldLabel: "Video pitch",
+      });
+    }
+
+    return items;
+  };
+
   const openReview = async () => {
     const fieldsValid = await trigger();
     const photosOk =
@@ -280,9 +398,8 @@ export function RegistrationForm({
       setRequireVideo(!videoOk);
       const invalidStep = findFirstInvalidStep();
       if (invalidStep !== null) setCurrentStepIndex(invalidStep);
-      sonnerToast.error(
-        "Please complete all required fields before submitting.",
-      );
+      setMissingFieldItems(buildMissingFieldItems());
+      setMissingFieldsOpen(true);
       return;
     }
 
@@ -426,6 +543,13 @@ export function RegistrationForm({
         videoPreviewUrl={videoRecorder.previewUrl}
         isSubmitting={submitMutation.isPending}
         onConfirm={() => void handleConfirmSubmit()}
+      />
+
+      <MissingFieldsModal
+        open={missingFieldsOpen}
+        onOpenChange={setMissingFieldsOpen}
+        items={missingFieldItems}
+        onGoToStep={setCurrentStepIndex}
       />
     </Main>
   );
