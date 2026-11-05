@@ -6,6 +6,7 @@ import {
   NIGERIAN_STATES,
   AKWA_IBOM_LGAS,
   OCCUPATIONS,
+  MARITAL_STATUSES,
 } from "./constants";
 import { NIGERIAN_INSTITUTIONS } from "./data/institutions";
 import {
@@ -85,6 +86,7 @@ export const registrationSchema = z
     // Step 1 — Personal (editable fields only; identity is locked from the account)
     middleName: optionalName(100),
     phone: phone("Enter a valid Nigerian phone number, e.g. 08012345678"),
+    maritalStatus: oneOf(MARITAL_STATUSES, "Select your marital status"),
     socialMedia: optionalText(300),
     nextOfKin: name(100),
     nextOfKinPhone: phone(
@@ -112,6 +114,9 @@ export const registrationSchema = z
 
     // Step 3 — Education & background
     education: oneOf(EDUCATION_LEVELS, "Select your highest qualification"),
+    // Only meaningful (and required) when education === "Other" — see the
+    // cross-field refine below.
+    educationOther: optionalText(100).transform(toSentenceCase),
     institution: oneOfOptional(
       INSTITUTION_OPTIONS,
       "Select a valid institution",
@@ -173,6 +178,14 @@ export const registrationSchema = z
   })
   .refine(
     (data) =>
+      data.education !== "Other" || data.educationOther.trim().length > 0,
+    {
+      message: "Please specify your qualification",
+      path: ["educationOther"],
+    },
+  )
+  .refine(
+    (data) =>
       data.occupation !== "Other" || data.occupationOther.trim().length > 0,
     {
       message: "Please specify your occupation",
@@ -193,6 +206,7 @@ export type RegistrationFormValues = z.infer<typeof registrationSchema>;
 export const DEFAULT_REGISTRATION_FORM_VALUES: RegistrationFormValues = {
   middleName: "",
   phone: "",
+  maritalStatus: "",
   socialMedia: "",
   nextOfKin: "",
   nextOfKinPhone: "",
@@ -203,6 +217,7 @@ export const DEFAULT_REGISTRATION_FORM_VALUES: RegistrationFormValues = {
   city: "",
   address: "",
   education: "",
+  educationOther: "",
   institution: "",
   institutionOther: "",
   occupation: "",
@@ -218,10 +233,17 @@ export const DEFAULT_REGISTRATION_FORM_VALUES: RegistrationFormValues = {
 };
 
 export const STEP_FIELDS: (keyof RegistrationFormValues)[][] = [
-  ["phone", "nextOfKin", "nextOfKinPhone", "nextOfKinRelationship"],
+  [
+    "phone",
+    "maritalStatus",
+    "nextOfKin",
+    "nextOfKinPhone",
+    "nextOfKinRelationship",
+  ],
   ["village", "localGovernment", "residenceState", "city", "address"],
   [
     "education",
+    "educationOther",
     "occupation",
     "occupationOther",
     "institution",

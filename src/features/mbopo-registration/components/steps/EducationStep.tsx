@@ -26,6 +26,7 @@ export function EducationStep({
   control,
   errors,
 }: EducationStepProps) {
+  const education = useWatch({ control, name: "education" });
   const occupation = useWatch({ control, name: "occupation" });
   const institution = useWatch({ control, name: "institution" });
 
@@ -54,6 +55,19 @@ export function EducationStep({
             )}
           />
         </Field>
+        {education === "Other" && (
+          <Field
+            label="Name your qualification"
+            required
+            error={errors.educationOther?.message}
+          >
+            <Input
+              placeholder="e.g. ND, A-Level, Professional certification"
+              maxLength={100}
+              {...register("educationOther")}
+            />
+          </Field>
+        )}
         <Field label="Institution attended" error={errors.institution?.message}>
           <Controller
             control={control}

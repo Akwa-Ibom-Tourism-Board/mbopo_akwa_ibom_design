@@ -1,8 +1,14 @@
-import type { FieldErrors, UseFormRegister } from "react-hook-form";
-import { Input } from "@/shared/ui";
+import {
+  Controller,
+  type Control,
+  type FieldErrors,
+  type UseFormRegister,
+} from "react-hook-form";
+import { Input, Combobox } from "@/shared/ui";
 import type { VerifiedUser } from "@/features/auth";
 import { digitsOnlyOnChange } from "@/lib/validation";
 import type { RegistrationFormValues } from "../../schema";
+import { MARITAL_STATUSES } from "../../constants";
 import { Field } from "../Field";
 import { FieldGrid, LockedValue } from "../Field.styles";
 import { StepContent, StepTitle, StepHint } from "../StepShell.styles";
@@ -10,10 +16,16 @@ import { StepContent, StepTitle, StepHint } from "../StepShell.styles";
 export interface PersonalStepProps {
   user: VerifiedUser;
   register: UseFormRegister<RegistrationFormValues>;
+  control: Control<RegistrationFormValues>;
   errors: FieldErrors<RegistrationFormValues>;
 }
 
-export function PersonalStep({ user, register, errors }: PersonalStepProps) {
+export function PersonalStep({
+  user,
+  register,
+  control,
+  errors,
+}: PersonalStepProps) {
   const phoneField = register("phone");
   const nextOfKinPhoneField = register("nextOfKinPhone");
 
@@ -48,6 +60,26 @@ export function PersonalStep({ user, register, errors }: PersonalStepProps) {
         </Field>
         <Field label="Email address">
           <LockedValue>{user.email}</LockedValue>
+        </Field>
+        <Field
+          label="Marital status"
+          required
+          error={errors.maritalStatus?.message}
+        >
+          <Controller
+            control={control}
+            name="maritalStatus"
+            render={({ field }) => (
+              <Combobox
+                value={field.value}
+                onValueChange={field.onChange}
+                options={MARITAL_STATUSES}
+                placeholder="Select marital status"
+                searchPlaceholder="Search…"
+                invalid={Boolean(errors.maritalStatus)}
+              />
+            )}
+          />
         </Field>
         <Field
           label="Social Media Handles"

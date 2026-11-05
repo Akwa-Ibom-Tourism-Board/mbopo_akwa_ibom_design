@@ -53,6 +53,7 @@ const VIDEO_STEP = 3;
 const FIELD_LABELS: Record<keyof RegistrationFormValues, string> = {
   middleName: "Middle name",
   phone: "Phone number",
+  maritalStatus: "Marital status",
   socialMedia: "Social media handles",
   nextOfKin: "Next of kin full name",
   nextOfKinPhone: "Next of kin phone",
@@ -63,6 +64,7 @@ const FIELD_LABELS: Record<keyof RegistrationFormValues, string> = {
   city: "Town / city of residence",
   address: "Home address",
   education: "Highest educational qualification",
+  educationOther: "Name your qualification",
   institution: "Institution attended",
   institutionOther: "Name your institution",
   occupation: "Occupation",
@@ -87,6 +89,7 @@ const FIELD_LABELS: Record<keyof RegistrationFormValues, string> = {
 // blanket emptiness check would wrongly treat a draft as incomplete at the
 // Education step for everyone who didn't need to fill either in.
 const CONDITIONAL_OTHER_FIELDS = new Set([
+  "educationOther",
   "occupationOther",
   "institutionOther",
 ]);
@@ -106,6 +109,7 @@ function findInitialStep(draft: Application | null | undefined): number {
         );
       });
     const missingOther =
+      (draft.education === "Other" && !draft.educationOther) ||
       (draft.occupation === "Other" && !draft.occupationOther) ||
       (draft.institution === "Other" && !draft.institutionOther);
     const missingPhoto =
@@ -175,6 +179,14 @@ export function RegistrationForm({
     formState: { errors },
   } = useForm<RegistrationFormValues>({
     resolver: zodResolver(registrationSchema),
+    // This form never calls RHF's own handleSubmit (each step advances via
+    // manual trigger() calls instead), so isSubmitted never becomes true.
+    // With the default mode ("onSubmit"), RHF skips all onChange
+    // re-validation until isSubmitted is true, so a field flagged invalid
+    // by trigger() would never clear on its own as the user fixed it.
+    // "onChange" re-validates fields that already have an error on every
+    // change, which clears them once the field becomes valid.
+    mode: "onChange",
     defaultValues: {
       ...DEFAULT_REGISTRATION_FORM_VALUES,
       ...initialDraft,
@@ -446,7 +458,12 @@ export function RegistrationForm({
           noValidate
         >
           {currentStepIndex === PERSONAL_STEP && (
-            <PersonalStep user={user} register={register} errors={errors} />
+            <PersonalStep
+              user={user}
+              register={register}
+              control={control}
+              errors={errors}
+            />
           )}
           {currentStepIndex === IDENTITY_STEP && (
             <IdentityOriginStep

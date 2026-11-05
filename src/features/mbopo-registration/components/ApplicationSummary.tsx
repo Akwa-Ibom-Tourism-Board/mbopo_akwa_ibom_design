@@ -111,6 +111,10 @@ export function ApplicationSummary({
             <DetailLabel>Email address</DetailLabel>
             <DetailValue>{user.email}</DetailValue>
           </DetailItem>
+          <DetailItem>
+            <DetailLabel>Marital status</DetailLabel>
+            <DetailValue>{values.maritalStatus}</DetailValue>
+          </DetailItem>
           {values.socialMedia && (
             <DetailItem $wide>
               <DetailLabel>Social media handles</DetailLabel>
@@ -192,7 +196,11 @@ export function ApplicationSummary({
         <DetailGrid>
           <DetailItem>
             <DetailLabel>Highest qualification</DetailLabel>
-            <DetailValue>{values.education}</DetailValue>
+            <DetailValue>
+              {values.education === "Other"
+                ? values.educationOther
+                : values.education}
+            </DetailValue>
           </DetailItem>
           {values.institution && (
             <DetailItem>
