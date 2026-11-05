@@ -63,6 +63,7 @@ const FIELD_LABELS: Record<keyof RegistrationFormValues, string> = {
   city: "Town / city of residence",
   address: "Home address",
   education: "Highest educational qualification",
+  educationOther: "Name your qualification",
   institution: "Institution attended",
   institutionOther: "Name your institution",
   occupation: "Occupation",
@@ -87,6 +88,7 @@ const FIELD_LABELS: Record<keyof RegistrationFormValues, string> = {
 // blanket emptiness check would wrongly treat a draft as incomplete at the
 // Education step for everyone who didn't need to fill either in.
 const CONDITIONAL_OTHER_FIELDS = new Set([
+  "educationOther",
   "occupationOther",
   "institutionOther",
 ]);
@@ -106,6 +108,7 @@ function findInitialStep(draft: Application | null | undefined): number {
         );
       });
     const missingOther =
+      (draft.education === "Other" && !draft.educationOther) ||
       (draft.occupation === "Other" && !draft.occupationOther) ||
       (draft.institution === "Other" && !draft.institutionOther);
     const missingPhoto =

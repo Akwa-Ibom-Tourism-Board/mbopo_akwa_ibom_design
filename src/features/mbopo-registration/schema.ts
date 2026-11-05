@@ -112,6 +112,9 @@ export const registrationSchema = z
 
     // Step 3 — Education & background
     education: oneOf(EDUCATION_LEVELS, "Select your highest qualification"),
+    // Only meaningful (and required) when education === "Other" — see the
+    // cross-field refine below.
+    educationOther: optionalText(100).transform(toSentenceCase),
     institution: oneOfOptional(
       INSTITUTION_OPTIONS,
       "Select a valid institution",
@@ -173,6 +176,14 @@ export const registrationSchema = z
   })
   .refine(
     (data) =>
+      data.education !== "Other" || data.educationOther.trim().length > 0,
+    {
+      message: "Please specify your qualification",
+      path: ["educationOther"],
+    },
+  )
+  .refine(
+    (data) =>
       data.occupation !== "Other" || data.occupationOther.trim().length > 0,
     {
       message: "Please specify your occupation",
@@ -203,6 +214,7 @@ export const DEFAULT_REGISTRATION_FORM_VALUES: RegistrationFormValues = {
   city: "",
   address: "",
   education: "",
+  educationOther: "",
   institution: "",
   institutionOther: "",
   occupation: "",
@@ -222,6 +234,7 @@ export const STEP_FIELDS: (keyof RegistrationFormValues)[][] = [
   ["village", "localGovernment", "residenceState", "city", "address"],
   [
     "education",
+    "educationOther",
     "occupation",
     "occupationOther",
     "institution",

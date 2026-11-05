@@ -192,7 +192,11 @@ export function ApplicationSummary({
         <DetailGrid>
           <DetailItem>
             <DetailLabel>Highest qualification</DetailLabel>
-            <DetailValue>{values.education}</DetailValue>
+            <DetailValue>
+              {values.education === "Other"
+                ? values.educationOther
+                : values.education}
+            </DetailValue>
           </DetailItem>
           {values.institution && (
             <DetailItem>
