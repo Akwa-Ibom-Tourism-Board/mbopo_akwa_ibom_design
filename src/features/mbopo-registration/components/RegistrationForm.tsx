@@ -53,6 +53,7 @@ const VIDEO_STEP = 3;
 const FIELD_LABELS: Record<keyof RegistrationFormValues, string> = {
   middleName: "Middle name",
   phone: "Phone number",
+  maritalStatus: "Marital status",
   socialMedia: "Social media handles",
   nextOfKin: "Next of kin full name",
   nextOfKinPhone: "Next of kin phone",
@@ -457,7 +458,12 @@ export function RegistrationForm({
           noValidate
         >
           {currentStepIndex === PERSONAL_STEP && (
-            <PersonalStep user={user} register={register} errors={errors} />
+            <PersonalStep
+              user={user}
+              register={register}
+              control={control}
+              errors={errors}
+            />
           )}
           {currentStepIndex === IDENTITY_STEP && (
             <IdentityOriginStep

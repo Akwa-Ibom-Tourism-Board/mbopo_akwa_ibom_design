@@ -8,6 +8,14 @@ export const REGISTRATION_STEPS = [
 
 export const VIDEO_PITCH_MAX_SECONDS = 30;
 
+export const MARITAL_STATUSES = [
+  "Single",
+  "Married",
+  "Divorced",
+  "Widowed",
+  "Separated",
+] as const;
+
 // Hard cap on the recorded file itself — a large video is what made
 // submit feel slow (the file has to actually reach Cloudinary before
 // submit can finish). useVideoRecorder's MediaRecorder bitrate settings
