@@ -121,6 +121,38 @@ function findInitialStep(draft: Application | null | undefined): number {
   return REGISTRATION_STEPS.length - 1;
 }
 
+// A resumed draft's never-touched columns come back from the API as `null`
+// (that's what an unfilled nullable DB column serializes to), but every
+// field in RegistrationFormValues is a plain string/boolean — zod's
+// z.string() rejects `null` outright as a type mismatch, and that single
+// rejection aborts the ENTIRE schema parse (zod's object-merge rule: one
+// aborted field aborts the whole object), which silently skips every other
+// field's validation too. In practice this hits the "Other" free-text
+// fields hardest, since they stay null for every applicant who didn't pick
+// "Other" — i.e. most applicants — making the form wrongly report them (and
+// everything else) as invalid the moment a draft with any null field is
+// resumed. Fold each null/undefined draft value back to its
+// DEFAULT_REGISTRATION_FORM_VALUES type before it ever reaches the schema.
+function sanitizeDraftForForm(
+  draft: Application | null | undefined,
+): Partial<RegistrationFormValues> {
+  if (!draft) return {};
+  const sanitized: Partial<RegistrationFormValues> = {};
+  (
+    Object.keys(
+      DEFAULT_REGISTRATION_FORM_VALUES,
+    ) as (keyof RegistrationFormValues)[]
+  ).forEach((key) => {
+    const value = draft[key as keyof Application];
+    sanitized[key] = (
+      value === null || value === undefined
+        ? DEFAULT_REGISTRATION_FORM_VALUES[key]
+        : value
+    ) as never;
+  });
+  return sanitized;
+}
+
 // Everything except the video pitch can be saved as a draft and resumed —
 // see "Save & Exit" below. The video is different: once it's been
 // submitted (useVideoRecorder's "locked" status), it can never be
@@ -189,7 +221,7 @@ export function RegistrationForm({
     mode: "onChange",
     defaultValues: {
       ...DEFAULT_REGISTRATION_FORM_VALUES,
-      ...initialDraft,
+      ...sanitizeDraftForForm(initialDraft),
     },
   });
 
