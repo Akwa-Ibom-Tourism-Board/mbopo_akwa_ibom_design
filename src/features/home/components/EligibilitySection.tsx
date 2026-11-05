@@ -27,6 +27,7 @@ import {
 
 const ELIGIBILITY_CRITERIA = [
   "Must be female (gender verified via NIN)",
+  "Must be single",
   "Must be an indigene of Akwa Ibom State",
   "Must be a graduate (minimum of B.Sc., HND or equivalent)",
   "Must be between 22 and 27 years old (age verified via NIN)",

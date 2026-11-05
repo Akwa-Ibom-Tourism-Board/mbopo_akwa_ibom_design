@@ -100,7 +100,7 @@ const SECTIONS: LegalSection[] = [
           "Be an indigene of Akwa Ibom State, and able to identify and represent a recognised Local Government Area of the State.",
           "Be between twenty-two (22) and twenty-seven (27) years of age, both inclusive, as at the eligibility reference date published by the Commission [date to be confirmed].",
           "Hold a minimum qualification of a Bachelor’s degree, Higher National Diploma (HND) or an equivalent qualification recognised by the Commission.",
-          "Be unmarried and without children, where so required by the approved Programme eligibility criteria [to be confirmed by the Commission].",
+          "Be unmarried (single) and without children at the time of application.",
           "Possess a valid National Identification Number (NIN).",
           "Possess a valid Certificate of Origin or Local Government Identification acceptable to the Commission.",
           "Possess a valid Voter Identification Number (VIN), where required by the Programme.",
