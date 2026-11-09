@@ -68,7 +68,7 @@ export function StoryStep({ register, control, errors }: StoryStepProps) {
         label="Voter Identification Number (VIN)"
         required
         error={errors.vin?.message}
-        hint="Checked when you submit — if it isn't found, you'll be asked to check it and try again before you can finish."
+        hint="Please ensure this is correct before submitting. It's verified after submission — an incorrect or unverifiable VIN may lead to disqualification."
       >
         <Input
           maxLength={19}
