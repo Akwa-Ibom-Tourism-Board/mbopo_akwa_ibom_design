@@ -4,10 +4,17 @@ import { AskMeForm } from "./AskMeForm";
 import { MinimizedWidget } from "./MinimizedWidget";
 import { StatusModal } from "./StatusModal";
 import type { StatusModalState } from "../types";
+import type { WidgetPosition } from "../useDraggable";
+
+const DEFAULT_POSITION: WidgetPosition = { side: "right", bottom: 24 };
 
 export function AskMeWidget() {
   const [isOpen, setIsOpen] = useState(false);
   const [isMinimized, setIsMinimized] = useState(false);
+  // Shared across the trigger bubble, the open form, and the minimized
+  // bar, so dragging any one of them keeps the widget where you left it
+  // as it switches between those states.
+  const [position, setPosition] = useState<WidgetPosition>(DEFAULT_POSITION);
   const [statusModal, setStatusModal] = useState<StatusModalState>({
     open: false,
     title: "",
@@ -33,7 +40,7 @@ export function AskMeWidget() {
       open: true,
       title: "Message sent",
       message:
-        "Thanks for reaching out. We have received your message and will get back to you soon.",
+        "Thanks for reaching out. We have received your message, and someone will respond soon via the email address you provided.",
       type: "success",
     });
 
@@ -51,6 +58,8 @@ export function AskMeWidget() {
         <MinimizedWidget
           onRestore={() => setIsMinimized(false)}
           onClose={closeWidget}
+          position={position}
+          onPositionChange={setPosition}
         />
         <StatusModal {...statusModal} onClose={closeStatusModal} />
       </>
@@ -59,7 +68,13 @@ export function AskMeWidget() {
 
   return (
     <>
-      {!isOpen && <AskMeTrigger onClick={openWidget} />}
+      {!isOpen && (
+        <AskMeTrigger
+          onClick={openWidget}
+          position={position}
+          onPositionChange={setPosition}
+        />
+      )}
 
       {isOpen && (
         <AskMeForm
@@ -67,6 +82,8 @@ export function AskMeWidget() {
           onMinimize={() => setIsMinimized(true)}
           onSuccess={showSuccess}
           onError={showError}
+          position={position}
+          onPositionChange={setPosition}
         />
       )}
 

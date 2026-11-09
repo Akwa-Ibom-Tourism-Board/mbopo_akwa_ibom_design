@@ -3,11 +3,7 @@ import { media } from "@/theme";
 
 export const Panel = styled.div`
   position: fixed;
-  bottom: 1.5rem;
-  right: 1.25rem;
-  left: 1.25rem;
   z-index: ${({ theme }) => theme.zIndex.modal};
-  margin-left: auto;
   width: calc(100% - 2.5rem);
   max-width: 24rem;
   max-height: 34rem;
@@ -18,15 +14,8 @@ export const Panel = styled.div`
   border-radius: ${({ theme }) => theme.radii["2xl"]};
   box-shadow: ${({ theme }) => theme.shadows.xl};
   overflow: hidden;
-  /* Dragging sets an inline transform (see useDraggable) — no transition
-     while actively dragging, so the panel tracks the pointer exactly
-     instead of lagging behind it. */
-  &[data-dragging="true"] {
-    transition: none;
-  }
 
   ${media.sm} {
-    left: auto;
     width: 24rem;
   }
 `;

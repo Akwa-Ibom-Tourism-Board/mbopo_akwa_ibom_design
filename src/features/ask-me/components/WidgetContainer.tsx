@@ -5,7 +5,11 @@ import {
   MessageCircleQuestion,
   X,
 } from "lucide-react";
-import { useDraggable } from "../useDraggable";
+import {
+  useDraggable,
+  WIDGET_SIDE_MARGIN,
+  type WidgetPosition,
+} from "../useDraggable";
 import {
   Panel,
   Header,
@@ -23,21 +27,27 @@ export interface WidgetContainerProps {
   children: ReactNode;
   onClose: () => void;
   onMinimize: () => void;
+  position: WidgetPosition;
+  onPositionChange: (next: WidgetPosition) => void;
 }
 
 export function WidgetContainer({
   children,
   onClose,
   onMinimize,
+  position,
+  onPositionChange,
 }: WidgetContainerProps) {
   const panelRef = useRef<HTMLDivElement>(null);
-  const { offset, isDragging, handleProps } = useDraggable(panelRef);
+  const { handleProps } = useDraggable(panelRef, position, onPositionChange);
 
   return (
     <Panel
       ref={panelRef}
-      data-dragging={isDragging}
-      style={{ transform: `translate3d(${offset.x}px, ${offset.y}px, 0)` }}
+      style={{
+        [position.side]: `${WIDGET_SIDE_MARGIN}px`,
+        bottom: `${position.bottom}px`,
+      }}
     >
       <Header>
         <HeaderInfo {...handleProps} title="Drag to move">

@@ -6,6 +6,7 @@ import {
   NIGERIAN_STATES,
   AKWA_IBOM_LGAS,
   OCCUPATIONS,
+  MARITAL_STATUSES,
 } from "./constants";
 import { NIGERIAN_INSTITUTIONS } from "./data/institutions";
 import {
@@ -15,19 +16,33 @@ import {
   NAME_MESSAGE,
   CONTAINS_LETTER_REGEX,
   CONTAINS_LETTER_MESSAGE,
-  toSentenceCase,
 } from "@/lib/validation";
 
 const wordCount = (value: string) =>
   value.trim().split(/\s+/).filter(Boolean).length;
 
+// These fields used to end with .transform(toSentenceCase). That's a real
+// zod bug (verified against the installed zod/react-hook-form versions):
+// once a preceding check (regex/min/max) fails, the field's parse status is
+// "dirty" (recoverable, not fatal) — but ZodEffects' transform branch only
+// runs when the inner result is exactly "valid", so a failing field got
+// silently escalated to "aborted". Per zod's own object-merge rule, ONE
+// aborted field aborts the WHOLE z.object() parse, which silently skipped
+// every .refine() chained on the schema below (the education/occupation/
+// institution "Other" checks) any time some OTHER field was still empty —
+// the form's normal mid-fill state. Separately: getValues() (used
+// everywhere in RegistrationForm.tsx — autosave, draft, submit, the review
+// summary) reads react-hook-form's raw internal state directly and never
+// runs the zod resolver at all, so that .transform() never actually
+// affected any value this form sends or displays; sentence-casing already
+// happens server-side as a backstop (application.helpers.ts's
+// normalizeDraftPayload). So it's simply removed here, not replaced.
 const name = (max: number) =>
   z
     .string()
     .trim()
     .max(max, `Keep this under ${max} characters`)
-    .regex(NAME_REGEX, NAME_MESSAGE)
-    .transform(toSentenceCase);
+    .regex(NAME_REGEX, NAME_MESSAGE);
 
 // Optional free-text fields still have their format checked when
 // non-empty — only an actually-empty string skips validation — so a
@@ -39,8 +54,7 @@ const optionalName = (max: number) =>
     .trim()
     .max(max, `Keep this under ${max} characters`)
     .regex(NAME_REGEX, NAME_MESSAGE)
-    .or(z.literal(""))
-    .transform(toSentenceCase);
+    .or(z.literal(""));
 
 const optionalText = (max: number) =>
   z.string().trim().max(max, `Keep this under ${max} characters`);
@@ -56,8 +70,7 @@ const placeName = (max: number) =>
     .string()
     .trim()
     .max(max, `Keep this under ${max} characters`)
-    .regex(CONTAINS_LETTER_REGEX, CONTAINS_LETTER_MESSAGE)
-    .transform(toSentenceCase);
+    .regex(CONTAINS_LETTER_REGEX, CONTAINS_LETTER_MESSAGE);
 
 // A plain string whitelisted against a fixed options list, rather than
 // z.enum(...) directly — z.enum rejects "" outright and (with a narrowing
@@ -85,6 +98,7 @@ export const registrationSchema = z
     // Step 1 — Personal (editable fields only; identity is locked from the account)
     middleName: optionalName(100),
     phone: phone("Enter a valid Nigerian phone number, e.g. 08012345678"),
+    maritalStatus: oneOf(MARITAL_STATUSES, "Select your marital status"),
     socialMedia: optionalText(300),
     nextOfKin: name(100),
     nextOfKinPhone: phone(
@@ -107,33 +121,33 @@ export const registrationSchema = z
       .string()
       .trim()
       .min(1, "Home address is required")
-      .max(300, "Keep this under 300 characters")
-      .transform(toSentenceCase),
+      .max(300, "Keep this under 300 characters"),
 
     // Step 3 — Education & background
     education: oneOf(EDUCATION_LEVELS, "Select your highest qualification"),
+    // Only meaningful (and required) when education === "Other" — see the
+    // cross-field refine below.
+    educationOther: optionalText(100),
     institution: oneOfOptional(
       INSTITUTION_OPTIONS,
       "Select a valid institution",
     ),
     // Only meaningful (and required) when institution === "Other" — see the
     // cross-field refine below.
-    institutionOther: optionalText(150).transform(toSentenceCase),
+    institutionOther: optionalText(150),
     occupation: oneOf(OCCUPATIONS, "Select your occupation"),
     // Only meaningful (and required) when occupation === "Other".
-    occupationOther: optionalText(100).transform(toSentenceCase),
+    occupationOther: optionalText(100),
     talents: z
       .string()
       .trim()
       .min(1, "Please share at least one talent")
-      .max(300, "Keep this under 300 characters")
-      .transform(toSentenceCase),
+      .max(300, "Keep this under 300 characters"),
     languages: z
       .string()
       .trim()
       .min(1, "Please list the languages you speak")
-      .max(300, "Keep this under 300 characters")
-      .transform(toSentenceCase),
+      .max(300, "Keep this under 300 characters"),
 
     // Step 4 — Your story, VIN & declarations. Unlike NIN (verified as
     // part of the very first step), VIN is only verified when the whole
@@ -148,7 +162,7 @@ export const registrationSchema = z
       .toUpperCase()
       .length(19, "Your VIN must be exactly 19 characters")
       .regex(/^[A-Z0-9]+$/, "Your VIN can only contain letters and digits"),
-    initiative: optionalText(1000).transform(toSentenceCase),
+    initiative: optionalText(1000),
     why: z
       .string()
       .trim()
@@ -159,8 +173,7 @@ export const registrationSchema = z
       })
       .refine((value) => wordCount(value) <= MAXIMUM_STORY_WORDS, {
         message: `Please keep this under ${MAXIMUM_STORY_WORDS} words.`,
-      })
-      .transform(toSentenceCase),
+      }),
     declarationIdentity: z
       .boolean()
       .refine((value) => value, "Please confirm this declaration."),
@@ -171,6 +184,14 @@ export const registrationSchema = z
       .boolean()
       .refine((value) => value, "Please accept the terms."),
   })
+  .refine(
+    (data) =>
+      data.education !== "Other" || data.educationOther.trim().length > 0,
+    {
+      message: "Please specify your qualification",
+      path: ["educationOther"],
+    },
+  )
   .refine(
     (data) =>
       data.occupation !== "Other" || data.occupationOther.trim().length > 0,
@@ -193,6 +214,7 @@ export type RegistrationFormValues = z.infer<typeof registrationSchema>;
 export const DEFAULT_REGISTRATION_FORM_VALUES: RegistrationFormValues = {
   middleName: "",
   phone: "",
+  maritalStatus: "",
   socialMedia: "",
   nextOfKin: "",
   nextOfKinPhone: "",
@@ -203,6 +225,7 @@ export const DEFAULT_REGISTRATION_FORM_VALUES: RegistrationFormValues = {
   city: "",
   address: "",
   education: "",
+  educationOther: "",
   institution: "",
   institutionOther: "",
   occupation: "",
@@ -218,10 +241,17 @@ export const DEFAULT_REGISTRATION_FORM_VALUES: RegistrationFormValues = {
 };
 
 export const STEP_FIELDS: (keyof RegistrationFormValues)[][] = [
-  ["phone", "nextOfKin", "nextOfKinPhone", "nextOfKinRelationship"],
+  [
+    "phone",
+    "maritalStatus",
+    "nextOfKin",
+    "nextOfKinPhone",
+    "nextOfKinRelationship",
+  ],
   ["village", "localGovernment", "residenceState", "city", "address"],
   [
     "education",
+    "educationOther",
     "occupation",
     "occupationOther",
     "institution",

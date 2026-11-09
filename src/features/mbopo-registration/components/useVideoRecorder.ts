@@ -119,6 +119,9 @@ export function useVideoRecorder({
   }, []);
 
   const releaseCamera = useCallback(() => {
+    streamRef.current?.getAudioTracks().forEach((track) => {
+      track.onmute = null;
+    });
     streamRef.current?.getTracks().forEach((track) => track.stop());
     streamRef.current = null;
   }, []);
@@ -165,7 +168,8 @@ export function useVideoRecorder({
       // blocked independently of the camera prompt) — catching that here,
       // before any recording starts, is the only way to avoid silently
       // producing a soundless take that looks fine until playback.
-      if (stream.getAudioTracks().length === 0) {
+      const audioTrack = stream.getAudioTracks()[0];
+      if (!audioTrack) {
         stream.getTracks().forEach((track) => track.stop());
         setErrorMessage(
           "We could not access your microphone. Please check your device's microphone permissions and try again.",
@@ -173,6 +177,33 @@ export function useVideoRecorder({
         setStatus("error");
         return;
       }
+      // A present track is not the same as a *live* one: MediaStreamTrack
+      // has its own spec'd `muted` state (the source has gone silent at the
+      // OS/hardware level — exclusively held by another app, a privacy
+      // toggle, a disconnected AirPods mic — distinct from the unrelated
+      // <video muted> HTML attribute on the preview element below) under
+      // which getUserMedia still resolves successfully and recording still
+      // "works," just with dead silence muxed in. This is the actual
+      // reproducible cause behind "I recorded it and there's no audio at
+      // all" on both Chrome/Mac and Chrome/Android — isTypeSupported and
+      // the codec string picked below were never the issue there.
+      if (audioTrack.muted) {
+        stream.getTracks().forEach((track) => track.stop());
+        setErrorMessage(
+          "Your microphone appears to be silenced or in use by another app. Please check it and try again.",
+        );
+        setStatus("error");
+        return;
+      }
+      // Covers the same condition arriving *after* this check — e.g. the
+      // mic gets grabbed by another app, or a privacy toggle flips, while
+      // the applicant is reading the instructions before pressing record.
+      audioTrack.onmute = () => {
+        setErrorMessage(
+          "Your microphone was silenced or disconnected. Please check it and try again.",
+        );
+        setStatus("error");
+      };
       streamRef.current = stream;
       if (liveVideoRef.current) {
         liveVideoRef.current.srcObject = stream;
@@ -204,6 +235,20 @@ export function useVideoRecorder({
     const stream = streamRef.current;
     // Also refuses to start a second recorder over a first still-active one.
     if (!stream || recorderRef.current?.state === "recording") return;
+
+    // Re-checked here, not just at requestCamera time — the mic can go
+    // silent (another app grabs it, a privacy toggle flips) in the gap
+    // between opening the camera and pressing Start, before the onmute
+    // handler above has a chance to react.
+    const audioTrack = stream.getAudioTracks()[0];
+    if (!audioTrack || audioTrack.muted) {
+      setErrorMessage(
+        "Your microphone appears to be silenced or in use by another app. Please check it and try again.",
+      );
+      setStatus("error");
+      releaseCamera();
+      return;
+    }
 
     chunksRef.current = [];
     const mimeType = pickSupportedMimeType();

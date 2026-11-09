@@ -8,6 +8,14 @@ export const REGISTRATION_STEPS = [
 
 export const VIDEO_PITCH_MAX_SECONDS = 30;
 
+export const MARITAL_STATUSES = [
+  "Single",
+  "Married",
+  "Divorced",
+  "Widowed",
+  "Separated",
+] as const;
+
 // Hard cap on the recorded file itself — a large video is what made
 // submit feel slow (the file has to actually reach Cloudinary before
 // submit can finish). useVideoRecorder's MediaRecorder bitrate settings
@@ -15,11 +23,15 @@ export const VIDEO_PITCH_MAX_SECONDS = 30;
 // the backstop in case a given browser/device doesn't honor that hint.
 export const VIDEO_PITCH_MAX_BYTES = 10 * 1024 * 1024;
 
+// Paired with an "Other" option in EducationStep that reveals a free-text
+// input (sanitized and sentence-cased the same as any other free-text
+// field — see schema.ts) for any qualification not listed here.
 export const EDUCATION_LEVELS = [
   "HND",
   "Bachelor's Degree",
   "Master's Degree",
   "PhD",
+  "Other",
 ] as const;
 
 // The 36 states of Nigeria plus the Federal Capital Territory, for the

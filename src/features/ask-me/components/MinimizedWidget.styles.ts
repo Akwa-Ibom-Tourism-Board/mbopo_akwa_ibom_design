@@ -2,8 +2,6 @@ import styled from "styled-components";
 
 export const Bar = styled.div`
   position: fixed;
-  bottom: 1.5rem;
-  right: 1.25rem;
   z-index: ${({ theme }) => theme.zIndex.modal};
   display: flex;
   align-items: center;
@@ -13,6 +11,12 @@ export const Bar = styled.div`
   border-radius: ${({ theme }) => theme.radii["2xl"]};
   box-shadow: ${({ theme }) => theme.shadows.xl};
   padding: 0.6rem 0.9rem;
+  cursor: grab;
+  touch-action: none;
+
+  &:active {
+    cursor: grabbing;
+  }
 `;
 
 export const RestoreButton = styled.button`
