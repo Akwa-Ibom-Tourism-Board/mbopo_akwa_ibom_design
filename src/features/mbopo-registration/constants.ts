@@ -27,6 +27,9 @@ export const VIDEO_PITCH_MAX_BYTES = 10 * 1024 * 1024;
 // input (sanitized and sentence-cased the same as any other free-text
 // field — see schema.ts) for any qualification not listed here.
 export const EDUCATION_LEVELS = [
+  "WAEC",
+  "NECO",
+  "NCE",
   "HND",
   "Bachelor's Degree",
   "Master's Degree",
