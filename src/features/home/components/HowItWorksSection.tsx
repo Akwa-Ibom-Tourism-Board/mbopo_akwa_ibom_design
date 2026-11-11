@@ -66,7 +66,7 @@ const STEPS: ProcessStep[] = [
     checklist: [
       "Certificate of Origin",
       "Two full-length images",
-      "Academic qualification (B.Sc., HND or equivalent)",
+      "Academic qualification (minimum of SSCE with at least 5 credits or equivalent)",
       "Voter Identification Number (VIN)",
     ],
   },
