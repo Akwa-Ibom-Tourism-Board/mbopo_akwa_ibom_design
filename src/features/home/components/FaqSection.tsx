@@ -25,7 +25,7 @@ const FAQS = [
   {
     question: "Who is eligible to apply for Mbopo Akwa Ibom?",
     answer:
-      "Any single female indigene of Akwa Ibom State, at least 18 years of age, who holds a minimum of SSCE (at least 5 credits) or equivalent, a valid NIN, VIN and Certificate of Origin. Meeting these requirements does not guarantee selection; every application goes through the full selection process.",
+      "Any single female indigene of Akwa Ibom State, at least 18 years of age, has a valid NIN, VIN and Certificate of Origin. Meeting these requirements does not guarantee selection; every application goes through the full selection process.",
   },
   {
     question: "Is there any fee to apply?",

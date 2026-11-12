@@ -29,7 +29,7 @@ const ELIGIBILITY_CRITERIA = [
   "Must be female (gender verified via NIN)",
   "Must be single",
   "Must be an indigene of Akwa Ibom State",
-  "Must have a minimum of SSCE (at least 5 credits) or equivalent",
+  // "Must have a minimum of SSCE (at least 5 credits) or equivalent",
   // be a graduate (minimum of B.Sc., HND or equivalent)",
   "Must be at least eighteen (18) years old (age verified via NIN)",
   "Must have a National Identification Number (NIN)",
