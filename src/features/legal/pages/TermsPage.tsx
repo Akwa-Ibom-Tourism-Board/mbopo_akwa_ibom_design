@@ -99,7 +99,7 @@ const SECTIONS: LegalSection[] = [
           "Be female.",
           "Be an indigene of Akwa Ibom State, and able to identify and represent a recognised Local Government Area of the State.",
           "Be at least eighteen (18) years of age, as at the eligibility reference date published by the Commission: 1st December, 2026.",
-          "Hold a minimum qualification of SSCE (at least 5 credits)) or an equivalent qualification recognised by the Commission.",
+          // "Hold a minimum qualification of SSCE (at least 5 credits)) or an equivalent qualification recognised by the Commission.",
           "Be unmarried (single) and without children at the time of application.",
           "Possess a valid National Identification Number (NIN).",
           "Possess a valid Certificate of Origin or Local Government Identification acceptable to the Commission.",
