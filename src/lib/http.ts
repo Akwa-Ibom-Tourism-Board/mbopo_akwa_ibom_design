@@ -50,6 +50,7 @@ function getStoredTokens() {
 // so the next request already uses the refreshed pair instead of the one
 // that just expired.
 function captureRotatedTokens(response: Response): void {
+  if (response.status === 304) return;
   const nextAccessToken = response.headers.get("x-access-token");
   const nextRefreshToken = response.headers.get("x-refresh-token");
   if (nextAccessToken) localStore.set(STORAGE_KEYS.authToken, nextAccessToken);
@@ -58,7 +59,11 @@ function captureRotatedTokens(response: Response): void {
   }
 }
 
-export async function request<T>(path: string, init?: RequestInit): Promise<T> {
+export async function request<T>(
+  path: string,
+  init?: RequestInit,
+  isRetry = false,
+): Promise<T> {
   const { accessToken, refreshToken } = getStoredTokens();
 
   const headers: Record<string, string> = {
@@ -68,7 +73,11 @@ export async function request<T>(path: string, init?: RequestInit): Promise<T> {
   if (accessToken) headers.Authorization = `Bearer ${accessToken}`;
   if (refreshToken) headers["x-refresh-token"] = refreshToken;
 
-  const response = await fetch(`${API_BASE_URL}${path}`, { ...init, headers });
+  const response = await fetch(`${API_BASE_URL}${path}`, {
+    ...init,
+    headers,
+    cache: "no-store",
+  });
 
   captureRotatedTokens(response);
 
@@ -78,6 +87,16 @@ export async function request<T>(path: string, init?: RequestInit): Promise<T> {
     ApiEnvelope<T> | undefined;
 
   if (!response.ok) {
+    // The tokens changed while this request was in flight (a new login, or
+    // another request already refreshed them). Retry once with the current
+    // pair instead of failing on a stale one.
+    if (response.status === 401 && accessToken && !isRetry) {
+      const currentToken = localStore.get<string>(STORAGE_KEYS.authToken);
+      if (currentToken && currentToken !== accessToken) {
+        return request<T>(path, init, true);
+      }
+    }
+
     throw new ApiError(
       body?.message ?? response.statusText,
       response.status,
