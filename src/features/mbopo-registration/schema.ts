@@ -149,19 +149,22 @@ export const registrationSchema = z
       .min(1, "Please list the languages you speak")
       .max(300, "Keep this under 300 characters"),
 
-    // Step 4 — Your story, VIN & declarations. Unlike NIN (verified as
-    // part of the very first step), VIN is only verified when the whole
-    // application is finally submitted — see submit's handling of
-    // "VIN not found" vs. a name mismatch (the latter doesn't block
-    // submission, it's just recorded for judges) in FIX_ME.md on the
-    // backend. This field is still draft-saveable like any other text
-    // field; saving a draft never itself calls out to DVP.
+    // Step 4 — Your story, VIN & declarations. Optional — someone can
+    // submit without a VIN at all; admin/judges simply see "no VIN"
+    // instead of a verification outcome. Unlike NIN (verified as part of
+    // the very first step), a VIN that is given is only verified after the
+    // whole application is submitted — see submit's handling of
+    // "VIN not found" vs. a name mismatch (neither blocks submission;
+    // both are just recorded for judges) in FIX_ME.md on the backend.
+    // This field is still draft-saveable like any other text field; saving
+    // a draft never itself calls out to DVP.
     vin: z
       .string()
       .trim()
       .toUpperCase()
       .length(19, "Your VIN must be exactly 19 characters")
-      .regex(/^[A-Z0-9]+$/, "Your VIN can only contain letters and digits"),
+      .regex(/^[A-Z0-9]+$/, "Your VIN can only contain letters and digits")
+      .or(z.literal("")),
     initiative: optionalText(1000),
     why: z
       .string()
