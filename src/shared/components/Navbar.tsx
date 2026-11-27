@@ -10,6 +10,7 @@ import { useLocation } from "react-router-dom";
 import akwaIbomLogo from "@/assets/akwa-ibom-logo-main.png";
 import ariseLogo from "@/assets/arise-logo-main.png";
 import { useAuth } from "@/features/auth";
+import { useRegistrationStatus } from "@/features/registration-status";
 import { DisclaimerStrip } from "./DisclaimerStrip";
 import {
   HeaderFrame,
@@ -71,6 +72,15 @@ export function Navbar({ variant = "solid" }: NavbarProps) {
   const [scrolled, setScrolled] = useState(variant === "solid");
   const [menuOpen, setMenuOpen] = useState(false);
   const { isAuthenticated } = useAuth();
+  // Only new sign-ups are affected — an already-authenticated visitor never
+  // loses their own "Dashboard" CTA, whatever this says. Defaults to "open"
+  // while the check is still in flight, so the button doesn't flash away
+  // on first paint for the common case (open); the backend is the real
+  // enforcement either way.
+  const registrationStatus = useRegistrationStatus().data?.status;
+  const canRegister =
+    registrationStatus !== "new_intake_closed" &&
+    registrationStatus !== "closed";
   const location = useLocation();
   const headerRef = useRef<HTMLElement>(null);
 
@@ -156,9 +166,11 @@ export function Navbar({ variant = "solid" }: NavbarProps) {
                   <SignInLink to="/login" $light={light}>
                     Sign In
                   </SignInLink>
-                  <CtaLink to="/register">
-                    Register Now <ArrowRight size={15} />
-                  </CtaLink>
+                  {canRegister && (
+                    <CtaLink to="/register">
+                      Register Now <ArrowRight size={15} />
+                    </CtaLink>
+                  )}
                 </>
               )}
             </NavLinks>
@@ -223,13 +235,15 @@ export function Navbar({ variant = "solid" }: NavbarProps) {
               Sign In
             </MobileSignInLink>
           )}
-          <MobileCtaLink
-            to={isAuthenticated ? "/dashboard" : "/register"}
-            onClick={closeMenu}
-          >
-            {isAuthenticated ? "Dashboard" : "Register Now"}
-            <ArrowRight size={15} />
-          </MobileCtaLink>
+          {(isAuthenticated || canRegister) && (
+            <MobileCtaLink
+              to={isAuthenticated ? "/dashboard" : "/register"}
+              onClick={closeMenu}
+            >
+              {isAuthenticated ? "Dashboard" : "Register Now"}
+              <ArrowRight size={15} />
+            </MobileCtaLink>
+          )}
         </MobileDrawerActions>
       </MobileDrawer>
     </>

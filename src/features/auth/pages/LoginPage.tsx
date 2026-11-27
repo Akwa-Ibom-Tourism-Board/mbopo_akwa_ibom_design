@@ -13,6 +13,7 @@ import { ApiError, friendlyMessage } from "@/lib/http";
 import { rememberPendingEmailVerification } from "@/lib/emailVerificationStore";
 import { MAX_EMAIL_LENGTH, MAX_PASSWORD_LENGTH } from "@/lib/validation";
 import { resendOtp } from "@/features/verify-email";
+import { useRegistrationStatus } from "@/features/registration-status";
 import { useAuth } from "../context/AuthContext";
 import { login } from "../api";
 import {
@@ -52,6 +53,10 @@ export function LoginPage() {
   const { status, login: setSession } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
+  const registrationStatus = useRegistrationStatus().data?.status;
+  const canRegister =
+    registrationStatus !== "new_intake_closed" &&
+    registrationStatus !== "closed";
   const [rememberMe, setRememberMe] = useState(true);
   const [captchaToken, setCaptchaToken] = useState<string | null>(null);
   const recaptchaRef = useRef<ReCAPTCHA>(null);
@@ -180,10 +185,12 @@ export function LoginPage() {
         </SubmitButton>
       </FormBlock>
 
-      <FormFooter>
-        Do not have an account?{" "}
-        <InlineLink to="/register">Create one here</InlineLink>
-      </FormFooter>
+      {canRegister && (
+        <FormFooter>
+          Do not have an account?{" "}
+          <InlineLink to="/register">Create one here</InlineLink>
+        </FormFooter>
+      )}
     </AuthLayout>
   );
 }

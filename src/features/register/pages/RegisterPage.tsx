@@ -3,11 +3,12 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useMutation } from "@tanstack/react-query";
-import { useNavigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 import ReCAPTCHA from "react-google-recaptcha";
 import { AuthLayout } from "@/shared/components";
 import { sonnerToast } from "@/shared/ui";
+import { useRegistrationStatus } from "@/features/registration-status";
 import { RECAPTCHA_SITE_KEY } from "@/lib/config";
 import { friendlyMessage } from "@/lib/http";
 import { MAX_EMAIL_LENGTH, MAX_PASSWORD_LENGTH } from "@/lib/validation";
@@ -56,6 +57,10 @@ export function RegisterPage() {
   const navigate = useNavigate();
   const [captchaToken, setCaptchaToken] = useState<string | null>(null);
   const recaptchaRef = useRef<ReCAPTCHA>(null);
+  const registrationStatus = useRegistrationStatus().data?.status;
+  const closed =
+    registrationStatus === "new_intake_closed" ||
+    registrationStatus === "closed";
 
   const {
     register,
@@ -66,6 +71,18 @@ export function RegisterPage() {
   useEffect(() => {
     document.title = "Register | Mbopo Akwa Ibom";
   }, []);
+
+  // Even with the nav CTA already hidden, someone can still type /register
+  // in directly — bounce them to login with a clear reason rather than
+  // showing a form that will just fail on submit.
+  useEffect(() => {
+    if (!closed) return;
+    sonnerToast.info(
+      registrationStatus === "closed"
+        ? "Registration has ended."
+        : "New registrations have closed. If you already have an account, log in to continue.",
+    );
+  }, [closed, registrationStatus]);
 
   const registerMutation = useMutation({
     mutationFn: registerAccount,
@@ -85,6 +102,10 @@ export function RegisterPage() {
       setCaptchaToken(null);
     },
   });
+
+  if (closed) {
+    return <Navigate to="/login" replace />;
+  }
 
   return (
     <AuthLayout carouselVariant="signup">
