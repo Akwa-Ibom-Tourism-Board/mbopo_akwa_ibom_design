@@ -87,3 +87,25 @@ export const LoadingShell = styled.div`
   color: ${({ theme }) => theme.colors.muted.foreground};
   font-size: 0.875rem;
 `;
+
+export const ClosedShell = styled.div`
+  display: grid;
+  gap: 8px;
+  max-width: 36rem;
+  min-height: 40vh;
+  margin: 0 auto;
+  place-content: center;
+  text-align: center;
+
+  h2 {
+    margin: 0;
+    font-size: 1.25rem;
+    color: ${({ theme }) => theme.colors.foreground};
+  }
+
+  p {
+    margin: 0;
+    color: ${({ theme }) => theme.colors.muted.foreground};
+    font-size: 0.9375rem;
+  }
+`;
