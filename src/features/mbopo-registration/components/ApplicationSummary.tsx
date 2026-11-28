@@ -155,10 +155,12 @@ export function ApplicationSummary({
             <DetailLabel>National Identification Number (NIN)</DetailLabel>
             <DetailValue>{user.nin}</DetailValue>
           </DetailItem>
-          <DetailItem $wide>
-            <DetailLabel>Voter Identification Number (VIN)</DetailLabel>
-            <DetailValue>{values.vin}</DetailValue>
-          </DetailItem>
+          {values.vin && (
+            <DetailItem $wide>
+              <DetailLabel>Voter Identification Number (VIN)</DetailLabel>
+              <DetailValue>{values.vin}</DetailValue>
+            </DetailItem>
+          )}
           <DetailItem>
             <DetailLabel>Local Government Area</DetailLabel>
             <DetailValue>{values.localGovernment}</DetailValue>
