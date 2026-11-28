@@ -84,21 +84,23 @@ const FIELD_LABELS: Record<keyof RegistrationFormValues, string> = {
 // the initial step is derived from which fields/photos are actually
 // missing, the same rule findFirstInvalidStep applies interactively later,
 // just checked against the raw fetched row instead of live form state.
-// occupationOther/institutionOther are only actually required when their
-// dropdown is set to "Other" (see schema.ts's cross-field refines) — a
-// blanket emptiness check would wrongly treat a draft as incomplete at the
-// Education step for everyone who didn't need to fill either in.
-const CONDITIONAL_OTHER_FIELDS = new Set([
+// educationOther/occupationOther/institutionOther are only actually
+// required when their dropdown is set to "Other" (see schema.ts's
+// cross-field refines), and vin is never required at all (also schema.ts)
+// — a blanket emptiness check would wrongly treat a draft as incomplete
+// just because one of these legitimately-empty fields is blank.
+const FIELDS_NEVER_BLANKET_REQUIRED = new Set([
   "educationOther",
   "occupationOther",
   "institutionOther",
+  "vin",
 ]);
 
 function findInitialStep(draft: Application | null | undefined): number {
   if (!draft) return 0;
   for (let index = 0; index < STEP_FIELDS.length; index += 1) {
     const missingField = (STEP_FIELDS[index] ?? [])
-      .filter((name) => !CONDITIONAL_OTHER_FIELDS.has(name))
+      .filter((name) => !FIELDS_NEVER_BLANKET_REQUIRED.has(name))
       .some((name) => {
         const value = draft[name as keyof Application];
         return (
